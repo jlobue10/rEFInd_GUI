@@ -27,6 +27,8 @@ else
 fi
 EOF
 
+chmod 555 $HOME/.local/rEFInd_GUI/install_config_from_GUI.sh 2>/dev/null
+
 #Create file for passwordless sudo for config file, background and icon installation
 cat > $HOME/.local/rEFInd_GUI/install_config_from_GUI <<EOF
 $USER ALL = NOPASSWD: $HOME/.local/rEFInd_GUI/install_config_from_GUI.sh
