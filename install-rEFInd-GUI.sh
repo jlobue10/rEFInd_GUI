@@ -59,7 +59,6 @@ make
 
 if [ ! -f $HOME/.local/rEFInd_GUI/GUI/src/build/rEFInd_GUI ]; then
 	echo -e "\nGUI compile failed. Please try again after ensuring that your cloned repo is up to date and your pacman config is normal.\n"
-	sudo steamos-readonly enable
 	exit 1
 fi
 
