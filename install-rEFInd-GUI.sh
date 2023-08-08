@@ -18,7 +18,7 @@ cat > $HOME/.local/rEFInd_GUI/install_config_from_GUI.sh <<EOF
 #!/bin/bash
 cp $HOME/.local/rEFInd_GUI/GUI/{refind.conf,background.png,os_icon1.png,os_icon2.png,os_icon3.png,os_icon4.png} /boot/efi/EFI/refind/ 2>/dev/null
 
-ANS=$?
+ANS=$? 2>/dev/null
 if [[ $ANS == 0 ]]; then
     zenity --info --title="Success" --text="`printf "The refind.conf config file, OS icons and background image\nwere successfully moved to the refind folder on the /esp partition."`" --width=500 2>/dev/null
 else
