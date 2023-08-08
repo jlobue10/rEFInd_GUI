@@ -95,5 +95,3 @@ while true; do
 		*) echo -e "\nInvalid response.";;
 	esac
 done
-
-#need to cat create sudoers entry for passwordless sudo of install config
