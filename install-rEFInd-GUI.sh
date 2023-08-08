@@ -70,11 +70,11 @@ cat > $HOME/.local/rEFInd_GUI/GUI/refind_GUI.desktop <<EOF
 [Desktop Entry]
 Categories=System;
 Comment=rEFInd Customization GUI
-Exec=$HOME/.SteamDeck_rEFInd/GUI/rEFInd_GUI
+Exec=$HOME/.local/rEFInd_GUI/GUI/rEFInd_GUI
 GenericName=rEFInd GUI
 Name=rEFInd GUI
-Path=$HOME/.SteamDeck_rEFInd/GUI
-Icon=$HOME/.SteamDeck_rEFInd/GUI/UEFI_icon.png
+Path=$HOME/.local/rEFInd_GUI/GUI
+Icon=$HOME/.local/rEFInd_GUI/GUI/UEFI_icon.png
 StartupNotify=true
 Terminal=false
 Type=Application
