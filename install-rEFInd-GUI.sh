@@ -48,7 +48,7 @@ FEDORA_BASE=$?
 
 if [ $NOBARA_BASE == 0 ] || [ $FEDORA_BASE == 0 ]; then
 	echo -e '\nFedora based installation starting.\n'
-	#commands for Fedora based GUI install
+	sudo dnf install cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel
 fi
 
 cd $HOME/.local/rEFInd_GUI/GUI/src 2>/dev/null
