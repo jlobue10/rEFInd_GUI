@@ -48,10 +48,14 @@ FEDORA_BASE=$?
 
 if [ $NOBARA_BASE == 0 ] || [ $FEDORA_BASE == 0 ]; then
 	echo -e '\nFedora based installation starting.\n'
-	sudo dnf install cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel
+	sudo dnf install cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel
 fi
 
 cd $HOME/.local/rEFInd_GUI/GUI/src 2>/dev/null
+ls -l CmakeCache.txt
+if [ $? == 0 ]; then
+	rm CmakeCache.txt
+fi
 mkdir -p build 2>/dev/null
 cd build 2>/dev/null
 cmake ..
