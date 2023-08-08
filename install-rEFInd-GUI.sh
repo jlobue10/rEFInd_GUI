@@ -52,9 +52,13 @@ if [ $NOBARA_BASE == 0 ] || [ $FEDORA_BASE == 0 ]; then
 fi
 
 cd $HOME/.local/rEFInd_GUI/GUI/src 2>/dev/null
-ls -l CmakeCache.txt
+ls -l $HOME/.local/rEFInd_GUI/GUI/src/build/CMakeCache.txt 2>/dev/null
 if [ $? == 0 ]; then
-	rm CmakeCache.txt
+	rm $HOME/.local/rEFInd_GUI/GUI/src/build/CMakeCache.txt 2>/dev/null
+fi
+ls -l $HOME/rEFInd_GUI/GUI/src/build/CMakeCache.txt 2>/dev/null
+if [ $? == 0 ]; then
+	rm $HOME/rEFInd_GUI/GUI/src/build/CMakeCache.txt 2>/dev/null
 fi
 mkdir -p build 2>/dev/null
 cd build 2>/dev/null
