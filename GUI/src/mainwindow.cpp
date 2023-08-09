@@ -763,6 +763,6 @@ void MainWindow::on_Rand_BG_On_pushButton_clicked()
 void MainWindow::on_Rand_BG_Off_pushButton_clicked()
 {
     string rand_bg_off = string("xterm -e \"sudo systemctl disable --now rEFInd_bg_randomizer.service &&");
-           rand_bg_off.append(" sudo systemctl status bootnext-refind.service; $SHELL\"");
+           rand_bg_off.append(" sudo systemctl status rEFInd_bg_randomizer.service; $SHELL\"");
     system(rand_bg_off.c_str());
 }
