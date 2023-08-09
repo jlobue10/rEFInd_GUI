@@ -36,7 +36,7 @@ EOF
 
 sudo cp $HOME/.local/rEFInd_GUI/install_config_from_GUI /etc/sudoers.d 2>/dev/null
 
-yes | cp $CURRENT_WD/{refind_install.sh,refind_install_Sourceforge.sh} $HOME/.local/rEFInd_GUI 2>/dev/null
+yes | cp $CURRENT_WD/{refind_install_package_mgr.sh,refind_install_Sourceforge.sh} $HOME/.local/rEFInd_GUI 2>/dev/null
 yes | cp $CURRENT_WD/refind-GUI.conf $HOME/.local/rEFInd_GUI/GUI/refind.conf 2>/dev/null
 chmod +x $HOME/.local/rEFInd_GUI/*.sh 2>/dev/null
 
