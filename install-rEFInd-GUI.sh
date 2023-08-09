@@ -40,15 +40,28 @@ yes | cp $CURRENT_WD/{refind_install.sh,refind_install_Sourceforge.sh} $HOME/.lo
 yes | cp $CURRENT_WD/refind-GUI.conf $HOME/.local/rEFInd_GUI/GUI/refind.conf 2>/dev/null
 chmod +x $HOME/.local/rEFInd_GUI/*.sh 2>/dev/null
 
-cat /etc/nobara-release 2>/dev/null
-NOBARA_BASE=$?
-
-cat /etc/fedora-release 2>/dev/null
+which dnf 2>/dev/null
 FEDORA_BASE=$?
 
-if [ $NOBARA_BASE == 0 ] || [ $FEDORA_BASE == 0 ]; then
+if [ $FEDORA_BASE == 0 ]; then
 	echo -e '\nFedora based installation starting.\n'
 	sudo dnf install cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel
+fi
+
+which apt 2>/dev/null
+UBUNTU_BASE=$?
+
+if [ $UBUNTU_BASE == 0 ]; then
+	echo -e '\nUbuntu based installation starting.\n'
+	#sudo apt-get update && sudo apt-get install build deps
+fi
+
+which pacman 2>/dev/null
+ARCH_BASE=$?
+
+if [ $ARCH_BASE == 0 ]; then
+	echo -e '\nArch based installation starting.\n'
+	#sudo pacman init and then pacman install build deps
 fi
 
 cd $HOME/.local/rEFInd_GUI/GUI/src 2>/dev/null
@@ -104,3 +117,26 @@ while true; do
 		*) echo -e "\nInvalid response.";;
 	esac
 done
+
+#Create script to pick random PNG background from backgrounds folder
+cat > $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh <<EOF
+#!/bin/bash
+RAND_BG="$(ls $HOME/.local/rEFInd_GUI/backgrounds | grep .png | shuf -n 1)" 2>/dev/null
+sudo cp $HOME/.local/rEFInd_GUI/backgrounds/$RAND_BG /boot/efi/EFI/refind/ 2>/dev/null
+EOF
+
+chmod +x $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh 2>/dev/null
+
+#Create systemd service file for optional rEFInd background randomizer
+cat > $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.service <<EOF
+[Unit]
+Description=Randomize Background on each rEFInd boot
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c '$HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh'
+
+[Install]
+WantedBy=multi-user.target
+EOF
