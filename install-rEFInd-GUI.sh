@@ -38,7 +38,6 @@ sudo cp $HOME/.local/rEFInd_GUI/install_config_from_GUI /etc/sudoers.d 2>/dev/nu
 
 yes | cp $CURRENT_WD/{refind_install_package_mgr.sh,refind_install_Sourceforge.sh} $HOME/.local/rEFInd_GUI 2>/dev/null
 yes | cp $CURRENT_WD/refind-GUI.conf $HOME/.local/rEFInd_GUI/GUI/refind.conf 2>/dev/null
-chmod +x $HOME/.local/rEFInd_GUI/*.sh 2>/dev/null
 
 which dnf 2>/dev/null
 FEDORA_BASE=$?
@@ -132,7 +131,7 @@ sed -i 's/grepp/grep/g' $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh
 sed -i 's/shuff/shuf/g' $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh
 sed -i 's/USE_RAND_BG/$RAND_BG/g' $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh
 
-chmod +x $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh 2>/dev/null
+chmod +x $HOME/.local/rEFInd_GUI/*.sh 2>/dev/null
 
 #Create systemd service file for optional rEFInd background randomizer
 cat > $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.service <<EOF
