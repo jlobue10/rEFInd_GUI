@@ -56,7 +56,7 @@
 	echo "# Installing files to /boot/efi partition..."
 	sudo mv /boot/efi/EFI/refind/refind.conf /boot/efi/EFI/refind/refind-bkp.conf
 	sudo cp $HOME/.local/rEFInd_GUI/GUI/refind.conf /boot/efi/EFI/refind/refind.conf
-	sudo cp -rf $HOME/.local/rEFInd_GUI/backgrounds/ /boot/efi/EFI/refind
+	#sudo cp -rf $HOME/.local/rEFInd_GUI/backgrounds/ /boot/efi/EFI/refind
 	sudo cp -rf $HOME/.local/rEFInd_GUI/icons/ /boot/efi/EFI/refind
 	sudo efibootmgr -c -d /dev/nvme0n1 -p 1 -L "rEFInd" -l \\EFI\\refind\\refind_x64.efi
 	echo 100
