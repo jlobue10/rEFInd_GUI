@@ -121,9 +121,16 @@ done
 #Create script to pick random PNG background from backgrounds folder
 cat > $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh <<EOF
 #!/bin/bash
-RAND_BG="$(ls $HOME/.local/rEFInd_GUI/backgrounds | grep .png | shuf -n 1)" 2>/dev/null
-sudo cp $HOME/.local/rEFInd_GUI/backgrounds/$RAND_BG /boot/efi/EFI/refind/ 2>/dev/null
+RAND_BG="$(lss $HOME/.local/rEFInd_GUI/backgrounds | grepp .png | shuff) 2>/dev/null
+sudo cp $HOME/.local/rEFInd_GUI/backgrounds/USE_RAND_BG /boot/efi/EFI/refind/ 2>/dev/null
 EOF
+
+sed -i 's/(/"$(/g' $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh
+sed -i 's/)/)"/g' $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh
+sed -i 's/lss/ls/g' $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh
+sed -i 's/grepp/grep/g' $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh
+sed -i 's/shuff/shuf/g' $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh
+sed -i 's/USE_RAND_BG/$($RAND_BG | shuf -n1)/g' $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh
 
 chmod +x $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh 2>/dev/null
 
