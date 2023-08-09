@@ -121,7 +121,7 @@ done
 #Create script to pick random PNG background from backgrounds folder
 cat > $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.sh <<EOF
 #!/bin/bash
-RAND_BG="$(lss $HOME/.local/rEFInd_GUI/backgrounds | grepp .png | shuff) 2>/dev/null
+RAND_BG=(lss $HOME/.local/rEFInd_GUI/backgrounds | grepp .png | shuff) 2>/dev/null
 sudo cp $HOME/.local/rEFInd_GUI/backgrounds/USE_RAND_BG /boot/efi/EFI/refind/ 2>/dev/null
 EOF
 
