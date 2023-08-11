@@ -42,9 +42,16 @@ yes | cp $CURRENT_WD/refind-GUI.conf $HOME/.local/rEFInd_GUI/GUI/refind.conf 2>/
 which dnf 2>/dev/null
 FEDORA_BASE=$?
 
+cat /etc/nobara-release
+NOBARA=$?
+
 if [ $FEDORA_BASE == 0 ]; then
 	echo -e '\nFedora based installation starting.\n'
-	sudo dnf install cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm
+ 	if [ $NOBARA == 0 ]; then
+		sudo dnf install cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm --allowerasing
+  	else
+   		sudo dnf install cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm
+     	fi
 fi
 
 which apt 2>/dev/null
@@ -84,6 +91,11 @@ fi
 
 # Move compiled rEFInd_GUI binary into GUI folder
 cp rEFInd_GUI ../../ 2>/dev/null
+
+if [ $NOBARA == 0 ]; then
+	#fix packaging after compile (if necessary)
+	sudo dnf install gstreamer1-plugins-good-qt6 --allowerasing
+fi
 
 #Create .desktop icon entry. Needs cat with generic username
 cat > $HOME/.local/rEFInd_GUI/GUI/refind_GUI.desktop <<EOF
