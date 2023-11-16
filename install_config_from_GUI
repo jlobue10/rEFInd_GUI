@@ -1,1 +1,1 @@
-$USER ALL = NOPASSWD: $HOME/.local/rEFInd_GUI/install_config_from_GUI.sh
+$USER ALL = NOPASSWD: /usr/bin/install_config_from_GUI.sh
