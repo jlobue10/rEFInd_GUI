@@ -65,5 +65,6 @@ if [ $NOBARA == 0 ]; then
 	sudo dnf install gstreamer1-plugins-good-qt6 --allowerasing
 fi
 
-cp /usr/share/applications/rEFInd_GUI.desktop $HOME/refind_GUI.desktop
-chmod +x $HOME/refind_GUI.desktop 2>/dev/null
+cp /usr/share/applications/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
+sudo chown $SUDO_USER $HOME/Desktop/refind_GUI.desktop
+chmod +x $HOME/Desktop/refind_GUI.desktop 2>/dev/null
