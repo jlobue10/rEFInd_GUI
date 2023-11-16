@@ -3,7 +3,7 @@ A graphical setup and customization utility to use alongside rEFInd
 
 Upload of files and updating README is a work in progress.
 
-##Installation
+## Installation (Currently Fedora / Nobara supported. Others coming soon...)
 
 ```
 curl -L https://github.com/jlobue10/rEFInd_GUI/raw/main/install-rEFInd-GUI.sh | sh
