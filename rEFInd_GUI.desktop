@@ -1,0 +1,12 @@
+[Desktop Entry]
+Categories=System;
+Comment=rEFInd Customization GUI
+Exec=/usr/bin/rEFInd_GUI
+GenericName=rEFInd GUI
+Name=rEFInd GUI
+Path=/usr/bin
+Icon=$HOME/.local/rEFInd_GUI/GUI/UEFI_icon.png
+StartupNotify=true
+Terminal=false
+Type=Application
+X-KDE-SubstituteUID=false
