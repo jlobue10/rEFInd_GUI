@@ -59,7 +59,7 @@ install -m 777 %{SOURCE5} %{buildroot}/usr/bin
 sed -i "s@\$USER@${SUDO_USER}@g" /etc/sudoers.d/install_config_from_GUI
 sed -i "s@\$HOME@/home/${SUDO_USER}@g" /usr/share/applications/rEFInd_GUI.desktop
 sed -i "s@\$HOME@/home/${SUDO_USER}@g" /usr/bin/install_config_from_GUI.sh
-sed -i 's@\$USER@${SUDO_USER}@g' /usr/bin/rEFInd_bg_randomizer.sh
+sed -i "s@\$USER@${SUDO_USER}@g" /usr/bin/rEFInd_bg_randomizer.sh
 
 %files
 /etc/systemd/system/rEFInd_bg_randomizer.service
