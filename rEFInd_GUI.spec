@@ -8,7 +8,7 @@ Summary:        Small GUI for customizing and installing rEFInd bootloader
 License:        GPL3
 URL:            https://github.com/jlobue10/rEFInd_GUI
 Source0:        rEFInd_GUI-main.zip
-Source1:        refind_GUI.desktop
+Source1:        rEFInd_GUI.desktop
 Source2:        rEFInd_bg_randomizer.sh
 Source3:        rEFInd_bg_randomizer.service
 Source4:        install_config_from_GUI
