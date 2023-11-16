@@ -32,7 +32,7 @@ unzip $RPM_SOURCE_DIR/rEFInd_GUI-main.zip -d %{_builddir}
 mkdir -p %{_builddir}/rEFInd_GUI
 cp -rf %{_builddir}/rEFInd_GUI-main/* %{_builddir}/rEFInd_GUI
 rm -rf %{_builddir}/rEFInd_GUI-main
-cp -f %{_builddir}/rEFInd_GUI/{refind_GUI.desktop,rEFInd_bg_randomizer.sh,rEFInd_bg_randomizer.service,install_config_from_GUI,install_config_from_GUI.sh} $RPM_SOURCE_DIR
+cp -f %{_builddir}/rEFInd_GUI/{rEFInd_GUI.desktop,rEFInd_bg_randomizer.sh,rEFInd_bg_randomizer.service,install_config_from_GUI,install_config_from_GUI.sh} $RPM_SOURCE_DIR
 
 %build
 cd %{_builddir}/rEFInd_GUI/GUI/src
