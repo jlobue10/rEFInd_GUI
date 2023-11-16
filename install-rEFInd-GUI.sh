@@ -66,5 +66,4 @@ if [ $NOBARA == 0 ]; then
 fi
 
 cp /usr/share/applications/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
-sudo chown $SUDO_USER $HOME/Desktop/refind_GUI.desktop
 chmod +x $HOME/Desktop/refind_GUI.desktop 2>/dev/null
