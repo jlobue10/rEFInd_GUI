@@ -24,9 +24,9 @@ NOBARA=$?
 if [ $FEDORA_BASE == 0 ]; then
 	echo -e '\nFedora based installation starting.\n'
  	if [ $NOBARA == 0 ]; then
-		sudo dnf install cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm --allowerasing
+		sudo dnf install -y cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm --allowerasing
   	else
-   		sudo dnf install cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm
+   		sudo dnf install -y cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm
      	fi
 	mkdir -p $HOME/rpmbuild/{SPECS,SOURCES}
 	cp rEFInd_GUI.spec $HOME/rpmbuild/SPECS
