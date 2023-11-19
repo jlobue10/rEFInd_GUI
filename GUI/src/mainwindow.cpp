@@ -28,7 +28,6 @@ bool Enable_Mouse_bool;
 bool Firmware_BootNum_bool;
 int Update_Num;
 int VERSION = 100;
-ostringstream install_config_path_o;
 ostringstream install_refind_apt_path_o;
 ostringstream install_refind_dnf_path_o;
 ostringstream install_refind_Sforge_path_o;
@@ -82,7 +81,6 @@ string Boot_Stanza_4;
 string Config_FW_BootNum;
 string default_OS_sel;
 string FW_BootNum_SteamOS;
-string install_config_path;
 string install_refind_apt_path;
 string install_refind_dnf_path;
 string install_refind_Sforge_path;
@@ -127,15 +125,19 @@ MainWindow::MainWindow(QWidget *parent)
     Default_OS_Icon1.reserve(user_home_path_q.length() + Default_OS_Icon1_Suffix.length());
     Default_OS_Icon1.append(user_home_path_q);
     Default_OS_Icon1.append(Default_OS_Icon1_Suffix);
+    Default_OS_Icon1_str = Default_OS_Icon1.toStdString();
     Default_OS_Icon2.reserve(user_home_path_q.length() + Default_OS_Icon2_Suffix.length());
     Default_OS_Icon2.append(user_home_path_q);
     Default_OS_Icon2.append(Default_OS_Icon2_Suffix);
+    Default_OS_Icon2_str = Default_OS_Icon2.toStdString();
     Default_OS_Icon3.reserve(user_home_path_q.length() + Default_OS_Icon3_Suffix.length());
     Default_OS_Icon3.append(user_home_path_q);
     Default_OS_Icon3.append(Default_OS_Icon3_Suffix);
+    Default_OS_Icon3_str = Default_OS_Icon3.toStdString();
     Default_OS_Icon4.reserve(user_home_path_q.length() + Default_OS_Icon4_Suffix.length());
     Default_OS_Icon4.append(user_home_path_q);
     Default_OS_Icon4.append(Default_OS_Icon4_Suffix);
+    Default_OS_Icon4_str = Default_OS_Icon4.toStdString();
     readSettings();
 }
 
@@ -279,42 +281,38 @@ void MainWindow::on_Create_Config_clicked()
     Background = ui->Background_lineEdit->text();
     if((Background != "") && (Background != Default_Background)){
         Background_path = Background.toStdString();
-        string cmd = string("yes | cp '") + Background_path + "' '" + Default_Background_str + "'";
+        string cmd = string("cp -f '") + Background_path + "' '" + Default_Background_str + "'";
         system(cmd.c_str());
     }
     OS_Icon1 = ui->Boot_Option_01_Icon_lineEdit->text();
     if((OS_Icon1 != "" ) && (OS_Icon1 != Default_OS_Icon1)){
         OS_Icon1_path = OS_Icon1.toStdString();
-        string cmd1 = string("yes | cp '") + OS_Icon1_path + "' '" + Default_OS_Icon1_str + "'";
+        string cmd1 = string("cp -f '") + OS_Icon1_path + "' '" + Default_OS_Icon1_str + "'";
         system(cmd1.c_str());
         }
     OS_Icon2 = ui->Boot_Option_02_Icon_lineEdit->text();
     if((OS_Icon2 != "" ) && (OS_Icon2 != Default_OS_Icon2)){
         OS_Icon2_path = OS_Icon2.toStdString();
-        string cmd2 = string("yes | cp '") + OS_Icon2_path + "' '" + Default_OS_Icon2_str + "'";
+        string cmd2 = string("cp -f '") + OS_Icon2_path + "' '" + Default_OS_Icon2_str + "'";
         system(cmd2.c_str());
         }
     OS_Icon3 = ui->Boot_Option_03_Icon_lineEdit->text();
     if((OS_Icon3 != "" ) && (OS_Icon3 != Default_OS_Icon3)){
         OS_Icon3_path = OS_Icon3.toStdString();
-        string cmd3 = string("yes | cp '") + OS_Icon3_path + "' '" + Default_OS_Icon3_str + "'";
+        string cmd3 = string("cp -f '") + OS_Icon3_path + "' '" + Default_OS_Icon3_str + "'";
         system(cmd3.c_str());
         }
     OS_Icon4 = ui->Boot_Option_04_Icon_lineEdit->text();
     if((OS_Icon4 != "" ) && (OS_Icon4 != Default_OS_Icon4)){
         OS_Icon4_path = OS_Icon4.toStdString();
-        string cmd4 = string("yes | cp '") + OS_Icon4_path + "' '" + Default_OS_Icon4_str + "'";
+        string cmd4 = string("cp -f '") + OS_Icon4_path + "' '" + Default_OS_Icon4_str + "'";
         system(cmd4.c_str());
         }
 }
 
 void MainWindow::on_Install_Config_clicked()
 {
-    install_config_path_o.str("");
-    install_config_path.clear();
-    install_config_path_o << "sudo " << user_home_path_str << "/.local/rEFInd_GUI/install_config_from_GUI.sh";
-    install_config_path = install_config_path_o.str();
-    system(install_config_path.c_str());
+    system("sudo /usr/bin/install_config_from_GUI.sh");
 }
 
 string MainWindow::Get_FW_BootNum() {
@@ -415,6 +413,15 @@ string MainWindow::CreateBootStanza(QString &BootOption, const char *BootNum, bo
             Boot_Stanza_GUI.append(BootNum);
             Boot_Stanza_GUI.append(".png\n");
             Boot_Stanza_GUI.append("\tloader /EFI/ubuntu/shimx64.efi\n");
+            Boot_Stanza_GUI.append("\tgraphics on\n}\n");
+            return Boot_Stanza_GUI;
+        }
+        if(Linux_Select_str == "Bazzite") {
+            Boot_Stanza_GUI.append("\nmenuentry \"Bazzite\" {\n");
+            Boot_Stanza_GUI.append("\ticon /EFI/refind/os_icon");
+            Boot_Stanza_GUI.append(BootNum);
+            Boot_Stanza_GUI.append(".png\n");
+            Boot_Stanza_GUI.append("\tloader /EFI/fedora/shimx64.efi\n");
             Boot_Stanza_GUI.append("\tgraphics on\n}\n");
             return Boot_Stanza_GUI;
         }
@@ -681,7 +688,7 @@ void MainWindow::on_About_pushButton_clicked()
     AboutBox.setText("<p align='center'>rEFInd Customization GUI v1.0.0<br><br>"
                      "Original GUI Creator: "
                      "<a href='https://github.com/jlobue10'>jlobue10</a><br><br>"
-                     "Special Thanks to Deck Wizard for testing and QA"
+                     "Special Thanks to Deck Wizard for testing the original GUI"
                      "<br><br><a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'>Deck Wizard Dual Boot Tutorial</a><br></p>");
     AboutBox.setStandardButtons(QMessageBox::Ok);
     AboutBox.addButton(updateButton, QMessageBox::ActionRole);
