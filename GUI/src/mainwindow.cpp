@@ -27,7 +27,11 @@ bool Boot_Last_OS_bool;
 bool Enable_Mouse_bool;
 bool Firmware_BootNum_bool;
 int Update_Num;
-int VERSION = 130;
+int VERSION = 100;
+ostringstream install_config_path_o;
+ostringstream install_refind_apt_path_o;
+ostringstream install_refind_dnf_path_o;
+ostringstream install_refind_Sforge_path_o;
 ostringstream user_home_path;
 QString Background;
 QString Background_fileName;
@@ -45,21 +49,21 @@ QString OS_Icon1_fileName;
 QString OS_Icon2_fileName;
 QString OS_Icon3_fileName;
 QString OS_Icon4_fileName;
+QString user_home_path_q;
 QString refind_install_source;
 QString refind_GUI_timeout;
-QString user_home_path_q;
 QString Default_Background;
 QString Default_OS_Icon1;
 QString Default_OS_Icon2;
 QString Default_OS_Icon3;
 QString Default_OS_Icon4;
 QString settings_path;
-QString Default_Background_Suffix{"/.local/SteamDeck_rEFInd/GUI/background.png"};
-QString Default_OS_Icon1_Suffix{"/.local/SteamDeck_rEFInd/GUI/os_icon1.png"};
-QString Default_OS_Icon2_Suffix{"/.local/SteamDeck_rEFInd/GUI/os_icon2.png"};
-QString Default_OS_Icon3_Suffix{"/.local/SteamDeck_rEFInd/GUI/os_icon3.png"};
-QString Default_OS_Icon4_Suffix{"/.local/SteamDeck_rEFInd/GUI/os_icon4.png"};
-QString settings_path_suffix{"/.local/SteamDeck_rEFInd/GUI/rEFInd_GUI.ini"};
+QString Default_Background_Suffix{"/.local/rEFInd_GUI/GUI/background.png"};
+QString Default_OS_Icon1_Suffix{"/.local/rEFInd_GUI/GUI/os_icon1.png"};
+QString Default_OS_Icon2_Suffix{"/.local/rEFInd_GUI/GUI/os_icon2.png"};
+QString Default_OS_Icon3_Suffix{"/.local/rEFInd_GUI/GUI/os_icon3.png"};
+QString Default_OS_Icon4_Suffix{"/.local/rEFInd_GUI/GUI/os_icon4.png"};
+QString settings_path_suffix{"/.local/rEFInd_GUI/GUI/rEFInd_GUI.ini"};
 string Default_Background_str;
 string Default_OS_Icon1_str;
 string Default_OS_Icon2_str;
@@ -78,6 +82,10 @@ string Boot_Stanza_4;
 string Config_FW_BootNum;
 string default_OS_sel;
 string FW_BootNum_SteamOS;
+string install_config_path;
+string install_refind_apt_path;
+string install_refind_dnf_path;
+string install_refind_Sforge_path;
 string GUID_Label;
 string Linux_Select_str;
 string OS_Icon1_path;
@@ -88,11 +96,10 @@ string refind_background;
 string refind_enable_mouse = "";
 string refind_timeout = "5";
 string refind_USER = getlogin();
-string user_home_path_str;
 string MICRO_SD_GUID = "SD";
-string USB_GUID = "USB";
+string user_home_path_str;
 string Update_Num_str;
-string VERSION_str;
+string USB_GUID = "USB";
 string Windows_SD_GUID;
 string Windows_USB_GUID;
 
@@ -103,6 +110,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     QValidator *INT_validator = new QIntValidator(-1, 99, this);
     ui->TimeOut_lineEdit->setValidator(INT_validator);
+    ui->Background_lineEdit->setReadOnly(true);
+    ui->Boot_Option_01_Icon_lineEdit->setReadOnly(true);
+    ui->Boot_Option_02_Icon_lineEdit->setReadOnly(true);
+    ui->Boot_Option_03_Icon_lineEdit->setReadOnly(true);
+    ui->Boot_Option_04_Icon_lineEdit->setReadOnly(true);
     user_home_path << "/home/" << refind_USER;
     user_home_path_str = user_home_path.str();
     user_home_path_q = QString::fromStdString(user_home_path_str);
@@ -115,19 +127,15 @@ MainWindow::MainWindow(QWidget *parent)
     Default_OS_Icon1.reserve(user_home_path_q.length() + Default_OS_Icon1_Suffix.length());
     Default_OS_Icon1.append(user_home_path_q);
     Default_OS_Icon1.append(Default_OS_Icon1_Suffix);
-    Default_OS_Icon1_str = Default_OS_Icon1.toStdString();
     Default_OS_Icon2.reserve(user_home_path_q.length() + Default_OS_Icon2_Suffix.length());
     Default_OS_Icon2.append(user_home_path_q);
     Default_OS_Icon2.append(Default_OS_Icon2_Suffix);
-    Default_OS_Icon2_str = Default_OS_Icon2.toStdString();
     Default_OS_Icon3.reserve(user_home_path_q.length() + Default_OS_Icon3_Suffix.length());
     Default_OS_Icon3.append(user_home_path_q);
     Default_OS_Icon3.append(Default_OS_Icon3_Suffix);
-    Default_OS_Icon3_str = Default_OS_Icon3.toStdString();
     Default_OS_Icon4.reserve(user_home_path_q.length() + Default_OS_Icon4_Suffix.length());
     Default_OS_Icon4.append(user_home_path_q);
     Default_OS_Icon4.append(Default_OS_Icon4_Suffix);
-    Default_OS_Icon4_str = Default_OS_Icon4.toStdString();
     readSettings();
 }
 
@@ -140,7 +148,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_Background_pushButton_clicked()
 {
     QFileDialog Background_File_Dialog(this, tr("Select Background PNG"));
-    Background_fileName = Background_File_Dialog.getOpenFileName(this, tr("Select Background PNG"), "/home/deck", tr("Image (*.png)"));
+    Background_fileName = Background_File_Dialog.getOpenFileName(this, tr("Select Background PNG"), user_home_path_q, tr("Image (*.png)"));
     if (Background_fileName != "")
     {
         ui->Background_lineEdit->setText(Background_fileName);
@@ -150,7 +158,7 @@ void MainWindow::on_Background_pushButton_clicked()
 void MainWindow::on_Boot_Option_01_Icon_pushButton_clicked()
 {
     QFileDialog OS_Icon1_File_Dialog(this, tr("Select OS Icon 1 PNG"));
-    OS_Icon1_fileName = OS_Icon1_File_Dialog.getOpenFileName(this, tr("Select OS Icon 1 PNG"), "/home/deck", tr("Image (*.png)"));
+    OS_Icon1_fileName = OS_Icon1_File_Dialog.getOpenFileName(this, tr("Select OS Icon 1 PNG"), user_home_path_q, tr("Image (*.png)"));
     if (OS_Icon1_fileName != "")
     {
         ui->Boot_Option_01_Icon_lineEdit->setText(OS_Icon1_fileName);
@@ -160,7 +168,7 @@ void MainWindow::on_Boot_Option_01_Icon_pushButton_clicked()
 void MainWindow::on_Boot_Option_02_Icon_pushButton_clicked()
 {
     QFileDialog OS_Icon2_File_Dialog(this, tr("Select OS Icon 2 PNG"));
-    OS_Icon2_fileName = OS_Icon2_File_Dialog.getOpenFileName(this, tr("Select OS Icon 2 PNG"), "/home/deck", tr("Image (*.png)"));
+    OS_Icon2_fileName = OS_Icon2_File_Dialog.getOpenFileName(this, tr("Select OS Icon 2 PNG"), user_home_path_q, tr("Image (*.png)"));
     if (OS_Icon2_fileName != "")
     {
         ui->Boot_Option_02_Icon_lineEdit->setText(OS_Icon2_fileName);
@@ -170,7 +178,7 @@ void MainWindow::on_Boot_Option_02_Icon_pushButton_clicked()
 void MainWindow::on_Boot_Option_03_Icon_pushButton_clicked()
 {
     QFileDialog OS_Icon3_File_Dialog(this, tr("Select OS Icon 3 PNG"));
-    OS_Icon3_fileName = OS_Icon3_File_Dialog.getOpenFileName(this, tr("Select OS Icon 3 PNG"), "/home/deck", tr("Image (*.png)"));
+    OS_Icon3_fileName = OS_Icon3_File_Dialog.getOpenFileName(this, tr("Select OS Icon 3 PNG"), user_home_path_q, tr("Image (*.png)"));
     if (OS_Icon3_fileName != "")
     {
         ui->Boot_Option_03_Icon_lineEdit->setText(OS_Icon3_fileName);
@@ -180,7 +188,7 @@ void MainWindow::on_Boot_Option_03_Icon_pushButton_clicked()
 void MainWindow::on_Boot_Option_04_Icon_pushButton_clicked()
 {
     QFileDialog OS_Icon4_File_Dialog(this, tr("Select OS Icon 4 PNG"));
-    OS_Icon4_fileName = OS_Icon4_File_Dialog.getOpenFileName(this, tr("Select OS Icon 4 PNG"), "/home/deck", tr("Image (*.png)"));
+    OS_Icon4_fileName = OS_Icon4_File_Dialog.getOpenFileName(this, tr("Select OS Icon 4 PNG"), user_home_path_q, tr("Image (*.png)"));
     if (OS_Icon4_fileName != "")
     {
         ui->Boot_Option_04_Icon_lineEdit->setText(OS_Icon4_fileName);
@@ -189,14 +197,22 @@ void MainWindow::on_Boot_Option_04_Icon_pushButton_clicked()
 
 void MainWindow::on_Install_rEFInd_clicked()
 {
+    install_refind_apt_path_o.str("");
+    install_refind_Sforge_path_o.str("");
+    install_refind_apt_path.clear();
+    install_refind_Sforge_path.clear();
     refind_install_source = ui->Install_Source_comboBox->currentText();
-    if(refind_install_source == "Pacman")
+    if(refind_install_source == "Package Mgr")
     {
-        system("/usr/bin/pacman_install.sh");
+        install_refind_apt_path_o << user_home_path_str << "/.local/rEFInd_GUI/refind_install_package_mgr.sh";
+        install_refind_apt_path = install_refind_apt_path_o.str();
+        system(install_refind_apt_path.c_str());
     }
     if(refind_install_source == "Sourceforge")
     {
-        system("/usr/bin/sourceforge_install.sh");
+        install_refind_Sforge_path_o << user_home_path_str << "/.local/rEFInd_GUI/refind_install_Sourceforge.sh";
+        install_refind_Sforge_path = install_refind_apt_path_o.str();
+        system(install_refind_Sforge_path.c_str());
     }
 }
 
@@ -213,7 +229,7 @@ void MainWindow::on_Create_Config_clicked()
     OS_Icon3_path.clear();
     OS_Icon4_path.clear();
     ostringstream refind_temp_path;
-    refind_temp_path << "/home/" << refind_USER << "/.local/SteamDeck_rEFInd/GUI/refind.conf";
+    refind_temp_path << "/home/" << refind_USER << "/.local/rEFInd_GUI/GUI/refind.conf";
     string refind_conf_path = refind_temp_path.str();
     ofstream refind_conf(refind_conf_path);
     cout << refind_conf.is_open() << endl;
@@ -260,47 +276,45 @@ void MainWindow::on_Create_Config_clicked()
     Boot_Stanza_4 = CreateBootStanza(Boot_Option_4, "4", Firmware_BootNum_bool);
     refind_conf << Boot_Stanza_4;
     refind_conf.close();
-    // Double checksing for valid PNG files
-    checkPNGFile(ui->Background_lineEdit);
-    checkPNGFile(ui->Boot_Option_01_Icon_lineEdit);
-    checkPNGFile(ui->Boot_Option_02_Icon_lineEdit);
-    checkPNGFile(ui->Boot_Option_03_Icon_lineEdit);
-    checkPNGFile(ui->Boot_Option_04_Icon_lineEdit);
     Background = ui->Background_lineEdit->text();
     if((Background != "") && (Background != Default_Background)){
         Background_path = Background.toStdString();
-        string cmd = string("cp -f '") + Background_path + "' '" + Default_Background_str + "'";
+        string cmd = string("yes | cp '") + Background_path + "' '" + Default_Background_str + "'";
         system(cmd.c_str());
     }
     OS_Icon1 = ui->Boot_Option_01_Icon_lineEdit->text();
     if((OS_Icon1 != "" ) && (OS_Icon1 != Default_OS_Icon1)){
         OS_Icon1_path = OS_Icon1.toStdString();
-        string cmd1 = string("cp -f '") + OS_Icon1_path + "' '" + Default_OS_Icon1_str + "'";
+        string cmd1 = string("yes | cp '") + OS_Icon1_path + "' '" + Default_OS_Icon1_str + "'";
         system(cmd1.c_str());
         }
     OS_Icon2 = ui->Boot_Option_02_Icon_lineEdit->text();
     if((OS_Icon2 != "" ) && (OS_Icon2 != Default_OS_Icon2)){
         OS_Icon2_path = OS_Icon2.toStdString();
-        string cmd2 = string("cp -f '") + OS_Icon2_path + "' '" + Default_OS_Icon2_str + "'";
+        string cmd2 = string("yes | cp '") + OS_Icon2_path + "' '" + Default_OS_Icon2_str + "'";
         system(cmd2.c_str());
         }
     OS_Icon3 = ui->Boot_Option_03_Icon_lineEdit->text();
     if((OS_Icon3 != "" ) && (OS_Icon3 != Default_OS_Icon3)){
         OS_Icon3_path = OS_Icon3.toStdString();
-        string cmd3 = string("cp -f '") + OS_Icon3_path + "' '" + Default_OS_Icon3_str + "'";
+        string cmd3 = string("yes | cp '") + OS_Icon3_path + "' '" + Default_OS_Icon3_str + "'";
         system(cmd3.c_str());
         }
     OS_Icon4 = ui->Boot_Option_04_Icon_lineEdit->text();
     if((OS_Icon4 != "" ) && (OS_Icon4 != Default_OS_Icon4)){
         OS_Icon4_path = OS_Icon4.toStdString();
-        string cmd4 = string("cp -f '") + OS_Icon4_path + "' '" + Default_OS_Icon4_str + "'";
+        string cmd4 = string("yes | cp '") + OS_Icon4_path + "' '" + Default_OS_Icon4_str + "'";
         system(cmd4.c_str());
         }
 }
 
 void MainWindow::on_Install_Config_clicked()
 {
-    system("/usr/bin/install_config_from_GUI.sh");
+    install_config_path_o.str("");
+    install_config_path.clear();
+    install_config_path_o << "sudo " << user_home_path_str << "/.local/rEFInd_GUI/install_config_from_GUI.sh";
+    install_config_path = install_config_path_o.str();
+    system(install_config_path.c_str());
 }
 
 string MainWindow::Get_FW_BootNum() {
@@ -372,7 +386,7 @@ string MainWindow::CreateBootStanza(QString &BootOption, const char *BootNum, bo
     }
     if(BootOption == "Windows (USB)") {
         Windows_USB_GUID = getPartitionGUIDLabel(USB_GUID);
-        Boot_Stanza_GUI.append("\nmenuentry \"Windows USB\" {\n");
+        Boot_Stanza_GUI.append("\nmenuentry \"Windows Micro SD\" {\n");
         Boot_Stanza_GUI.append("\ticon /EFI/refind/os_icon");
         Boot_Stanza_GUI.append(BootNum);
         Boot_Stanza_GUI.append(".png\n");
@@ -404,24 +418,6 @@ string MainWindow::CreateBootStanza(QString &BootOption, const char *BootNum, bo
             Boot_Stanza_GUI.append("\tgraphics on\n}\n");
             return Boot_Stanza_GUI;
         }
-        if(Linux_Select_str == "Arch - Systemd") {
-            Boot_Stanza_GUI.append("\nmenuentry \"Arch\" {\n");
-            Boot_Stanza_GUI.append("\ticon /EFI/refind/os_icon");
-            Boot_Stanza_GUI.append(BootNum);
-            Boot_Stanza_GUI.append(".png\n");
-            Boot_Stanza_GUI.append("\tloader /EFI/systemd/systemd-bootx64.efi\n");
-            Boot_Stanza_GUI.append("\tgraphics on\n}\n");
-            return Boot_Stanza_GUI;
-        }
-        if(Linux_Select_str == "Bazzite") {
-            Boot_Stanza_GUI.append("\nmenuentry \"Bazzite\" {\n");
-            Boot_Stanza_GUI.append("\ticon /EFI/refind/os_icon");
-            Boot_Stanza_GUI.append(BootNum);
-            Boot_Stanza_GUI.append(".png\n");
-            Boot_Stanza_GUI.append("\tloader /EFI/fedora/shimx64.efi\n");
-            Boot_Stanza_GUI.append("\tgraphics on\n}\n");
-            return Boot_Stanza_GUI;
-            }
         if(Linux_Select_str == "CentOS") {
             Boot_Stanza_GUI.append("\nmenuentry \"CentOS\" {\n");
             Boot_Stanza_GUI.append("\ticon /EFI/refind/os_icon");
@@ -512,7 +508,7 @@ string MainWindow::CreateBootStanza(QString &BootOption, const char *BootNum, bo
             Boot_Stanza_GUI.append("\tloader /EFI/fedora/shimx64.efi\n");
             Boot_Stanza_GUI.append("\tgraphics on\n}\n");
             return Boot_Stanza_GUI;
-            }
+        }
         if(Linux_Select_str == "openSUSE") {
             Boot_Stanza_GUI.append("\nmenuentry \"openSUSE\" {\n");
             Boot_Stanza_GUI.append("\ticon /EFI/refind/os_icon");
@@ -603,10 +599,10 @@ string MainWindow::getPartitionGUIDLabel(string &GUID_Source){
     char GUID_buff[1024];
     GUID_Label.clear();
     if(GUID_Source == "USB"){
-        GUID_process = popen("lsblk -f | grep sda1 | awk '{print $5}' | tr [:lower:] [:upper:]", "r");
+        GUID_process = popen("hwinfo --block | grep /dev/sda1 | grep -o 'by-partuuid.*' | cut -f2 -d'/' | cut -f1 -d ','", "r");
     }
     if(GUID_Source == "SD"){
-        GUID_process = popen("lsblk -f | grep mmcblk0p1 | awk '{print $5}' | tr [:lower:] [:upper:]", "r");
+        GUID_process = popen("hwinfo --block | grep /dev/mmcblk0p1 | grep -o 'by-partuuid.*' | cut -f2 -d'/' | cut -f1 -d ','", "r");
     }
     if (GUID_process != NULL) {
         while (fgets(GUID_buff, sizeof(GUID_buff), GUID_process)) {
@@ -620,7 +616,7 @@ string MainWindow::getPartitionGUIDLabel(string &GUID_Source){
 
 void MainWindow::readSettings()
 {
-    QSettings settings("/home/deck/.local/SteamDeck_rEFInd/GUI/rEFInd_GUI.ini", QSettings::NativeFormat);
+    QSettings settings(settings_path, QSettings::NativeFormat);
     settings.beginGroup("CheckBoxes");
         bool temp_Last_OS_bool = settings.value("LastOSCheckBox").toBool();
         bool FW_bool = settings.value("FW_bootNum_CheckBox").toBool();
@@ -656,7 +652,7 @@ void MainWindow::readSettings()
 
 void MainWindow::writeSettings()
 {
-    QSettings settings("/home/deck/.local/SteamDeck_rEFInd/GUI/rEFInd_GUI.ini", QSettings::NativeFormat);
+    QSettings settings(settings_path, QSettings::NativeFormat);
     settings.beginGroup("ComboBoxes");
         settings.setValue("DefaultBootComboBox", ui->Default_Boot_comboBox->currentIndex());
         settings.setValue("BootComboBox01", ui->Boot_Option_01_comboBox->currentIndex());
@@ -682,11 +678,11 @@ void MainWindow::on_About_pushButton_clicked()
     QPushButton* updateButton = new QPushButton("Check For Update");
     connect(updateButton, &QPushButton::clicked, this, &MainWindow::on_updateButton_Clicked);
     AboutBox.setTextFormat(Qt::RichText);
-    AboutBox.setText("<p align='center'><a href='https://github.com/jlobue10/SteamDeck_rEFInd'>rEFInd Customization GUI v1.3.0</a><br><br>"
+    AboutBox.setText("<p align='center'>rEFInd Customization GUI v1.0.0<br><br>"
                      "Original GUI Creator: "
                      "<a href='https://github.com/jlobue10'>jlobue10</a><br><br>"
                      "Special Thanks to Deck Wizard for testing and QA"
-                     "<br><br><a href='https://www.youtube.com/watch?v=zEpcBWX9K_o'>Deck Wizard Dual Boot Tutorial</a><br></p>");
+                     "<br><br><a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'>Deck Wizard Dual Boot Tutorial</a><br></p>");
     AboutBox.setStandardButtons(QMessageBox::Ok);
     AboutBox.addButton(updateButton, QMessageBox::ActionRole);
     AboutBox.exec();
@@ -709,7 +705,6 @@ void MainWindow::on_Background_lineEdit_editingFinished()
    checkPNGFile(ui->Background_lineEdit);
 }
 
-
 void MainWindow::on_Boot_Option_01_Icon_lineEdit_editingFinished()
 {
     checkPNGFile(ui->Boot_Option_01_Icon_lineEdit);
@@ -730,20 +725,6 @@ void MainWindow::on_Boot_Option_04_Icon_lineEdit_editingFinished()
     checkPNGFile(ui->Boot_Option_04_Icon_lineEdit);
 }
 
-void MainWindow::on_Enable_sysd_pushButton_clicked()
-{
-    string sysd_on = string("xterm -e \"sudo systemctl enable --now bootnext-refind.service &&");
-           sysd_on.append(" sudo systemctl status bootnext-refind.service; $SHELL\"");
-    system(sysd_on.c_str());
-}
-
-void MainWindow::on_Disable_sysd_pushButton_clicked()
-{
-    string sysd_off = string("xterm -e \"sudo systemctl disable --now bootnext-refind.service &&");
-           sysd_off.append(" sudo efibootmgr -N && sudo systemctl status bootnext-refind.service; $SHELL\"");
-    system(sysd_off.c_str());
-}
-
 void MainWindow::on_updateButton_Clicked()
 {
     QMessageBox UpdateBox;
@@ -751,7 +732,7 @@ void MainWindow::on_updateButton_Clicked()
     FILE *Update_process;
     char Update_buff[1024];
     Update_Num_str.clear();
-    Update_process = popen("echo $(curl https://raw.githubusercontent.com/jlobue10/SteamDeck_rEFInd/main/VERSION) | sed 's/\\./ /g' | sed 's/\\s\\+//g'", "r");
+    Update_process = popen("echo $(curl https://raw.githubusercontent.com/jlobue10/rEFInd_GUI/main/VERSION) | sed 's/\\./ /g' | sed 's/\\s\\+//g'", "r");
     if (Update_process != NULL) {
         while (fgets(Update_buff, sizeof(Update_buff), Update_process)) {
             printf("%s", Update_buff);
@@ -762,7 +743,7 @@ void MainWindow::on_updateButton_Clicked()
     Update_Num = stoi(Update_Num_str);
     if(Update_Num > VERSION) {
         UpdateBox.setText("<p align='center'>An update is available "
-                         "<a href='https://github.com/jlobue10/SteamDeck_rEFInd/releases'>here</a><br><br></p>");
+                         "<a href='https://github.com/jlobue10/rEFInd_GUI/releases'>here</a><br><br></p>");
     } else {
         UpdateBox.setText("<p align='center'>No update found. You are using the latest version.<br><br></p>");
     }
@@ -777,6 +758,7 @@ void MainWindow::on_Rand_BG_On_pushButton_clicked()
            rand_bg_on.append(" sudo systemctl status rEFInd_bg_randomizer.service; $SHELL\"");
     system(rand_bg_on.c_str());
 }
+
 
 void MainWindow::on_Rand_BG_Off_pushButton_clicked()
 {
