@@ -108,11 +108,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     QValidator *INT_validator = new QIntValidator(-1, 99, this);
     ui->TimeOut_lineEdit->setValidator(INT_validator);
-    ui->Background_lineEdit->setReadOnly(true);
-    ui->Boot_Option_01_Icon_lineEdit->setReadOnly(true);
-    ui->Boot_Option_02_Icon_lineEdit->setReadOnly(true);
-    ui->Boot_Option_03_Icon_lineEdit->setReadOnly(true);
-    ui->Boot_Option_04_Icon_lineEdit->setReadOnly(true);
     user_home_path << "/home/" << refind_USER;
     user_home_path_str = user_home_path.str();
     user_home_path_q = QString::fromStdString(user_home_path_str);
@@ -278,6 +273,12 @@ void MainWindow::on_Create_Config_clicked()
     Boot_Stanza_4 = CreateBootStanza(Boot_Option_4, "4", Firmware_BootNum_bool);
     refind_conf << Boot_Stanza_4;
     refind_conf.close();
+    //Double checking for valid PNG files
+    checkPNGFile(ui->Background_lineEdit);
+    checkPNGFile(ui->Boot_Option_01_Icon_lineEdit);
+    checkPNGFile(ui->Boot_Option_02_Icon_lineEdit);
+    checkPNGFile(ui->Boot_Option_03_Icon_lineEdit);
+    checkPNGFile(ui->Boot_Option_04_Icon_lineEdit);
     Background = ui->Background_lineEdit->text();
     if((Background != "") && (Background != Default_Background)){
         Background_path = Background.toStdString();
@@ -688,7 +689,7 @@ void MainWindow::on_About_pushButton_clicked()
     AboutBox.setText("<p align='center'>rEFInd Customization GUI v1.0.0<br><br>"
                      "Original GUI Creator: "
                      "<a href='https://github.com/jlobue10'>jlobue10</a><br><br>"
-                     "Special Thanks to Deck Wizard for testing the original GUI"
+                     "Special Thanks to Deck Wizard for testing and QA"
                      "<br><br><a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'>Deck Wizard Dual Boot Tutorial</a><br></p>");
     AboutBox.setStandardButtons(QMessageBox::Ok);
     AboutBox.addButton(updateButton, QMessageBox::ActionRole);
@@ -701,8 +702,7 @@ void MainWindow::checkPNGFile(QLineEdit *PNGlineEdit) {
     if (fileInfo.exists() && fileInfo.isFile() && fileInfo.suffix() == "png") {
         // Do nothing to text, keep valid PNG entry
     } else {
-        // The file does not exist or is not a .png file.
-        // Clear the QLineEdit.
+        // The file does not exist or is not a .png file. Clear the QLineEdit.
         PNGlineEdit->clear();
     }
 }
@@ -760,8 +760,7 @@ void MainWindow::on_updateButton_Clicked()
 
 void MainWindow::on_Rand_BG_On_pushButton_clicked()
 {
-    string rand_bg_on = string("xterm -e \"sudo cp $HOME/.local/rEFInd_GUI/rEFInd_bg_randomizer.service /etc/systemd/system/rEFInd_bg_randomizer.service &&");
-           rand_bg_on.append(" sudo systemctl enable --now rEFInd_bg_randomizer.service &&");
+    string rand_bg_on = string("xterm -e \"sudo systemctl enable --now rEFInd_bg_randomizer.service &&");
            rand_bg_on.append(" sudo systemctl status rEFInd_bg_randomizer.service; $SHELL\"");
     system(rand_bg_on.c_str());
 }
