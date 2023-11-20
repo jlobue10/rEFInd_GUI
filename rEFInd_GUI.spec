@@ -14,7 +14,7 @@ Source3:        rEFInd_bg_randomizer.service
 Source4:        install_config_from_GUI
 Source5:        install_config_from_GUI.sh
 
-BuildRequires:  cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel
+BuildRequires:  cmake gcc-c++ qt5-qtbase-devel qt5-qttools-devel
 Requires:       mokutil sbsigntools xterm zenity
 Provides:       rEFInd_GUI
 Conflicts:      rEFInd_GUI
