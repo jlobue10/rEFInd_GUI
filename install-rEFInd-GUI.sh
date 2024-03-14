@@ -21,10 +21,13 @@ FEDORA_BASE=$?
 cat /etc/nobara-release
 NOBARA=$?
 
+cat /etc/bazzite/image_name
+BAZZITE=$?
+
 if [ $FEDORA_BASE == 0 ]; then
 	echo -e '\nFedora based installation starting.\n'
  	if [ $NOBARA == 0 ]; then
-		sudo dnf install -y cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm --allowerasing
+		sudo dnf install -y cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm
   	else
    		sudo dnf install -y cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm
      	fi
@@ -50,20 +53,15 @@ fi
 which pacman 2>/dev/null
 ARCH_BASE=$?
 
-if [ $ARCH_BASE == 0 ]; then
-	echo -e '\nArch based installation starting.\n'
-	#sudo pacman init and then pacman install build deps
-fi
-
 if [ ! -f /usr/bin/rEFInd_GUI ]; then
 	echo -e "\nGUI compile failed. Please try again after ensuring that your cloned repo is up to date and your pacman config is normal.\n"
 	exit 1
 fi
 
-if [ $NOBARA == 0 ]; then
-	#fix packaging after compile (if necessary)
-	sudo dnf install gstreamer1-plugins-good-qt6 --allowerasing
-fi
+# if [ $NOBARA == 0 ]; then
+#	#fix packaging after compile (if necessary)
+#	sudo dnf install gstreamer1-plugins-good-qt6 --allowerasing
+# fi
 
 cp /usr/share/applications/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
 chmod +x $HOME/Desktop/refind_GUI.desktop 2>/dev/null
