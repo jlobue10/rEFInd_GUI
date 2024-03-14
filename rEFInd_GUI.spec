@@ -24,14 +24,9 @@ rEFInd_GUI
 
 %prep
 rm -rf %{_builddir}/rEFInd_GUI
+cd %{_builddir}
+git clone %{url}
 cd $RPM_SOURCE_DIR
-rm -f rEFInd_GUI-main.zip
-wget https://github.com/jlobue10/rEFInd_GUI/archive/refs/heads/main.zip
-mv main.zip rEFInd_GUI-main.zip
-unzip $RPM_SOURCE_DIR/rEFInd_GUI-main.zip -d %{_builddir}
-mkdir -p %{_builddir}/rEFInd_GUI
-cp -rf %{_builddir}/rEFInd_GUI-main/* %{_builddir}/rEFInd_GUI
-rm -rf %{_builddir}/rEFInd_GUI-main
 cp -f %{_builddir}/rEFInd_GUI/{rEFInd_GUI.desktop,rEFInd_bg_randomizer.sh,rEFInd_bg_randomizer.service,install_config_from_GUI,install_config_from_GUI.sh} $RPM_SOURCE_DIR
 
 %build
