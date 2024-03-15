@@ -24,7 +24,7 @@ NOBARA=$?
 cat /etc/bazzite/image_name
 BAZZITE=$?
 
-if [ $FEDORA_BASE == 0 ]; then
+if [ $FEDORA_BASE == 0 ] && [ $BAZZITE != 0 ]; then
 	echo -e '\nFedora based installation starting.\n'
  	if [ $NOBARA == 0 ]; then
 		sudo dnf install -y cmake hwinfo gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm
@@ -41,6 +41,19 @@ if [ $FEDORA_BASE == 0 ]; then
 	fi
 	sudo dnf install -y $HOME/rpmbuild/RPMS/x86_64/rEFInd_GUI*.rpm
 fi
+
+if [ $BAZZITE == 0 ]; then
+	echo -e '\nBazzite based installation starting.\n'
+ 	rpm-ostree status | grep xterm
+  	XTERM_STATUS=$?
+   	if [ $XTERM_STATUS != 0]; then
+		sudo rpm-ostree install xterm
+    	fi
+ 	cd $HOME/Downloads
+  	rm -f rEFInd_GUI*.rpm
+  	wget $(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*\.rpm" | grep -v "\.src\.rpm" | cut -d : -f 2,3 | tr -d \"\ )
+   	sudo rpm-ostree install ./rEFInd_GUI*.rpm
+fi   
 
 which apt 2>/dev/null
 UBUNTU_BASE=$?
