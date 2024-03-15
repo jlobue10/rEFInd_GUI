@@ -66,7 +66,7 @@ fi
 which pacman 2>/dev/null
 ARCH_BASE=$?
 
-if [ ! -f /usr/bin/rEFInd_GUI ]; then
+if [ ! -f /usr/bin/rEFInd_GUI ] && [ $BAZZITE != 0 ]; then
 	echo -e "\nGUI compile failed. Please try again after ensuring that your cloned repo is up to date and your pacman config is normal.\n"
 	exit 1
 fi
@@ -75,6 +75,10 @@ fi
 #	#fix packaging after compile (if necessary)
 #	sudo dnf install gstreamer1-plugins-good-qt6 --allowerasing
 # fi
+
+if [ $BAZZITE == 0 ]; then
+	systemctl reboot
+fi
 
 cp /usr/share/applications/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
 chmod +x $HOME/Desktop/refind_GUI.desktop 2>/dev/null
