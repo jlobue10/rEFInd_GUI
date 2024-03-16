@@ -19,6 +19,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    string execute_check(const char* cmd);
+    string Get_EFI_Label();
     string Get_FW_BootNum();
     string CreateBootStanza(QString &BootOption, const char *BootNum, bool FW_BootNum);
     string getDefaultBoot(QString &DefaultBootOption, bool Last_OS, bool FW_BootNum_boot_bool, QString &Boot_Opt1, QString &Boot_Opt2, QString &Boot_Opt3, QString &Boot_Opt4);
