@@ -100,6 +100,6 @@ chmod +x $HOME/Desktop/refind_GUI.desktop
 
 sudo chmod +x /etc/rEFInd/{install_config_from_GUI.sh,rEFInd_bg_randomizer.sh,rEFInd_GUI.desktop}
 
-#if [ $BAZZITE == 0 ]; then
-#	systemctl reboot
-#fi
+if [ $BAZZITE == 0 ]; then
+	systemctl reboot
+fi
