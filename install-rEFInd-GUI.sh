@@ -86,13 +86,13 @@ sed -i "s@USER@$USER@g" $CURRENT_WD/rEFInd_bg_randomizer.sh
 sudo mkdir -p /etc/rEFInd
 sudo cp -f $CURRENT_WD/install_config_from_GUI /etc/sudoers.d/install_config_from_GUI
 sudo cp -f $CURRENT_WD/install_config_from_GUI.sh /etc/rEFInd/install_config_from_GUI.sh
-sudo cp -f $CURRENT_WD/rEFInd_GUI.desktop /usr/share/applications/rEFInd_GUI.desktop
 sudo cp -f $CURRENT_WD/rEFInd_bg_randomizer.sh /etc/rEFInd/rEFInd_bg_randomizer.sh
 
 if [ $BAZZITE == 0 ]; then
 	sudo cp -f $CURRENT_WD/rEFInd_GUI.desktop /etc/rEFInd/rEFInd_GUI.desktop
  	cp $CURRENT_WD/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
 else
+	sudo cp -f $CURRENT_WD/rEFInd_GUI.desktop /usr/share/applications/rEFInd_GUI.desktop
   	cp /usr/share/applications/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
 fi
 
