@@ -8,14 +8,14 @@ git clone https://github.com/jlobue10/rEFInd_GUI
 cd rEFInd_GUI
 CURRENT_WD=$(pwd)
 
-mkdir -p $HOME/.local/rEFInd_GUI 2>/dev/null
-cp -rf $CURRENT_WD/GUI/ $HOME/.local/rEFInd_GUI 2>/dev/null
-cp -rf $CURRENT_WD/icons/ $HOME/.local/rEFInd_GUI 2>/dev/null
-cp -rf $CURRENT_WD/backgrounds/ $HOME/.local/rEFInd_GUI 2>/dev/null
-cp -f $CURRENT_WD/{refind_install_package_mgr.sh,refind_install_Sourceforge.sh} $HOME/.local/rEFInd_GUI 2>/dev/null
-cp -f $CURRENT_WD/refind-GUI.conf $HOME/.local/rEFInd_GUI/GUI/refind.conf 2>/dev/null
+mkdir -p $HOME/.local/rEFInd_GUI
+cp -rf $CURRENT_WD/GUI/ $HOME/.local/rEFInd_GUI
+cp -rf $CURRENT_WD/icons/ $HOME/.local/rEFInd_GUI
+cp -rf $CURRENT_WD/backgrounds/ $HOME/.local/rEFInd_GUI
+cp -f $CURRENT_WD/{refind_install_package_mgr.sh,refind_install_Sourceforge.sh} $HOME/.local/rEFInd_GUI
+cp -f $CURRENT_WD/refind-GUI.conf $HOME/.local/rEFInd_GUI/GUI/refind.conf
 
-which dnf 2>/dev/null
+which dnf
 FEDORA_BASE=$?
 
 cat /etc/nobara-release
@@ -75,6 +75,18 @@ fi
 #	#fix packaging after compile (if necessary)
 #	sudo dnf install gstreamer1-plugins-good-qt6 --allowerasing
 # fi
+
+sed -i "s@USER@$USER@g" $CURRENT_WD/install_config_from_GUI
+sed -i "s@HOME@/home/$USER@g" $CURRENT_WD/rEFInd_GUI.desktop
+sed -i "s@HOME@/home/$USER@g" $CURRENT_WD/install_config_from_GUI.sh
+sed -i "s@USER@$USER@g" $CURRENT_WD/rEFInd_bg_randomizer.sh
+
+sudo cp -f $CURRENT_WD/install_config_from_GUI /etc/sudoers.d/install_config_from_GUI
+sudo cp -f $CURRENT_WD/install_config_from_GUI.sh /usr/bin/install_config_from_GUI.sh
+sudo cp -f $CURRENT_WD/rEFInd_GUI.desktop /usr/share/applications/rEFInd_GUI.desktop
+sudo cp -f $CURRENT_WD/rEFInd_bg_randomizer.sh /usr/bin/rEFInd_bg_randomizer.sh
+
+sudo chmod 777 /usr/bin/{install_config_from_GUI.sh,rEFInd_bg_randomizer.sh}
 
 if [ $BAZZITE == 0 ]; then
 	systemctl reboot
