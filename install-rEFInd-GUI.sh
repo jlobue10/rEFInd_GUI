@@ -15,7 +15,7 @@ cp -rf $CURRENT_WD/backgrounds/ $HOME/.local/rEFInd_GUI
 cp -f $CURRENT_WD/{refind_install_package_mgr.sh,refind_install_Sourceforge.sh} $HOME/.local/rEFInd_GUI
 cp -f $CURRENT_WD/refind-GUI.conf $HOME/.local/rEFInd_GUI/GUI/refind.conf
 
-chmod 777 $HOME/.local/rEFInd_GUI/{refind_install_package_mgr.sh,refind_install_Sourceforge.sh}
+chmod +x $HOME/.local/rEFInd_GUI/{refind_install_package_mgr.sh,refind_install_Sourceforge.sh}
 
 which dnf
 FEDORA_BASE=$?
@@ -91,13 +91,15 @@ sudo cp -f $CURRENT_WD/rEFInd_bg_randomizer.sh /etc/rEFInd/rEFInd_bg_randomizer.
 
 if [ $BAZZITE == 0 ]; then
 	sudo cp -f $CURRENT_WD/rEFInd_GUI.desktop /etc/rEFInd/rEFInd_GUI.desktop
+ 	cp $CURRENT_WD/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
+else
+  	cp /usr/share/applications/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
 fi
 
-sudo chmod 777 /etc/rEFInd/{install_config_from_GUI.sh,rEFInd_bg_randomizer.sh,rEFInd_GUI.desktop}
+chmod +x $HOME/Desktop/refind_GUI.desktop
+
+sudo chmod +x /etc/rEFInd/{install_config_from_GUI.sh,rEFInd_bg_randomizer.sh,rEFInd_GUI.desktop}
 
 #if [ $BAZZITE == 0 ]; then
 #	systemctl reboot
 #fi
-
-cp /usr/share/applications/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
-chmod +x $HOME/Desktop/refind_GUI.desktop
