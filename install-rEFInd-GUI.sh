@@ -91,11 +91,11 @@ if [ $BAZZITE == 0 ]; then
 	sudo cp -f $CURRENT_WD/rEFInd_GUI.desktop /etc/rEFInd/rEFInd_GUI.desktop
 fi
 
-sudo chmod 777 /usr/bin/{install_config_from_GUI.sh,rEFInd_bg_randomizer.sh}
+sudo chmod 777 /etc/rEFInd/{install_config_from_GUI.sh,rEFInd_bg_randomizer.sh,rEFInd_GUI.desktop}
 
-if [ $BAZZITE == 0 ]; then
-	systemctl reboot
-fi
+#if [ $BAZZITE == 0 ]; then
+#	systemctl reboot
+#fi
 
 cp /usr/share/applications/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
 chmod +x $HOME/Desktop/refind_GUI.desktop 2>/dev/null
