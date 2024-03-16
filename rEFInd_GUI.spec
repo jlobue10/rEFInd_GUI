@@ -1,18 +1,14 @@
 %global _name   rEFInd_GUI
 
 Name:           rEFInd_GUI
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
 License:        GPL3
 URL:            https://github.com/jlobue10/rEFInd_GUI
-Source0:        rEFInd_GUI-main.zip
-Source1:        rEFInd_GUI.desktop
-Source2:        rEFInd_bg_randomizer.sh
-Source3:        rEFInd_bg_randomizer.service
-Source4:        install_config_from_GUI
-Source5:        install_config_from_GUI.sh
+Source0:        rEFInd_GUI.desktop
+Source1:        rEFInd_bg_randomizer.service
 
 BuildRequires:  cmake gcc-c++ qt5-qtbase-devel qt5-qttools-devel
 Requires:       mokutil sbsigntools xterm zenity
@@ -27,7 +23,7 @@ rm -rf %{_builddir}/rEFInd_GUI
 cd %{_builddir}
 git clone %{url}
 cd $RPM_SOURCE_DIR
-cp -f %{_builddir}/rEFInd_GUI/{rEFInd_GUI.desktop,rEFInd_bg_randomizer.sh,rEFInd_bg_randomizer.service,install_config_from_GUI,install_config_from_GUI.sh} $RPM_SOURCE_DIR
+cp -f %{_builddir}/rEFInd_GUI/{rEFInd_GUI.desktop,rEFInd_bg_randomizer.service} $RPM_SOURCE_DIR
 
 %build
 cd %{_builddir}/rEFInd_GUI/GUI/src
@@ -42,28 +38,18 @@ cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI %{buildroot}/usr/bin/rEFInd_
 
 mkdir -p %{buildroot}/etc/systemd/system
 mkdir -p %{buildroot}/usr/share/applications
-mkdir -p %{buildroot}/etc/sudoers.d
 
-install -m 777 %{SOURCE1} %{buildroot}/usr/share/applications
-install -m 777 %{SOURCE2} %{buildroot}/usr/bin
-install -m 644 %{SOURCE3} %{buildroot}/etc/systemd/system
-install -m 644 %{SOURCE4} %{buildroot}/etc/sudoers.d
-install -m 777 %{SOURCE5} %{buildroot}/usr/bin
-
-%post
-sed -i "s@\$USER@${SUDO_USER}@g" /etc/sudoers.d/install_config_from_GUI
-sed -i "s@\$HOME@/home/${SUDO_USER}@g" /usr/share/applications/rEFInd_GUI.desktop
-sed -i "s@\$HOME@/home/${SUDO_USER}@g" /usr/bin/install_config_from_GUI.sh
-sed -i "s@\$USER@${SUDO_USER}@g" /usr/bin/rEFInd_bg_randomizer.sh
+install -m 777 %{SOURCE0} %{buildroot}/usr/share/applications
+install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 
 %files
 /etc/systemd/system/rEFInd_bg_randomizer.service
-/usr/bin/rEFInd_bg_randomizer.sh
 /usr/bin/rEFInd_GUI
 /usr/share/applications/rEFInd_GUI.desktop
-/etc/sudoers.d/install_config_from_GUI
-/usr/bin/install_config_from_GUI.sh
 
 %changelog
+* Fri Mar 15 2024 Jon LoBue <jlobue10@gmail.com> [1.1.0-1]
+- Bazzite friendly changes
+
 * Wed Nov 15 2023 Jon LoBue <jlobue10@gmail.com> [1.0.0-1]
 - Initial package
