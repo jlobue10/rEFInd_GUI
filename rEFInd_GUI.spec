@@ -1,7 +1,7 @@
 %global _name   rEFInd_GUI
 
 Name:           rEFInd_GUI
-Version:        1.1.0
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -33,8 +33,8 @@ cmake ..
 make
 
 %install
-mkdir -p %{buildroot}/usr/bin
-cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI %{buildroot}/usr/bin/rEFInd_GUI
+mkdir -p %{buildroot}/etc/rEFInd
+cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI %{buildroot}/etc/rEFInd/rEFInd_GUI
 
 mkdir -p %{buildroot}/etc/systemd/system
 mkdir -p %{buildroot}/usr/share/applications
@@ -44,10 +44,13 @@ install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 
 %files
 /etc/systemd/system/rEFInd_bg_randomizer.service
-/usr/bin/rEFInd_GUI
+/etc/rEFInd/rEFInd_GUI
 /usr/share/applications/rEFInd_GUI.desktop
 
 %changelog
+* Sat Mar 16 2024 Jon LoBue <jlobue10@gmail.com> [1.2.0-1]
+- More Bazzite friendly changes
+
 * Fri Mar 15 2024 Jon LoBue <jlobue10@gmail.com> [1.1.0-1]
 - Bazzite friendly changes
 
