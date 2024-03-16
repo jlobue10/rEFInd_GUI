@@ -103,7 +103,6 @@ string MICRO_SD_GUID = "SD";
 string user_home_path_str;
 string Update_Num_str;
 string USB_GUID = "USB";
-string Windows_EFI_Label;
 string Windows_SD_GUID;
 string Windows_USB_GUID;
 
@@ -338,7 +337,7 @@ string MainWindow::execute_check(const char* cmd) {
     return result;
 }
 
-string MainWindow::Get_EFI_Label() {
+void MainWindow::Get_EFI_Label() {
     EFI_Label.clear();
     checkResult.clear();
     checkResult = execute_check(checkMountCmd.c_str());
@@ -347,9 +346,9 @@ string MainWindow::Get_EFI_Label() {
     }
     if (checkResult == "1") {
         EFI_Label = execute_check(labelCmd.c_str());
-        return EFI_Label;
+        Boot_Stanza_GUI.append("\tvolume ");
+        Boot_Stanza_GUI.append(EFI_Label);
     }
-    return "0";
 }
 
 string MainWindow::Get_FW_BootNum() {
@@ -396,10 +395,7 @@ string MainWindow::CreateBootStanza(QString &BootOption, const char *BootNum, bo
         Boot_Stanza_GUI.append(BootNum);
         Boot_Stanza_GUI.append(".png\n");
         if(Linux_Select_str == "Bazzite") {
-            Windows_EFI_Label.clear();
-            Windows_EFI_Label = Get_EFI_Label();
-            Boot_Stanza_GUI.append("\tvolume ");
-            Boot_Stanza_GUI.append(Windows_EFI_Label);
+            Get_EFI_Label();
         }
         Boot_Stanza_GUI.append("\tloader /EFI/Microsoft/Boot/bootmgfw.efi\n");
         Boot_Stanza_GUI.append("\tgraphics on\n}\n");
