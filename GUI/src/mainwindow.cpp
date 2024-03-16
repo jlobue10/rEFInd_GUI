@@ -27,7 +27,7 @@ bool Boot_Last_OS_bool;
 bool Enable_Mouse_bool;
 bool Firmware_BootNum_bool;
 int Update_Num;
-int VERSION = 100;
+int VERSION = 110;
 ostringstream install_refind_apt_path_o;
 ostringstream install_refind_dnf_path_o;
 ostringstream install_refind_Sforge_path_o;
@@ -730,7 +730,7 @@ void MainWindow::on_About_pushButton_clicked()
     QPushButton* updateButton = new QPushButton("Check For Update");
     connect(updateButton, &QPushButton::clicked, this, &MainWindow::on_updateButton_Clicked);
     AboutBox.setTextFormat(Qt::RichText);
-    AboutBox.setText("<p align='center'>rEFInd Customization GUI v1.0.0<br><br>"
+    AboutBox.setText("<p align='center'>rEFInd Customization GUI v1.1.0<br><br>"
                      "Original GUI Creator: "
                      "<a href='https://github.com/jlobue10'>jlobue10</a><br><br>"
                      "Special Thanks to Deck Wizard for testing and QA"
