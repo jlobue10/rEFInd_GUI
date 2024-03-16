@@ -63,6 +63,8 @@ QString Default_OS_Icon2_Suffix{"/.local/rEFInd_GUI/GUI/os_icon2.png"};
 QString Default_OS_Icon3_Suffix{"/.local/rEFInd_GUI/GUI/os_icon3.png"};
 QString Default_OS_Icon4_Suffix{"/.local/rEFInd_GUI/GUI/os_icon4.png"};
 QString settings_path_suffix{"/.local/rEFInd_GUI/GUI/rEFInd_GUI.ini"};
+string checkMountCmd = "lsblk -o MOUNTPOINT /dev/nvme0n1p1 | grep -q '/boot/efi' && echo 0 || echo 1";
+string checkResult;
 string Default_Background_str;
 string Default_OS_Icon1_str;
 string Default_OS_Icon2_str;
@@ -80,11 +82,13 @@ string Boot_Stanza_3;
 string Boot_Stanza_4;
 string Config_FW_BootNum;
 string default_OS_sel;
+string EFI_Label;
 string FW_BootNum_SteamOS;
 string install_refind_apt_path;
 string install_refind_dnf_path;
 string install_refind_Sforge_path;
 string GUID_Label;
+string labelCmd = "lsblk -no LABEL /dev/nvme0n1p1";
 string Linux_Select_str;
 string OS_Icon1_path;
 string OS_Icon2_path;
@@ -94,10 +98,12 @@ string refind_background;
 string refind_enable_mouse = "";
 string refind_timeout = "5";
 string refind_USER = getlogin();
+string result;
 string MICRO_SD_GUID = "SD";
 string user_home_path_str;
 string Update_Num_str;
 string USB_GUID = "USB";
+string Windows_EFI_Label;
 string Windows_SD_GUID;
 string Windows_USB_GUID;
 
@@ -317,6 +323,35 @@ void MainWindow::on_Install_Config_clicked()
     system("sudo /usr/bin/install_config_from_GUI.sh");
 }
 
+string MainWindow::execute_check(const char* cmd) {
+    result.clear();
+    FILE *process;
+    char result_buff[1024];
+    process = popen(cmd, "r");
+    if (process != NULL) {
+        while (fgets(result_buff, sizeof(result_buff), process)) {
+            printf("%s", result_buff);
+            result += result_buff;
+        }
+        pclose(process);
+    }
+    return result;
+}
+
+string MainWindow::Get_EFI_Label() {
+    EFI_Label.clear();
+    checkResult.clear();
+    checkResult = execute_check(checkMountCmd.c_str());
+    if (!checkResult.empty() && checkResult.back() == '\n') {
+        checkResult.pop_back(); // Remove the last character
+    }
+    if (checkResult == "1") {
+        EFI_Label = execute_check(labelCmd.c_str());
+        return EFI_Label;
+    }
+    return "0";
+}
+
 string MainWindow::Get_FW_BootNum() {
     FW_BootNum_SteamOS.clear();
     FILE *process;
@@ -335,6 +370,8 @@ string MainWindow::Get_FW_BootNum() {
 string MainWindow::CreateBootStanza(QString &BootOption, const char *BootNum, bool FW_BootNum_bool) {
     Boot_Stanza_GUI.clear();
     Config_FW_BootNum.clear();
+    Linux_Select = ui->Linux_Select_comboBox->currentText();
+    Linux_Select_str = Linux_Select.toStdString();
     if(BootOption == "SteamOS") {
         Boot_Stanza_GUI.append("\nmenuentry \"SteamOS\" {\n");
         Boot_Stanza_GUI.append("\ticon /EFI/refind/os_icon");
@@ -358,6 +395,12 @@ string MainWindow::CreateBootStanza(QString &BootOption, const char *BootNum, bo
         Boot_Stanza_GUI.append("\ticon /EFI/refind/os_icon");
         Boot_Stanza_GUI.append(BootNum);
         Boot_Stanza_GUI.append(".png\n");
+        if(Linux_Select_str == "Bazzite") {
+            Windows_EFI_Label.clear();
+            Windows_EFI_Label = Get_EFI_Label();
+            Boot_Stanza_GUI.append("\tvolume ");
+            Boot_Stanza_GUI.append(Windows_EFI_Label);
+        }
         Boot_Stanza_GUI.append("\tloader /EFI/Microsoft/Boot/bootmgfw.efi\n");
         Boot_Stanza_GUI.append("\tgraphics on\n}\n");
         return Boot_Stanza_GUI;
@@ -407,8 +450,6 @@ string MainWindow::CreateBootStanza(QString &BootOption, const char *BootNum, bo
         return Boot_Stanza_GUI;
     }
     if(BootOption == "Linux") {
-        Linux_Select = ui->Linux_Select_comboBox->currentText();
-        Linux_Select_str = Linux_Select.toStdString();
         if(Linux_Select_str == "Ubuntu") {
             Boot_Stanza_GUI.append("\nmenuentry \"Ubuntu\" {\n");
             Boot_Stanza_GUI.append("\ticon /EFI/refind/os_icon");
@@ -613,12 +654,18 @@ string MainWindow::getPartitionGUIDLabel(string &GUID_Source){
     if(GUID_Source == "SD"){
         GUID_process = popen("hwinfo --block | grep /dev/mmcblk0p1 | grep -o 'by-partuuid.*' | cut -f2 -d'/' | cut -f1 -d ','", "r");
     }
+    if(GUID_Source == "BAZZITE"){
+        GUID_process = popen("lsblk -o MOUNTPOINT /dev/nvme0n1p1 | grep -q '/boot/efi' && echo 0 || echo 1", "r");
+    }
     if (GUID_process != NULL) {
         while (fgets(GUID_buff, sizeof(GUID_buff), GUID_process)) {
             printf("%s", GUID_buff);
             GUID_Label += GUID_buff;
         }
         pclose(GUID_process);
+    }
+    if((Linux_Select_str == "Bazzite") && (GUID_Source == "BAZZITE") && ((GUID_Label == "1") || (GUID_Label == "1\n"))){
+        Get_EFI_Label();
     }
     return GUID_Label;
 }
