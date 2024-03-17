@@ -27,7 +27,7 @@ bool Boot_Last_OS_bool;
 bool Enable_Mouse_bool;
 bool Firmware_BootNum_bool;
 int Update_Num;
-int VERSION = 120;
+int VERSION = 130;
 ostringstream install_refind_apt_path_o;
 ostringstream install_refind_dnf_path_o;
 ostringstream install_refind_Sforge_path_o;
@@ -89,6 +89,8 @@ string install_refind_dnf_path;
 string install_refind_Sforge_path;
 string GUID_Label;
 string labelCmd = "lsblk -no LABEL /dev/nvme0n1p1";
+string Legion_Go_Check_cmd = "cat /sys/devices/virtual/dmi/id/board_name";
+string Legion_Go_Check;
 string Linux_Select_str;
 string OS_Icon1_path;
 string OS_Icon2_path;
@@ -231,6 +233,7 @@ void MainWindow::on_Create_Config_clicked()
     OS_Icon2_path.clear();
     OS_Icon3_path.clear();
     OS_Icon4_path.clear();
+    Legion_Go_Check.clear();
     ostringstream refind_temp_path;
     refind_temp_path << "/home/" << refind_USER << "/.local/rEFInd_GUI/GUI/refind.conf";
     string refind_conf_path = refind_temp_path.str();
@@ -248,7 +251,16 @@ void MainWindow::on_Create_Config_clicked()
     refind_background = "background.png";
     refind_conf << "banner " << refind_background << "\n";
     refind_conf << "banner_scale fillscreen\n";
-    refind_conf << "resolution 3\n";
+    Legion_Go_Check = execute_check(Legion_Go_Check_cmd.c_str());
+    if (!Legion_Go_Check.empty() && Legion_Go_Check.back() == '\n') {
+        Legion_Go_Check.pop_back(); // Remove the last character
+    }
+    if (Legion_Go_Check == "LNVNB161216") {
+        refind_conf << "resolution 2560 1600\n";
+    }
+    else {
+        refind_conf << "resolution 3\n";
+    }
     refind_conf << "enable_touch\n";
     Boot_Last_OS_bool = ui->Last_OS_CheckBox->isChecked();
     Enable_Mouse_bool = ui->Enable_Mouse_checkBox->isChecked();
@@ -730,7 +742,7 @@ void MainWindow::on_About_pushButton_clicked()
     QPushButton* updateButton = new QPushButton("Check For Update");
     connect(updateButton, &QPushButton::clicked, this, &MainWindow::on_updateButton_Clicked);
     AboutBox.setTextFormat(Qt::RichText);
-    AboutBox.setText("<p align='center'>rEFInd Customization GUI v1.2.0<br><br>"
+    AboutBox.setText("<p align='center'>rEFInd Customization GUI v1.3.0<br><br>"
                      "Original GUI Creator: "
                      "<a href='https://github.com/jlobue10'>jlobue10</a><br><br>"
                      "Special Thanks to Deck Wizard for testing and QA"
