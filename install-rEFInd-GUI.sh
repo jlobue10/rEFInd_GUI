@@ -86,6 +86,7 @@ sudo cp -f $CURRENT_WD/GUI/UEFI_icon.png /etc/rEFInd/UEFI_icon.png
 
 if [ $BAZZITE == 0 ]; then
 	sudo cp -f $CURRENT_WD/rEFInd_GUI.desktop /etc/rEFInd/rEFInd_GUI.desktop
+ 	sudo chmod +x /etc/rEFInd/rEFInd_GUI.desktop
  	cp $CURRENT_WD/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
 else
 	sudo cp -f $CURRENT_WD/rEFInd_GUI.desktop /usr/share/applications/rEFInd_GUI.desktop
@@ -94,7 +95,7 @@ fi
 
 chmod +x $HOME/Desktop/refind_GUI.desktop
 
-sudo chmod +x /etc/rEFInd/{install_config_from_GUI.sh,rEFInd_bg_randomizer.sh,rEFInd_GUI.desktop}
+sudo chmod +x /etc/rEFInd/{install_config_from_GUI.sh,rEFInd_bg_randomizer.sh}
 
 if [ $BAZZITE == 0 ]; then
 	systemctl reboot
