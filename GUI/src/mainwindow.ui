@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>613</width>
-    <height>485</height>
+    <height>480</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>613</width>
-    <height>485</height>
+    <height>480</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>613</width>
-    <height>485</height>
+    <height>480</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -30,117 +30,13 @@
     <normaloff>UEFI_icon.png</normaloff>UEFI_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="layoutWidget1">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>440</y>
-      <width>581</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="3" alignment="Qt::AlignRight">
-      <widget class="QPushButton" name="Install_Config">
-       <property name="minimumSize">
-        <size>
-         <width>140</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>140</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Install config and copy PNGs</string>
-       </property>
-       <property name="text">
-        <string>Install Config</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QPushButton" name="Create_Config">
-       <property name="minimumSize">
-        <size>
-         <width>140</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>140</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Create config and ready PNGs</string>
-       </property>
-       <property name="text">
-        <string>Create Config</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="Install_rEFInd">
-       <property name="minimumSize">
-        <size>
-         <width>140</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>140</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Install rEFInd</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QComboBox" name="Install_Source_comboBox">
-       <property name="minimumSize">
-        <size>
-         <width>140</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>140</width>
-         <height>32</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>rEFInd Installation method</string>
-       </property>
-       <item>
-        <property name="text">
-         <string>Package Mgr</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Sourceforge</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>12</x>
-      <y>13</y>
-      <width>591</width>
-      <height>416</height>
+      <x>9</x>
+      <y>9</y>
+      <width>597</width>
+      <height>456</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_3">
@@ -709,6 +605,28 @@
        </item>
       </widget>
      </item>
+     <item row="8" column="6">
+      <widget class="QPushButton" name="Exit_pushButton">
+       <property name="minimumSize">
+        <size>
+         <width>95</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>95</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exit GUI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Exit</string>
+       </property>
+      </widget>
+     </item>
      <item row="9" column="0" colspan="2">
       <widget class="QLabel" name="Boot_Option_04_Icon_label">
        <property name="minimumSize">
@@ -952,19 +870,112 @@
        </item>
       </layout>
      </item>
-     <item row="0" column="2" colspan="4">
-      <widget class="QLineEdit" name="Background_lineEdit">
+     <item row="11" column="0" colspan="7">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="3" alignment="Qt::AlignRight">
+        <widget class="QPushButton" name="Install_Config">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>140</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Install config and copy PNGs</string>
+         </property>
+         <property name="text">
+          <string>Install Config</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" alignment="Qt::AlignRight">
+        <widget class="QPushButton" name="Create_Config">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>140</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Create config and ready PNGs</string>
+         </property>
+         <property name="text">
+          <string>Create Config</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" alignment="Qt::AlignRight">
+        <widget class="QPushButton" name="Install_rEFInd">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>140</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Install rEFInd</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" alignment="Qt::AlignLeft">
+        <widget class="QComboBox" name="Install_Source_comboBox">
+         <property name="minimumSize">
+          <size>
+           <width>155</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>155</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>rEFInd Installation method</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>Package Mgr</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Sourceforge</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="5" column="2" colspan="4">
+      <widget class="QLineEdit" name="Boot_Option_02_Icon_lineEdit">
        <property name="minimumSize">
         <size>
          <width>135</width>
          <height>32</height>
         </size>
        </property>
-       <property name="toolTip">
-        <string>rEFInd Background selection</string>
-       </property>
        <property name="placeholderText">
-        <string>~/.local/rEFInd_GUI/GUI/background.png</string>
+        <string>~/.local/rEFInd_GUI/GUI/os_icon2.png</string>
        </property>
       </widget>
      </item>
@@ -981,16 +992,19 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="2" colspan="4">
-      <widget class="QLineEdit" name="Boot_Option_02_Icon_lineEdit">
+     <item row="0" column="2" colspan="4">
+      <widget class="QLineEdit" name="Background_lineEdit">
        <property name="minimumSize">
         <size>
          <width>135</width>
          <height>32</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>rEFInd Background selection</string>
+       </property>
        <property name="placeholderText">
-        <string>~/.local/rEFInd_GUI/GUI/os_icon2.png</string>
+        <string>~/.local/rEFInd_GUI/GUI/background.png</string>
        </property>
       </widget>
      </item>
