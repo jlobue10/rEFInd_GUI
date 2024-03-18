@@ -217,7 +217,7 @@ void MainWindow::on_Install_rEFInd_clicked()
     if(refind_install_source == "Sourceforge")
     {
         install_refind_Sforge_path_o << user_home_path_str << "/.local/rEFInd_GUI/refind_install_Sourceforge.sh";
-        install_refind_Sforge_path = install_refind_apt_path_o.str();
+        install_refind_Sforge_path = install_refind_Sforge_path_o.str();
         system(install_refind_Sforge_path.c_str());
     }
 }
