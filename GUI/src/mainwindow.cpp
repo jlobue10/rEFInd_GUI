@@ -27,7 +27,7 @@ bool Boot_Last_OS_bool;
 bool Enable_Mouse_bool;
 bool Firmware_BootNum_bool;
 int Update_Num;
-int VERSION = 131;
+int VERSION = 140;
 ostringstream install_refind_apt_path_o;
 ostringstream install_refind_dnf_path_o;
 ostringstream install_refind_Sforge_path_o;
@@ -141,6 +141,7 @@ MainWindow::MainWindow(QWidget *parent)
     Default_OS_Icon4.append(user_home_path_q);
     Default_OS_Icon4.append(Default_OS_Icon4_Suffix);
     Default_OS_Icon4_str = Default_OS_Icon4.toStdString();
+    connect(ui->Exit_pushButton, &QPushButton::clicked, this, &MainWindow::close);
     readSettings();
 }
 
@@ -742,7 +743,7 @@ void MainWindow::on_About_pushButton_clicked()
     QPushButton* updateButton = new QPushButton("Check For Update");
     connect(updateButton, &QPushButton::clicked, this, &MainWindow::on_updateButton_Clicked);
     AboutBox.setTextFormat(Qt::RichText);
-    AboutBox.setText("<p align='center'>rEFInd Customization GUI v1.3.1<br><br>"
+    AboutBox.setText("<p align='center'>rEFInd Customization GUI v1.4.0<br><br>"
                      "Original GUI Creator: "
                      "<a href='https://github.com/jlobue10'>jlobue10</a><br><br>"
                      "Special Thanks to Deck Wizard for testing and QA"
@@ -816,7 +817,7 @@ void MainWindow::on_updateButton_Clicked()
 
 void MainWindow::on_Rand_BG_On_pushButton_clicked()
 {
-    string rand_bg_on = string("xterm -geometry 100x35 -e \"sudo systemctl enable --now rEFInd_bg_randomizer.service &&");
+    string rand_bg_on = string("xterm -e \"sudo systemctl enable --now rEFInd_bg_randomizer.service &&");
            rand_bg_on.append(" sudo systemctl status rEFInd_bg_randomizer.service; $SHELL\"");
     system(rand_bg_on.c_str());
 }
@@ -824,7 +825,7 @@ void MainWindow::on_Rand_BG_On_pushButton_clicked()
 
 void MainWindow::on_Rand_BG_Off_pushButton_clicked()
 {
-    string rand_bg_off = string("xterm -geometry 100x35 -e \"sudo systemctl disable --now rEFInd_bg_randomizer.service &&");
+    string rand_bg_off = string("xterm -e \"sudo systemctl disable --now rEFInd_bg_randomizer.service &&");
            rand_bg_off.append(" sudo systemctl status rEFInd_bg_randomizer.service; $SHELL\"");
     system(rand_bg_off.c_str());
 }
