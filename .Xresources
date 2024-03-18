@@ -89,8 +89,8 @@ XTerm*Form.menubar.vertDistance: 0
 #XTerm*Form.menubar.Thickness:  0
 
 # Fonts
-XTerm*vt100.faceName:           xft:Consolas:size=18:antialias=true:style=Regular
-XTerm*vt100.boldFont:           xft:Consolas:size=18:antialias=true:style=Bold
+XTerm*vt100.faceName:           xft:Consolas:size=16:antialias=true:style=Regular
+XTerm*vt100.boldFont:           xft:Consolas:size=16:antialias=true:style=Bold
 
 # Size and Title
 XTerm*vt100.geometry:           80x20
