@@ -1,7 +1,7 @@
 %global _name   rEFInd_GUI
 
 Name:           rEFInd_GUI
-Version:        1.3.1
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -44,6 +44,9 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Mon Mar 18 2024 Jon LoBue <jlobue10@gmail.com> [1.4.0-1]
+- Added Exit push button and other UI alignment updates
+
 * Sat Mar 16 2024 Jon LoBue <jlobue10@gmail.com> [1.3.0-1]
 - Xterm window size change
 
