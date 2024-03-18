@@ -88,6 +88,8 @@ if [ $BAZZITE == 0 ]; then
 	sudo cp -f $CURRENT_WD/rEFInd_GUI.desktop /etc/rEFInd/rEFInd_GUI.desktop
  	sudo chmod +x /etc/rEFInd/rEFInd_GUI.desktop
  	cp $CURRENT_WD/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
+  	cp $CURRENT_WD/.Xresources $HOME/.Xresources
+   	xrdb $HOME/.Xresources
 else
 	sudo cp -f $CURRENT_WD/rEFInd_GUI.desktop /usr/share/applications/rEFInd_GUI.desktop
   	cp /usr/share/applications/rEFInd_GUI.desktop $HOME/Desktop/refind_GUI.desktop
