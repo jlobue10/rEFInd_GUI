@@ -1,0 +1,168 @@
+# XTerm resources
+#
+# Remember to run `xrdb < .Xresources` after changing anything.
+#
+# Tavis Ormandy <taviso@gmail.com>
+
+# Set the default UI font (menus, toolbar, etc)
+XTerm*XftFont:                  Segoe UI:size=10:antialias=true:style=Regular
+
+# Color of UI Components
+XTerm*.SimpleMenu.background:   #ffffff
+XTerm*.SimpleMenu.foreground:   #000000
+
+# Tone down the Xaw3D effect.
+XTerm*shapeStyle:               Rectangle
+XTerm*beNiceToColormap:         false
+XTerm*relief:                   None
+XTerm*highlightThickness:       0
+
+# Dont automatically jump to the bottom on output, but do on keypress.
+XTerm*scrollTtyOutput:          false
+XTerm*scrollKey:                true
+XTerm*scrollBar:                false
+XTerm*eightBitInput:            false
+XTerm*cursorBlink:              true
+
+# Dont allow mouse ops - it can be enabled in the view Menu at runtime.
+# The reason is it breaks copy/paste if an application requests mouse events,
+# because the application gets the event instead of XTerm.
+XTerm*allowMouseOps:            false
+
+# Dont change my title by default, this can be re-enabled from the menu.
+XTerm*allowTitleOps:            false
+XTerm*allowFontOps:             false
+
+# Mouse cursor configuration, I prefer to keep it simple.
+# XTerm*pointerColor:             white
+# XTerm*pointerColorBackground:   black
+# XTerm*pointerShape:             left_ptr
+
+# Only select text, not empty space around it.
+XTerm*highlightSelection:       true
+
+# The distance between the edge of the screen and the characters.
+XTerm*vt100.internalBorder:     6
+
+# The border around elements.
+XTerm*.BorderColor:             #ffffff
+XTerm*vt100.BorderColor:        #d0d0d0
+XTerm*BorderWidth:              3
+
+# Menu Names, I dont like the default verbose names.
+XTerm*.mainMenu.label:          File
+XTerm*.vtMenu.label:            Options
+XTerm*.fontMenu.label:          View
+
+# You can rename menu entries, like this, I dont know why the menubar
+# is called a "toolbar", probably historical reasons.
+XTerm*.mainMenu.toolbar.label:  Menubar
+
+# Adjust how the active menu item looks
+XTerm*.SimpleMenu.*.shadowWidth: 3
+XTerm*.SimpleMenu.*.topShadowPixel: SkyBlue
+XTerm*.SimpleMenu.*.bottomShadowPixel: LightSkyBlue
+
+# Try to hide the useless title displayed at the top of menus, I know what
+# menu it is because I just clicked it.
+XTerm*.*.menuLabel.vertSpace:   0
+XTerm*.*.menuLabel.foreground:  #ffffff
+XTerm*.*.menuLabel.XftFont:     Courier:size=0
+
+# Space around menu entries.
+XTerm*.SimpleMenu.*.topMargin:  0
+XTerm*.SimpleMenu.*.bottomMargin: 0
+XTerm*.SimpleMenu.*.leftMargin: 32
+XTerm*.SimpleMenu.*.rightMargin: 64
+# The height of each menu entry, the default calculates it from font size.
+# XTerm*.SimpleMenu.*.rowHeight: 16
+
+# Space around the checkmark in the menus.
+XTerm*.SimpleMenu.*.leftWhitespace: 16
+#XTerm*.SimpleMenu.*.rightWhitespace: 8
+
+# Trim vertical padding around the toolbar, all elements have a form.
+XTerm*Form.menubar.vSpace:      0
+XTerm*Form.menubar.vertDistance: 0
+#XTerm*Form.menubar.foreground: #000000
+#XTerm*Form.menubar.background: #ffffff
+#XTerm*Form.menubar.Thickness:  0
+
+# Fonts
+XTerm*vt100.faceName:           xft:Consolas:size=18:antialias=true:style=Regular
+XTerm*vt100.boldFont:           xft:Consolas:size=18:antialias=true:style=Bold
+
+# Size and Title
+XTerm*vt100.geometry:           80x20
+XTerm*title:                    Terminal
+
+# Terminal Colors
+XTerm*vt100.background:     #212121
+XTerm*vt100.foreground:     #80FF80
+XTerm*cursorColor:          #ffffff
+
+# I like bold items to be in bright white.
+XTerm*veryBoldColors:       4
+XTerm*colorBDMode:          true
+XTerm*colorBD:              #ffffff
+XTerm*colorRV:              #ffffff
+
+# I can see a small line between box characters, this fixes it.
+XTerm*forceBoxChars:        true
+XTerm*vt100.scaleHeight:    1.04
+
+# This (or similar id) is required for Sixel support.
+XTerm*decTerminalID:        vt382
+
+# Color Scheme
+# 0-7:  Black, Red, Green, Yellow, Blue, Purple, Cyan, White
+# 8-15: Bright Black, Bright Red, ...
+XTerm*color0:               #212121
+XTerm*color8:               #7f7f7f
+XTerm*color1:               #A00000
+XTerm*color9:               #FF0000
+XTerm*color2:               #00A000
+XTerm*color10:              #00FF00
+XTerm*color3:               #A0A000
+XTerm*color11:              #FFFF00
+XTerm*color4:               #0000A0
+XTerm*color12:              #5C5CFF
+XTerm*color5:               #A000A0
+XTerm*color13:              #FF00FF
+XTerm*color6:               #00A0A0
+XTerm*color14:              #00FFFF
+XTerm*color7:               #C0C0C0
+XTerm*color15:              #ffffff
+
+#  XTerm Translations, i.e. keyboard remapping.
+#
+# Notes:
+#   ~       means that that modifier must not be asserted.
+#   #       means that the listed modifiers must be in the correct state and
+#               no other modifiers can be asserted.
+#   None    means no modifiers can be asserted.
+#   :       directs the Intrinsics to apply any standard modifiers in the event.
+#   ^       is an abbreviation for the Control modifier.
+#   $       is an abbreviation for Meta
+#
+# Example:
+#   No modifiers:                          None <event> detail
+#   Any modifiers:                              <event> detail
+#   Only these modifiers:           # mod1 mod2 <event> detail
+#   These modifiers and any others:   mod1 mod2 <event> detail
+
+# Below:
+#
+# - I have some old apps that use Alt-F4, but thats sometimes difficult to
+#       press so Ctrl-Shift-F4 does the same thing.
+# - Ctrl-MouseWheel can be used to increase and descrease font size.
+# - Ctrl-I is totally useless, because it is literally impossible for
+#       applications to differentiate it from Tab. You can remap it to some
+#       other harder-to-press keybinding here, I use it for Italics in
+#       wordperfect.
+
+#XTerm*vt100.translations:   #override           \n\
+#    Ctrl Shift <Key>F4:     string("\033[1;3S") \n\
+  # Ctrl <Btn4Up>:          larger-vt-font()    \n\
+  # Ctrl <Btn5Up>:          smaller-vt-font()   \n\
+# ^<Key>I:                string("\014")      \n\
