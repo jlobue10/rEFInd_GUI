@@ -26,7 +26,7 @@
 	yes | sudo cp -rf $HOME/Downloads/refind-bin-0.14.0.2/refind/tools_x64/ /boot/efi/EFI/refind
 	echo 50
 	echo "# Installing rEFInd files..."
-	yes | sudo ./refind-bin-0.14.0.2/refind-install
+	yes | sudo $HOME/Downloads/refind-bin-0.14.0.2/refind-install
 	yes | sudo cp -rf $HOME/Downloads/refind-bin-0.14.0.2/refind/icons/ /boot/efi/EFI/refind
 	yes | sudo cp -rf $HOME/Downloads/refind-bin-0.14.0.2/fonts/ /boot/efi/EFI/refind
 	yes | sudo cp $HOME/.local/rEFInd_GUI/GUI/refind.conf /boot/efi/EFI/refind/refind.conf
