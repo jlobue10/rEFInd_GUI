@@ -16,19 +16,20 @@
 	echo 20
 	echo "# Downloading rEFInd zip file..."
 	cd $HOME/Downloads
-	wget https://sourceforge.net/projects/refind/files/0.14.0.2/refind-bin-gnuefi-0.14.0.2.zip
+	wget https://sourceforge.net/projects/refind/files/0.14.1/refind-bin-gnuefi-0.14.1.zip
 	echo 25
 	echo "# Unzipping rEFInd zip..."
-	unzip -o refind-bin-gnuefi-0.14.0.2.zip
+	unzip -o refind-bin-gnuefi-0.14.1.zip
 	sudo mkdir -p /boot/efi/EFI/refind
-	yes | sudo cp $HOME/Downloads/refind-bin-0.14.0.2/refind/refind_x64.efi /boot/efi/EFI/refind/
-	yes | sudo cp -rf $HOME/Downloads/refind-bin-0.14.0.2/refind/drivers_x64/ /boot/efi/EFI/refind
-	yes | sudo cp -rf $HOME/Downloads/refind-bin-0.14.0.2/refind/tools_x64/ /boot/efi/EFI/refind
+	yes | sudo cp $HOME/Downloads/refind-bin-0.14.1/refind/refind_x64.efi /boot/efi/EFI/refind/
+	yes | sudo cp -rf $HOME/Downloads/refind-bin-0.14.1/refind/drivers_x64/ /boot/efi/EFI/refind
+	yes | sudo cp -rf $HOME/Downloads/refind-bin-0.14.1/refind/tools_x64/ /boot/efi/EFI/refind
 	echo 50
 	echo "# Installing rEFInd files..."
-	yes | sudo $HOME/Downloads/refind-bin-0.14.0.2/refind-install
-	yes | sudo cp -rf $HOME/Downloads/refind-bin-0.14.0.2/refind/icons/ /boot/efi/EFI/refind
-	yes | sudo cp -rf $HOME/Downloads/refind-bin-0.14.0.2/fonts/ /boot/efi/EFI/refind
+ 	yes | sudo chmod +x $HOME/Downloads/refind-bin-0.14.1/refind-install
+	yes | sudo $HOME/Downloads/refind-bin-0.14.1/refind-install
+	yes | sudo cp -rf $HOME/Downloads/refind-bin-0.14.1/refind/icons/ /boot/efi/EFI/refind
+	yes | sudo cp -rf $HOME/Downloads/refind-bin-0.14.1/fonts/ /boot/efi/EFI/refind
 	yes | sudo cp $HOME/.local/rEFInd_GUI/GUI/refind.conf /boot/efi/EFI/refind/refind.conf
 	yes | sudo cp -rf $HOME/.local/rEFInd_GUI/backgrounds/ /boot/efi/EFI/refind
 	yes | sudo cp -rf $HOME/.local/rEFInd_GUI/icons/ /boot/efi/EFI/refind
