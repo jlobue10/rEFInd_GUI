@@ -1,5 +1,5 @@
 #!/bin/bash
-#Updated SOurceforge based installation
+#Updated Sourceforge based installation
 
 echo "Installation started..."
 echo "Downloading rEFInd zip file..."
