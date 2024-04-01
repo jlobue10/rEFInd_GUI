@@ -211,13 +211,17 @@ void MainWindow::on_Install_rEFInd_clicked()
     if(refind_install_source == "Package Mgr")
     {
         install_refind_apt_path_o << user_home_path_str << "/.local/rEFInd_GUI/refind_install_package_mgr.sh";
-        install_refind_apt_path = install_refind_apt_path_o.str();
+        install_refind_apt_path.append("xterm -e \"");
+        install_refind_apt_path.append(install_refind_apt_path_o.str());
+        install_refind_apt_path.append("\"");
         system(install_refind_apt_path.c_str());
     }
     if(refind_install_source == "Sourceforge")
     {
         install_refind_Sforge_path_o << user_home_path_str << "/.local/rEFInd_GUI/refind_install_Sourceforge.sh";
-        install_refind_Sforge_path = install_refind_Sforge_path_o.str();
+        install_refind_Sforge_path.append("xterm -e \"");
+        install_refind_Sforge_path.append(install_refind_Sforge_path_o.str());
+        install_refind_Sforge_path.append("\"");
         system(install_refind_Sforge_path.c_str());
     }
 }
