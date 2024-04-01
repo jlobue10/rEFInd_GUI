@@ -1,7 +1,7 @@
 %global _name   rEFInd_GUI
 
 Name:           rEFInd_GUI
-Version:        1.4.1
+Version:        1.4.2
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -44,6 +44,9 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sun Mar 31 2024 Jon LoBue <jlobue10@gmail.com> [1.4.2-1]
+- Updated refind install scripts to drop Zenity in favor of xterm
+
 * Mon Mar 18 2024 Jon LoBue <jlobue10@gmail.com> [1.4.1-1]
 - Fixed typo in Sourceforge installation method script launching
 
