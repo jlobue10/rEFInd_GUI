@@ -568,7 +568,7 @@ string MainWindow::CreateBootStanza(QString &BootOption, const char *BootNum, bo
             Boot_Stanza_GUI.append("\ticon /EFI/refind/os_icon");
             Boot_Stanza_GUI.append(BootNum);
             Boot_Stanza_GUI.append(".png\n");
-            Boot_Stanza_GUI.append("\tloader /EFI/fedora/grubx64.efi\n");
+            Boot_Stanza_GUI.append("\tloader /EFI/fedora/shimx64.efi\n");
             Boot_Stanza_GUI.append("\tgraphics on\n}\n");
             return Boot_Stanza_GUI;
         }
