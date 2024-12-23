@@ -33,7 +33,7 @@ What I've done on my own personal ASUS ROG ALLY X is install Nobara (latest vers
 For Fedora based distros such as Nobara, run these steps to get `sbctl` installed.
 
 ```
-sudo dnf copr enable chenxiaolong/sbctl
+sudo dnf copr enable chenxiaolong/sbctl fedora-41-x86_64
 sudo dnf install sbctl
 ```
 
