@@ -50,7 +50,7 @@ Now sign any efi file (this includes `refind_x64.efi` and `fwbootmgr.efi` for Wi
 sudo sbctl sign -s object-to-be-signed
 ```
 
-Replace the "object-to-be-signed" portion witht he full path efi file(s) or Linux kernel to be signed. Remember to sign new kernels before trying to boot into them with secure boot enabled.
+Replace the "object-to-be-signed" portion with the full path efi file(s) or Linux kernel to be signed. Remember to sign new kernels before trying to boot into them with secure boot enabled.
 
 Re-enable secure boot in BIOS, and enjoy the benefits of being able to play anti-cheat games in Windows and a fully functioning Linux distro, side-by-side without toggling the secure boot setting in BIOS.
 
