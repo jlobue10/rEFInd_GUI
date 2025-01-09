@@ -1,5 +1,5 @@
 # rEFInd_GUI
-A graphical setup and customization utility to use alongside rEFInd
+A graphical setup and customization utility to use alongside rEFInd (work in progress)
 
 ## Installation (Currently Fedora / Nobara / Bazzite are supported. Others coming in a future update...)
 
