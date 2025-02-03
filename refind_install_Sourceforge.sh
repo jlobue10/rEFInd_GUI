@@ -3,6 +3,22 @@
 
 echo "Installation started..."
 echo "Downloading rEFInd zip file..."
+DOWNLOAD_DIR="$HOME/Downloads"
+
+# Check if the directory exists
+if [ ! -d "$DOWNLOAD_DIR" ]; then
+    echo "Directory $DOWNLOAD_DIR does not exist. Creating it now..."
+    mkdir -p "$DOWNLOAD_DIR"
+    if [ $? -eq 0 ]; then
+        echo "Directory created successfully."
+    else
+        echo "Failed to create directory." >&2
+        exit 1
+    fi
+else
+    echo "Directory $DOWNLOAD_DIR already exists."
+fi
+
 cd $HOME/Downloads
 wget https://sourceforge.net/projects/refind/files/0.14.2/refind-bin-gnuefi-0.14.2.zip
 echo "Unzipping rEFInd zip..."
