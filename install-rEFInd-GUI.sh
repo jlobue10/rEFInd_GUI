@@ -48,7 +48,7 @@ if [ $BAZZITE == 0 ]; then
 	echo -e '\nBazzite based installation starting.\n'
  	rpm-ostree status | grep xterm
   	XTERM_STATUS=$?
-   	if [ $XTERM_STATUS != 0]; then
+   	if [ $XTERM_STATUS != 0 ]; then
 		sudo rpm-ostree install xterm
     	fi
  	cd $HOME/Downloads
