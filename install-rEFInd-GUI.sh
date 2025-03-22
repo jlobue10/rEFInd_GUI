@@ -68,6 +68,12 @@ fi
 which pacman 2>/dev/null
 ARCH_BASE=$?
 
+if grep -q 'CachyOS' /etc/os-release; then
+    echo "Starting CachyOS based installation."
+    sudo pacman -S --needed base-devel git cmake qt5-base qt5-tools
+    makepkg -si
+fi
+
 # if [ $NOBARA == 0 ]; then
 #	#fix packaging after compile (if necessary)
 #	sudo dnf install gstreamer1-plugins-good-qt6 --allowerasing
