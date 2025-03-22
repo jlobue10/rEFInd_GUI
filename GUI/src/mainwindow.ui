@@ -30,7 +30,7 @@
     <normaloff>UEFI_icon.png</normaloff>UEFI_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>9</x>
@@ -52,7 +52,7 @@
         <string>Background</string>
        </property>
        <property name="textFormat">
-        <enum>Qt::AutoText</enum>
+        <enum>Qt::TextFormat::AutoText</enum>
        </property>
       </widget>
      </item>
@@ -134,7 +134,7 @@
         <string>Boot last booted OS</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -182,7 +182,7 @@
         <string>Boot Option #1 Selection</string>
        </property>
        <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
        </property>
        <item>
         <property name="text">
@@ -231,7 +231,7 @@
         <string>Use Firmware_bootnum</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -687,16 +687,16 @@
         </size>
        </property>
        <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
        </property>
        <property name="text">
         <string>Timeout</string>
        </property>
        <property name="textFormat">
-        <enum>Qt::AutoText</enum>
+        <enum>Qt::TextFormat::AutoText</enum>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -727,7 +727,7 @@
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Timeout in seconds&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="placeholderText">
         <string>5</string>
@@ -746,7 +746,7 @@
         <string>Seconds</string>
        </property>
        <property name="textFormat">
-        <enum>Qt::AutoText</enum>
+        <enum>Qt::TextFormat::AutoText</enum>
        </property>
       </widget>
      </item>
@@ -754,7 +754,7 @@
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout">
-         <item alignment="Qt::AlignRight">
+         <item alignment="Qt::AlignmentFlag::AlignRight">
           <widget class="QLabel" name="Enable_Mouse_label">
            <property name="text">
             <string>Enable Mouse</string>
@@ -803,7 +803,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Ubuntu</string>
+           <string>CachyOS</string>
           </property>
          </item>
          <item>
@@ -863,6 +863,11 @@
          </item>
          <item>
           <property name="text">
+           <string>Ubuntu</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>Zorin</string>
           </property>
          </item>
@@ -872,7 +877,7 @@
      </item>
      <item row="11" column="0" colspan="7">
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="3" alignment="Qt::AlignRight">
+       <item row="0" column="3" alignment="Qt::AlignmentFlag::AlignRight">
         <widget class="QPushButton" name="Install_Config">
          <property name="minimumSize">
           <size>
@@ -894,7 +899,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2" alignment="Qt::AlignRight">
+       <item row="0" column="2" alignment="Qt::AlignmentFlag::AlignRight">
         <widget class="QPushButton" name="Create_Config">
          <property name="minimumSize">
           <size>
@@ -916,7 +921,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1" alignment="Qt::AlignRight">
+       <item row="0" column="1" alignment="Qt::AlignmentFlag::AlignRight">
         <widget class="QPushButton" name="Install_rEFInd">
          <property name="minimumSize">
           <size>
@@ -935,7 +940,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="0" alignment="Qt::AlignLeft">
+       <item row="0" column="0" alignment="Qt::AlignmentFlag::AlignLeft">
         <widget class="QComboBox" name="Install_Source_comboBox">
          <property name="minimumSize">
           <size>
