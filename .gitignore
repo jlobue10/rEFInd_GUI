@@ -1,0 +1,20 @@
+# Build directories
+GUI/src/build/
+GUI/src/build-*/
+build/
+build-*/
+
+# Windows packaging outputs
+/deploy/
+windows/Output/
+*-portable.zip
+rEFInd_GUI-*-setup.exe
+
+# Qt / CMake user files
+GUI/src/CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+
+# OS cruft
+.DS_Store
+Thumbs.db

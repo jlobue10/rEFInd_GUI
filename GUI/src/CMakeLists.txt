@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 
-project(rEFInd_GUI VERSION 0.1 LANGUAGES CXX)
+project(rEFInd_GUI VERSION 2.0.0 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -19,8 +19,19 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        osdetect.h
+        osdetect_common.cpp
+        platform.cpp
+        platform.h
         ${TS_FILES}
 )
+
+if(WIN32)
+    enable_language(RC)
+    list(APPEND PROJECT_SOURCES osdetect_win.cpp rEFInd_GUI.rc)
+else()
+    list(APPEND PROJECT_SOURCES osdetect_linux.cpp)
+endif()
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(rEFInd_GUI
@@ -50,6 +61,11 @@ else()
 endif()
 
 target_link_libraries(rEFInd_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+if(MSVC)
+    # MinGW gets the manifest via rEFInd_GUI.rc; MSVC generates its own.
+    target_link_options(rEFInd_GUI PRIVATE "/MANIFESTUAC:level='requireAdministrator' uiAccess='false'")
+endif()
 
 set_target_properties(rEFInd_GUI PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

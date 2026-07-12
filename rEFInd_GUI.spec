@@ -1,7 +1,7 @@
 %global _name   rEFInd_GUI
 
 Name:           rEFInd_GUI
-Version:        1.4.3
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -44,6 +44,15 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sun Jul 12 2026 Jon LoBue <jlobue10@gmail.com> [2.0.0-1]
+- Windows support: the GUI now builds and runs on Windows (Qt6) with a
+  per-user Inno Setup installer and SignPath code signing
+- Automatic detection of installed OSes/bootloaders on the EFI system partition
+- Removed the Linux distro selection box (now auto-detected)
+- Security hardening: no shell string interpolation from user input, safer
+  efibootmgr parsing, dynamic ESP discovery instead of hardcoded /dev/nvme0n1
+- Dropped hwinfo dependency
+
 * Sun Mar 31 2024 Jon LoBue <jlobue10@gmail.com> [1.4.2-1]
 - Updated refind install scripts to drop Zenity in favor of xterm
 
