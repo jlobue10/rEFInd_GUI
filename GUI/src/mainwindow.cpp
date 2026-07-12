@@ -173,6 +173,22 @@ void MainWindow::applyAutoSelection()
         setComboText(ui->Default_Boot_comboBox, picks.first());
 }
 
+// Pull selected OSes toward slot 1 with no gaps, preserving their order, so a
+// saved settings file that left slots 1/2 as None with OSes in 3/4 is packed
+// back into 1, 2, ... on load.
+void MainWindow::compactBootSelections()
+{
+    const QList<QComboBox *> combos = bootCombos();
+    QStringList chosen;
+    for (QComboBox *combo : combos) {
+        const QString text = combo->currentText();
+        if (text != NONE_OPTION && !text.isEmpty())
+            chosen << text;
+    }
+    for (int i = 0; i < combos.size(); ++i)
+        setComboText(combos.at(i), i < chosen.size() ? chosen.at(i) : NONE_OPTION);
+}
+
 void MainWindow::refreshDefaultBootCombo()
 {
     if (populating)
@@ -431,6 +447,9 @@ void MainWindow::readSettings()
         const QStringList saved = {boot1, boot2, boot3, boot4};
         for (int i = 0; i < combos.size(); ++i)
             setComboText(combos.at(i), saved.at(i));
+        // Repack any gaps a stale settings file may have left (OSes in 3/4,
+        // 1/2 empty) so detected OSes always start at slot 1.
+        compactBootSelections();
     }
     setComboText(ui->Default_Boot_comboBox, defaultBoot);
     ui->Install_Source_comboBox->setCurrentIndex(installSource);

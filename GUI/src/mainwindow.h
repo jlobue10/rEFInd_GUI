@@ -48,6 +48,7 @@ private:
     QList<BootEntry> comboOptions();
     void populateBootCombos();
     void applyAutoSelection();
+    void compactBootSelections();
     void refreshDefaultBootCombo();
     static void setComboText(QComboBox *combo, const QString &text);
     void browsePng(QLineEdit *edit, const QString &title);
