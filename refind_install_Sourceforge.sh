@@ -1,51 +1,70 @@
 #!/bin/bash
 #Updated Sourceforge based installation
 
+REFIND_VER="0.14.2"
+DOWNLOAD_DIR="$HOME/Downloads"
+
 echo "Installation started..."
 echo "Downloading rEFInd zip file..."
-DOWNLOAD_DIR="$HOME/Downloads"
 
 # Check if the directory exists
 if [ ! -d "$DOWNLOAD_DIR" ]; then
-    echo "Directory $DOWNLOAD_DIR does not exist. Creating it now..."
-    mkdir -p "$DOWNLOAD_DIR"
-    if [ $? -eq 0 ]; then
-        echo "Directory created successfully."
-    else
-        echo "Failed to create directory." >&2
-        exit 1
-    fi
+	echo "Directory $DOWNLOAD_DIR does not exist. Creating it now..."
+	if mkdir -p "$DOWNLOAD_DIR"; then
+		echo "Directory created successfully."
+	else
+		echo "Failed to create directory." >&2
+		exit 1
+	fi
 else
-    echo "Directory $DOWNLOAD_DIR already exists."
+	echo "Directory $DOWNLOAD_DIR already exists."
 fi
 
-cd $HOME/Downloads
-wget https://sourceforge.net/projects/refind/files/0.14.2/refind-bin-gnuefi-0.14.2.zip
+cd "$DOWNLOAD_DIR" || exit 1
+wget "https://sourceforge.net/projects/refind/files/${REFIND_VER}/refind-bin-gnuefi-${REFIND_VER}.zip"
 echo "Unzipping rEFInd zip..."
-unzip -o refind-bin-gnuefi-0.14.2.zip
-sudo mkdir -p /boot/efi/EFI/refind
-sudo cp -f $HOME/Downloads/refind-bin-0.14.2/refind/refind_x64.efi /boot/efi/EFI/refind/
-sudo cp -rf $HOME/Downloads/refind-bin-0.14.2/refind/drivers_x64/ /boot/efi/EFI/refind
-sudo cp -rf $HOME/Downloads/refind-bin-0.14.2/refind/tools_x64/ /boot/efi/EFI/refind
+unzip -o "refind-bin-gnuefi-${REFIND_VER}.zip"
+
+ESP_MP="$(findmnt -no TARGET /boot/efi 2>/dev/null || findmnt -no TARGET /efi 2>/dev/null)"
+[ -z "$ESP_MP" ] && ESP_MP="/boot/efi"
+
+REFIND_BIN="$DOWNLOAD_DIR/refind-bin-${REFIND_VER}"
+sudo mkdir -p "$ESP_MP/EFI/refind"
+sudo cp -f "$REFIND_BIN/refind/refind_x64.efi" "$ESP_MP/EFI/refind/"
+sudo cp -rf "$REFIND_BIN/refind/drivers_x64/" "$ESP_MP/EFI/refind"
+sudo cp -rf "$REFIND_BIN/refind/tools_x64/" "$ESP_MP/EFI/refind"
 echo "Installing rEFInd files..."
-sudo $HOME/Downloads/refind-bin-0.14.2/refind-install
-sudo cp -rf $HOME/Downloads/refind-bin-0.14.2/refind/icons/ /boot/efi/EFI/refind
-sudo cp -rf $HOME/Downloads/refind-bin-0.14.2/fonts/ /boot/efi/EFI/refind
-sudo cp -f $HOME/.local/rEFInd_GUI/GUI/refind.conf /boot/efi/EFI/refind/refind.conf
-sudo cp -rf $HOME/.local/rEFInd_GUI/backgrounds/ /boot/efi/EFI/refind
-sudo cp -rf $HOME/.local/rEFInd_GUI/icons/ /boot/efi/EFI/refind
-efibootmgr | tee $HOME/efibootlist.txt
+sudo "$REFIND_BIN/refind-install"
+sudo cp -rf "$REFIND_BIN/refind/icons/" "$ESP_MP/EFI/refind"
+sudo cp -rf "$REFIND_BIN/fonts/" "$ESP_MP/EFI/refind"
+sudo cp -f "$HOME/.local/rEFInd_GUI/GUI/refind.conf" "$ESP_MP/EFI/refind/refind.conf"
+sudo cp -rf "$HOME/.local/rEFInd_GUI/backgrounds/" "$ESP_MP/EFI/refind"
+sudo cp -rf "$HOME/.local/rEFInd_GUI/icons/" "$ESP_MP/EFI/refind"
+
 echo "Fixing EFI entries..."
-WINDOWS_BOOTNUM="$(grep -A0 'Windows' $HOME/efibootlist.txt | grep -Eo '[0-9]{1,4}' | head -1)"
-sudo efibootmgr -b $WINDOWS_BOOTNUM -A
-REFIND_BOOTNUM="$(grep -A0 'rEFInd Boot Manager' $HOME/efibootlist.txt | grep -Eo '[0-9]{1,4}' | head -1)"
-sudo efibootmgr -b $REFIND_BOOTNUM -B
-REFIND_BOOTNUM_ALT="$(grep -A0 'rEFInd' $HOME/efibootlist.txt | grep -Eo '[0-9]{1,4}' | head -1)"
-re='^[0-9]+$'
-if [[ $REFIND_BOOTNUM_ALT =~ $re ]]; then
-	sudo efibootmgr -b $REFIND_BOOTNUM_ALT -B
+EFILIST="$(mktemp)"
+efibootmgr | tee "$EFILIST"
+get_bootnum() {
+	grep -m1 "$1" "$EFILIST" | sed -nE 's/^Boot([0-9A-Fa-f]{4}).*/\1/p'
+}
+BOOTNUM_RE='^[0-9A-Fa-f]{4}$'
+WINDOWS_BOOTNUM="$(get_bootnum 'Windows')"
+if [[ $WINDOWS_BOOTNUM =~ $BOOTNUM_RE ]]; then
+	sudo efibootmgr -b "$WINDOWS_BOOTNUM" -A
 fi
+REFIND_BOOTNUM="$(get_bootnum 'rEFInd Boot Manager')"
+if [[ $REFIND_BOOTNUM =~ $BOOTNUM_RE ]]; then
+	sudo efibootmgr -b "$REFIND_BOOTNUM" -B
+fi
+REFIND_BOOTNUM_ALT="$(get_bootnum 'rEFInd')"
+if [[ $REFIND_BOOTNUM_ALT =~ $BOOTNUM_RE ]]; then
+	sudo efibootmgr -b "$REFIND_BOOTNUM_ALT" -B
+fi
+rm -f "$EFILIST"
+
 echo "Finishing up..."
-sudo efibootmgr -c -d /dev/nvme0n1 -p 1 -L "rEFInd" -l \\EFI\\refind\\refind_x64.efi
-rm $HOME/efibootlist.txt
+ESP_DEV="$(findmnt -no SOURCE "$ESP_MP")"
+ESP_DISK="/dev/$(lsblk -no PKNAME "$ESP_DEV")"
+ESP_PARTNUM="$(cat "/sys/class/block/$(basename "$ESP_DEV")/partition")"
+sudo efibootmgr -c -d "$ESP_DISK" -p "$ESP_PARTNUM" -L "rEFInd" -l '\EFI\refind\refind_x64.efi'
 echo "Installation completed."
