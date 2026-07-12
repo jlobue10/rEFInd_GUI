@@ -207,8 +207,11 @@ void MainWindow::refreshDefaultBootCombo()
 
 void MainWindow::on_Rescan_pushButton_clicked()
 {
+    // Re-detect and reset the slots to the detected defaults (packed into
+    // 1, 2, ... with the preferred OS leading), discarding any manual arrangement.
     detected = detector.detect();
     populateBootCombos();
+    applyAutoSelection();
 }
 
 void MainWindow::browsePng(QLineEdit *edit, const QString &title)
