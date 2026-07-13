@@ -57,6 +57,19 @@ try {
     }
     Copy-Item -Recurse -Force (Join-Path $bin 'fonts') $dest
 
+    # SkorionOS Xbox 360 USB controller UEFI driver: dropping it into rEFInd's
+    # drivers_x64 folder makes wired/handheld gamepads (ROG Ally, Legion Go,
+    # etc.) usable in the boot menu. The driver auto-creates its own config at
+    # \EFI\Xbox360\config.ini on first boot, so only the .efi is needed here.
+    Write-Host 'Downloading UsbXbox360Dxe.efi controller driver...'
+    $driverDest = Join-Path $dest 'drivers_x64\UsbXbox360Dxe.efi'
+    $driverUrl = 'https://github.com/SkorionOS/UsbXbox360Dxe/releases/latest/download/UsbXbox360Dxe.efi'
+    try {
+        Invoke-WebRequest -Uri $driverUrl -OutFile $driverDest -MaximumRedirection 10
+    } catch {
+        Write-Warning "Failed to download UsbXbox360Dxe.efi; skipping controller driver. $_"
+    }
+
     # Back up any existing config, then apply the GUI-generated one.
     $conf = Join-Path $dest 'refind.conf'
     if (Test-Path $conf) {

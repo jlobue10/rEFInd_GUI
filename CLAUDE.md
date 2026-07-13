@@ -64,4 +64,6 @@ Platform-specific code is confined to three files; everything else is shared. Ne
 
 The literal tokens `USER` and `HOME` inside `install_config_from_GUI`, `install_config_from_GUI.sh`, `rEFInd_GUI.desktop`, and `rEFInd_bg_randomizer.sh` are placeholders replaced by `sed` during installation — don't "fix" them to `$USER`/`$HOME`.
 
+**Xbox 360 controller driver**: all three rEFInd install scripts (`refind_install_Sourceforge.sh`, `refind_install_package_mgr.sh`, `windows/install_rEFInd.ps1`) download the SkorionOS `UsbXbox360Dxe.efi` into the ESP's `EFI/refind/drivers_x64/` so gamepads work in the boot menu. The URL is version-agnostic (`.../releases/latest/download/UsbXbox360Dxe.efi`) so no version needs syncing; only the `.efi` is copied (the driver self-creates `\EFI\Xbox360\config.ini` on first boot). Download failure is non-fatal — it warns and continues. The package-manager script is the one that must `mkdir -p .../drivers_x64` first, since `refind-install` doesn't populate it. Keep this step in sync across all three scripts when editing.
+
 `rEFInd_bg_randomizer.service` + `rEFInd_bg_randomizer.sh` implement the optional random-background-on-boot feature, toggled from the GUI via `systemctl enable/disable`.
