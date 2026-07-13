@@ -20,10 +20,13 @@ BAZZITE=$?
 grep -q 'CachyOS' /etc/os-release
 CACHYOS=$?
 
+command -v apt-get >/dev/null 2>&1
+DEB_BASE=$?
+
 # Bail out before touching the system (this script installs a sudoers rule)
 # if no supported package path exists for this distro.
-if [ "$FEDORA_BASE" != 0 ] && [ "$BAZZITE" != 0 ] && [ "$CACHYOS" != 0 ]; then
-	echo "Error: unsupported distro (no dnf, Bazzite, or CachyOS detected). Aborting." >&2
+if [ "$FEDORA_BASE" != 0 ] && [ "$BAZZITE" != 0 ] && [ "$CACHYOS" != 0 ] && [ "$DEB_BASE" != 0 ]; then
+	echo "Error: unsupported distro (no dnf, apt, Bazzite, or CachyOS detected). Aborting." >&2
 	exit 1
 fi
 
@@ -123,6 +126,42 @@ if [ "$CACHYOS" = 0 ]; then
 			echo "Error: makepkg failed. Aborting." >&2
 			exit 1
 		fi
+	fi
+fi
+
+if [ "$DEB_BASE" = 0 ]; then
+	echo -e '\nDebian/Ubuntu based installation starting.\n'
+	# Prefer the CI-built package from the latest release; fall back to a
+	# local dpkg-buildpackage build when the release carries no package or
+	# the download fails.
+	mkdir -p "$HOME/Downloads"
+	cd "$HOME/Downloads" || exit 1
+	rm -f refind-gui*.deb
+	DEB_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*_amd64\.deb" | grep -v "dbgsym" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
+	if [ -n "$DEB_URL" ] && wget "$DEB_URL"; then
+		echo -e '\nInstalling the prebuilt release package.\n'
+		INSTALL_DEB="$(basename "$DEB_URL")"
+		if dpkg -s refind-gui >/dev/null 2>&1; then
+			sudo apt-get remove -y refind-gui
+		fi
+		if ! sudo apt-get install -y "./$INSTALL_DEB"; then
+			echo "Error: apt-get failed to install $INSTALL_DEB. Aborting." >&2
+			exit 1
+		fi
+		rm -f "$INSTALL_DEB"
+	else
+		echo -e '\nNo release package available; building locally with dpkg-buildpackage.\n'
+		sudo apt-get update
+		sudo apt-get install -y build-essential debhelper cmake qtbase5-dev qttools5-dev
+		if ! (cd "$CURRENT_WD" && dpkg-buildpackage -us -uc -b); then
+			echo "Error: dpkg-buildpackage failed. Aborting." >&2
+			exit 1
+		fi
+		if ! sudo apt-get install -y "$HOME"/refind-gui_*.deb; then
+			echo "Error: apt-get failed to install the built package. Aborting." >&2
+			exit 1
+		fi
+		rm -f "$HOME"/refind-gui_*.deb "$HOME"/refind-gui_*.buildinfo "$HOME"/refind-gui_*.changes
 	fi
 fi
 

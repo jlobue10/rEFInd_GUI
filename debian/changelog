@@ -1,0 +1,6 @@
+refind-gui (2.0.0) unstable; urgency=medium
+
+  * Initial Debian packaging (2.0.0): Windows support, automatic OS
+    detection, PNG signature validation.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sun, 12 Jul 2026 17:00:00 -0700
