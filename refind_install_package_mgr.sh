@@ -94,6 +94,16 @@
 		echo "(device: '$ESP_DEV', disk: '$ESP_DISK', partition: '$ESP_PARTNUM')." >&2
 		echo "Existing boot entries were left untouched." >&2
 	else
+		# refind-install just created its own "rEFInd Boot Manager" entry;
+		# remove it up front so the firmware list never carries it alongside
+		# our "rEFInd" entry. Only that exact label is deleted pre-create --
+		# plain "rEFInd" entries from previous installs are kept until the
+		# new entry verifiably exists (see below).
+		while read -r _num; do
+			echo "Deleting refind-install's rEFInd Boot Manager entry Boot$_num..." >&2
+			sudo efibootmgr -b "$_num" -B >/dev/null 2>&1 \
+				|| echo "Warning: could not delete Boot$_num." >&2
+		done < <(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd Boot Manager$/\1/p')
 		# Create the new entry BEFORE deleting old rEFInd entries. The old
 		# delete-then-create order left the machine with no rEFInd entry at
 		# all whenever the create failed, because the entry refind-install
