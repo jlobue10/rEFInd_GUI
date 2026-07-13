@@ -30,27 +30,6 @@
 	fi
 	sudo refind-install
 	echo 50
-	echo "# Fixing EFI entries..."
-	EFILIST="$(mktemp)"
-	efibootmgr | tee "$EFILIST"
-	get_bootnum() {
-		grep -m1 "$1" "$EFILIST" | sed -nE 's/^Boot([0-9A-Fa-f]{4}).*/\1/p'
-	}
-	BOOTNUM_RE='^[0-9A-Fa-f]{4}$'
-	WINDOWS_BOOTNUM="$(get_bootnum 'Windows')"
-	if [[ $WINDOWS_BOOTNUM =~ $BOOTNUM_RE ]]; then
-		sudo efibootmgr -b "$WINDOWS_BOOTNUM" -A
-	fi
-	REFIND_BOOTNUM="$(get_bootnum 'rEFInd Boot Manager')"
-	if [[ $REFIND_BOOTNUM =~ $BOOTNUM_RE ]]; then
-		sudo efibootmgr -b "$REFIND_BOOTNUM" -B
-	fi
-	REFIND_BOOTNUM_ALT="$(get_bootnum 'rEFInd')"
-	if [[ $REFIND_BOOTNUM_ALT =~ $BOOTNUM_RE ]]; then
-		sudo efibootmgr -b "$REFIND_BOOTNUM_ALT" -B
-	fi
-	rm -f "$EFILIST"
-	echo 75
 	echo "# Installing files to EFI system partition..."
 	# Resolve the real ESP mountpoint. The ESP may be mounted at /boot/efi,
 	# /efi, or directly at /boot (CachyOS/systemd-boot single-partition
@@ -72,9 +51,6 @@
 		[ -z "$ESP_MP" ] && ESP_MP="$_mp"
 	done
 	[ -z "$ESP_MP" ] && ESP_MP="/boot/efi"
-	ESP_DEV="$(findmnt -no SOURCE "$ESP_MP")"
-	ESP_DISK="/dev/$(lsblk -no PKNAME "$ESP_DEV")"
-	ESP_PARTNUM="$(cat "/sys/class/block/$(basename "$ESP_DEV")/partition")"
 	if sudo test -f "$ESP_MP/EFI/refind/refind.conf"; then
 		sudo mv "$ESP_MP/EFI/refind/refind.conf" "$ESP_MP/EFI/refind/refind-bkp.conf"
 	fi
@@ -98,7 +74,85 @@
 		echo "# Warning: failed to download UsbXbox360Dxe.efi; skipping controller driver."
 	fi
 	rm -f "$XBOX360_DRV_TMP"
-	sudo efibootmgr -c -d "$ESP_DISK" -p "$ESP_PARTNUM" -L "rEFInd" -l '\EFI\refind\refind_x64.efi'
+	echo 95
+	echo "# Updating EFI boot entries..."
+	# Resolve the ESP's parent disk and partition number for efibootmgr.
+	# `lsblk -no PKNAME` has been observed returning empty here (util-linux
+	# 2.42), which produced `efibootmgr -c -d /dev/ ...` -- a failed create --
+	# so fall back to sysfs, where a partition's parent directory is its disk.
+	# Diagnostics go to stderr: stdout is zenity's progress protocol.
+	ESP_DEV="$(findmnt -no SOURCE "$ESP_MP" | head -1)"
+	ESP_PART="$(basename "$ESP_DEV")"
+	ESP_PARTNUM="$(cat "/sys/class/block/$ESP_PART/partition" 2>/dev/null)"
+	ESP_PARENT="$(lsblk -no PKNAME "$ESP_DEV" 2>/dev/null | head -1)"
+	if [ -z "$ESP_PARENT" ]; then
+		ESP_PARENT="$(basename "$(dirname "$(readlink -f "/sys/class/block/$ESP_PART")")")"
+	fi
+	ESP_DISK="/dev/$ESP_PARENT"
+	if [ ! -b "$ESP_DISK" ] || [ -z "$ESP_PARTNUM" ]; then
+		echo "ERROR: could not resolve the ESP's disk and partition number" >&2
+		echo "(device: '$ESP_DEV', disk: '$ESP_DISK', partition: '$ESP_PARTNUM')." >&2
+		echo "Existing boot entries were left untouched." >&2
+	else
+		# Create the new entry BEFORE deleting old rEFInd entries. The old
+		# delete-then-create order left the machine with no rEFInd entry at
+		# all whenever the create failed, because the entry refind-install
+		# had just made was already gone.
+		if CREATE_OUT="$(sudo efibootmgr -c -d "$ESP_DISK" -p "$ESP_PARTNUM" -L "rEFInd" -l '\EFI\refind\refind_x64.efi' 2>&1)"; then
+			# efibootmgr -c puts the new entry first in BootOrder; use that
+			# to identify it so the cleanup below never deletes it.
+			NEW_BOOTNUM="$(efibootmgr | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{4}).*/\1/p')"
+			if [ -n "$NEW_BOOTNUM" ] && efibootmgr | grep -qE "^Boot${NEW_BOOTNUM}\*? +rEFInd$"; then
+				while read -r _num; do
+					[ "$_num" = "$NEW_BOOTNUM" ] && continue
+					echo "Deleting old rEFInd entry Boot$_num..." >&2
+					sudo efibootmgr -b "$_num" -B >/dev/null 2>&1 \
+						|| echo "Warning: could not delete Boot$_num." >&2
+				done < <(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd.*/\1/p')
+			else
+				echo "Warning: could not identify the new rEFInd entry; skipping cleanup of old entries." >&2
+			fi
+		else
+			echo "ERROR: creating the rEFInd boot entry failed:" >&2
+			printf '%s\n' "$CREATE_OUT" >&2
+			echo "Existing rEFInd entries (if any) were left in place." >&2
+		fi
+		WINDOWS_BOOTNUM="$(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +Windows.*/\1/p' | head -1)"
+		if [ -n "$WINDOWS_BOOTNUM" ]; then
+			sudo efibootmgr -b "$WINDOWS_BOOTNUM" -A >/dev/null 2>&1 \
+				|| echo "Warning: could not deactivate the Windows boot entry." >&2
+		fi
+	fi
 	echo 100
-	echo "# Installation completed successfully."
+	echo "# Installation finished."
 ) | zenity --title "Installing rEFInd" --progress --no-cancel --width=500 2>/dev/null
+
+# Verify the result from live NVRAM and show it both in the terminal (the GUI
+# runs this in a transient xterm -- keep it open so the status can be read)
+# and as a zenity dialog.
+echo
+echo "==================== Installation summary ===================="
+FINAL_LIST="$(efibootmgr)"
+printf '%s\n' "$FINAL_LIST"
+echo "---------------------------------------------------------------"
+REFIND_NUMS="$(printf '%s\n' "$FINAL_LIST" | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd.*/\1/p')"
+FIRST_BOOT="$(printf '%s\n' "$FINAL_LIST" | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{4}).*/\1/p')"
+if [ -z "$REFIND_NUMS" ]; then
+	echo "*** FAILED: no rEFInd entry exists in the firmware boot list. ***"
+	echo "*** rEFInd will NOT be offered at boot -- see errors above.   ***"
+	zenity --error --title="rEFInd installation failed" --width=450 \
+		--text="No rEFInd boot entry exists in the firmware boot list.\nrEFInd will NOT be offered at boot. See the terminal window for details." 2>/dev/null
+elif printf '%s\n' "$REFIND_NUMS" | grep -qx "$FIRST_BOOT"; then
+	echo "SUCCESS: rEFInd is installed and first in the boot order."
+	zenity --info --title="rEFInd installed" --width=400 \
+		--text="rEFInd is installed and first in the boot order." 2>/dev/null
+else
+	echo "WARNING: a rEFInd entry exists but is NOT first in the boot order"
+	echo "(boot order starts with Boot$FIRST_BOOT)."
+	zenity --warning --title="rEFInd installed with warnings" --width=450 \
+		--text="A rEFInd boot entry exists but is NOT first in the boot order." 2>/dev/null
+fi
+if [ -t 0 ]; then
+	echo
+	read -rp "Press Enter to close this window..."
+fi
