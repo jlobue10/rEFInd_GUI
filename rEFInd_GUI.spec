@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,15 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sun Jul 12 2026 Jon LoBue <jlobue10@gmail.com> [2.0.1-1]
+- Fix OS detection finding neither Windows nor Linux on multi-ESP systems:
+  request NAME from lsblk (its omission produced a flat device list that hid
+  every partition) and scan every ESP by its real mount point
+- Generated boot stanzas now carry each OS's ESP partition GUID as volume, so
+  they boot regardless of which ESP rEFInd itself launched from
+- Name a bare systemd-boot install after the running distro (e.g. CachyOS)
+- Install the generated config to the ESP firmware actually boots rEFInd from
+
 * Sun Jul 12 2026 Jon LoBue <jlobue10@gmail.com> [2.0.0-1]
 - Windows support: the GUI now builds and runs on Windows (Qt6) with a
   per-user Inno Setup installer and SignPath code signing

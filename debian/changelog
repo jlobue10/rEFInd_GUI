@@ -1,3 +1,12 @@
+refind-gui (2.0.1) unstable; urgency=medium
+
+  * Fix OS detection on multi-ESP systems (lsblk NAME column / flat output,
+    per-ESP scanning), tag generated stanzas with each OS's ESP partition
+    GUID, name bare systemd-boot after the running distro, and install the
+    config to the ESP firmware actually boots rEFInd from.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sun, 12 Jul 2026 21:58:00 -0700
+
 refind-gui (2.0.0) unstable; urgency=medium
 
   * Initial Debian packaging (2.0.0): Windows support, automatic OS
