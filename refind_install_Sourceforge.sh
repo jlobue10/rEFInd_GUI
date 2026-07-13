@@ -33,6 +33,20 @@ sudo mkdir -p "$ESP_MP/EFI/refind"
 sudo cp -f "$REFIND_BIN/refind/refind_x64.efi" "$ESP_MP/EFI/refind/"
 sudo cp -rf "$REFIND_BIN/refind/drivers_x64/" "$ESP_MP/EFI/refind"
 sudo cp -rf "$REFIND_BIN/refind/tools_x64/" "$ESP_MP/EFI/refind"
+
+# SkorionOS Xbox 360 USB controller UEFI driver: dropping it into rEFInd's
+# drivers_x64 folder makes wired/handheld gamepads (ROG Ally, Legion Go, etc.)
+# usable in the boot menu. The driver auto-creates its own config at
+# \EFI\Xbox360\config.ini on first boot, so only the .efi is needed here.
+XBOX360_DRV_URL="https://github.com/SkorionOS/UsbXbox360Dxe/releases/latest/download/UsbXbox360Dxe.efi"
+echo "Downloading UsbXbox360Dxe.efi controller driver..."
+sudo mkdir -p "$ESP_MP/EFI/refind/drivers_x64"
+if wget -q -O "$DOWNLOAD_DIR/UsbXbox360Dxe.efi" "$XBOX360_DRV_URL"; then
+	sudo cp -f "$DOWNLOAD_DIR/UsbXbox360Dxe.efi" "$ESP_MP/EFI/refind/drivers_x64/UsbXbox360Dxe.efi"
+	rm -f "$DOWNLOAD_DIR/UsbXbox360Dxe.efi"
+else
+	echo "Warning: failed to download UsbXbox360Dxe.efi; skipping controller driver." >&2
+fi
 echo "Installing rEFInd files..."
 sudo "$REFIND_BIN/refind-install"
 sudo cp -rf "$REFIND_BIN/refind/icons/" "$ESP_MP/EFI/refind"

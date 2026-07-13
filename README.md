@@ -33,7 +33,7 @@ Release builds are Authenticode-signed (executable, installer, and PowerShell sc
 Windows notes:
 
 - The app requests **Administrator** rights at launch — everything it does (mounting the EFI System Partition via `mountvol`, `bcdedit`) needs them.
-- **Install rEFInd** downloads rEFInd from SourceForge and points the Windows Boot Manager firmware entry at rEFInd (`bcdedit /set {bootmgr} path \EFI\refind\refind_x64.efi`). Your previous settings are saved to `%LOCALAPPDATA%\rEFInd_GUI\bootmgr-backup.txt`, and the revert command is printed after installation.
+- **Install rEFInd** downloads rEFInd from SourceForge and points the Windows Boot Manager firmware entry at rEFInd (`bcdedit /set {bootmgr} path \EFI\refind\refind_x64.efi`). Your previous settings are saved to `%LOCALAPPDATA%\rEFInd_GUI\bootmgr-backup.txt`, and the revert command is printed after installation. It also fetches the [Xbox 360 controller driver](#controller-support-in-the-boot-menu) into `EFI\refind\drivers_x64`.
 - The background randomizer runs as a Scheduled Task at logon instead of a systemd service.
 - The SteamOS `firmware_bootnum` option is Linux-only (Windows has no `efibootmgr` equivalent).
 
@@ -57,6 +57,12 @@ Let that command finish and then either run `systemctl reboot` or reboot another
 ## Legion Go
 
 Some simple logic has been added to default to 2560 x 1600 in the generated `refind.conf` file on a Legion Go device. This solves a portrait rotation issue.
+
+## Controller support in the boot menu
+
+Every rEFInd install path now drops the **[SkorionOS UsbXbox360Dxe](https://github.com/SkorionOS/UsbXbox360Dxe)** UEFI driver into rEFInd's `drivers_x64` folder on the ESP, so Xbox 360 / handheld gamepads (ASUS ROG Ally/Ally X, Legion Go, GPD, OneXPlayer, MSI Claw, 8BitDo, and 40+ others) can drive the rEFInd boot menu with mouse-emulation and key mappings. rEFInd auto-loads every driver it finds in `drivers_x64`, so nothing else is required.
+
+The latest release of the driver is fetched at install time from `https://github.com/SkorionOS/UsbXbox360Dxe/releases/latest`, so you always get the newest build. Only the `.efi` is installed — on first boot the driver auto-creates its own config at `\EFI\Xbox360\config.ini` on the ESP, which you can edit to remap buttons/sticks. If the download fails (no network), the rEFInd install still completes; the driver is simply skipped.
 
 ## Secure boot considerations
 
@@ -84,6 +90,12 @@ sudo sbctl sign -s object-to-be-signed
 ```
 
 Replace the "object-to-be-signed" portion with the full path efi file(s) or Linux kernel to be signed. Remember to sign new kernels before trying to boot into them with secure boot enabled.
+
+If you use the bundled Xbox 360 controller driver (see [Controller support in the boot menu](#controller-support-in-the-boot-menu)) with secure boot enabled, sign it too — the firmware verifies drivers rEFInd loads:
+
+```
+sudo sbctl sign -s /boot/efi/EFI/refind/drivers_x64/UsbXbox360Dxe.efi
+```
 
 Re-enable secure boot in BIOS, and enjoy the benefits of being able to play anti-cheat games in Windows and a fully functioning Linux distro, side-by-side without toggling the secure boot setting in BIOS.
 
