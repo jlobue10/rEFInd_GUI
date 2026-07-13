@@ -1,3 +1,11 @@
+refind-gui (2.0.2) unstable; urgency=medium
+
+  * Detect the Legion Go 2 (DMI product name 83N0/83N1) and default the
+    generated refind.conf to resolution 1920 1200 on it; the Go 2 shares
+    the original Go's board name, which previously forced 2560 1600 there.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Mon, 13 Jul 2026 07:43:00 -0700
+
 refind-gui (2.0.1) unstable; urgency=medium
 
   * Fix OS detection on multi-ESP systems (lsblk NAME column / flat output,
