@@ -52,7 +52,25 @@
 	rm -f "$EFILIST"
 	echo 75
 	echo "# Installing files to EFI system partition..."
-	ESP_MP="$(findmnt -no TARGET /boot/efi 2>/dev/null || findmnt -no TARGET /efi 2>/dev/null)"
+	# Resolve the real ESP mountpoint. The ESP may be mounted at /boot/efi,
+	# /efi, or directly at /boot (CachyOS/systemd-boot single-partition
+	# layout). Plain `findmnt /boot/efi` only matches an exact mountpoint, so
+	# on a /boot-mounted ESP it returned nothing and the old fallback wrote to
+	# the literal path /boot/efi -- a *subdir inside* the ESP -- producing a
+	# nested EFI/EFI/refind the firmware never loads. `findmnt --target`
+	# resolves a path to its containing mount; we pick the FAT ESP that
+	# already holds an EFI/refind install so writes hit the booting copy.
+	ESP_MP=""
+	for _cand in /boot/efi /efi /boot; do
+		[ -e "$_cand" ] || continue
+		_mp="$(findmnt -no TARGET --target "$_cand" 2>/dev/null | head -1)"
+		[ -n "$_mp" ] || continue
+		case "$(findmnt -no FSTYPE --target "$_cand" 2>/dev/null | head -1)" in
+			vfat|msdos|fat) ;; *) continue ;;
+		esac
+		if [ -d "$_mp/EFI/refind" ]; then ESP_MP="$_mp"; break; fi
+		[ -z "$ESP_MP" ] && ESP_MP="$_mp"
+	done
 	[ -z "$ESP_MP" ] && ESP_MP="/boot/efi"
 	ESP_DEV="$(findmnt -no SOURCE "$ESP_MP")"
 	ESP_DISK="/dev/$(lsblk -no PKNAME "$ESP_DEV")"
