@@ -38,21 +38,35 @@ chmod +x "$HOME/.local/rEFInd_GUI/refind_install_package_mgr.sh" "$HOME/.local/r
 
 if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 	echo -e '\nFedora based installation starting.\n'
-	sudo dnf install -y cmake gcc-c++ qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel xterm
-	mkdir -p "$HOME/rpmbuild/SPECS" "$HOME/rpmbuild/SOURCES"
-	cp -f "$CURRENT_WD/rEFInd_GUI.spec" "$HOME/rpmbuild/SPECS"
-	# Fresh output dir so the install glob below can't pick up stale rpms
-	# from a previous build.
-	rm -f "$HOME"/rpmbuild/RPMS/x86_64/rEFInd_GUI*.rpm
-	if ! rpmbuild -bb "$HOME/rpmbuild/SPECS/rEFInd_GUI.spec"; then
-		echo "Error: rpmbuild failed. Aborting." >&2
-		exit 1
+	sudo dnf install -y xterm
+	# Prefer the CI-built rpm from the latest release; fall back to a local
+	# rpmbuild when the release carries no rpm or the download fails.
+	mkdir -p "$HOME/Downloads"
+	cd "$HOME/Downloads" || exit 1
+	rm -f rEFInd_GUI*.rpm
+	RPM_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*\.rpm" | grep -vE "\.src\.rpm|debuginfo|debugsource" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
+	if [ -n "$RPM_URL" ] && wget "$RPM_URL"; then
+		echo -e '\nInstalling the prebuilt release rpm.\n'
+	else
+		echo -e '\nNo release rpm available; building locally with rpmbuild.\n'
+		sudo dnf install -y rpm-build cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel
+		mkdir -p "$HOME/rpmbuild/SPECS" "$HOME/rpmbuild/SOURCES"
+		cp -f "$CURRENT_WD/rEFInd_GUI.spec" "$HOME/rpmbuild/SPECS"
+		cp -f "$CURRENT_WD/rEFInd_bg_randomizer.service" "$HOME/rpmbuild/SOURCES"
+		# Fresh output dir so the copy below can't pick up stale rpms from a
+		# previous build.
+		rm -f "$HOME"/rpmbuild/RPMS/x86_64/rEFInd_GUI*.rpm
+		if ! rpmbuild -bb "$HOME/rpmbuild/SPECS/rEFInd_GUI.spec"; then
+			echo "Error: rpmbuild failed. Aborting." >&2
+			exit 1
+		fi
+		cp -f "$HOME"/rpmbuild/RPMS/x86_64/rEFInd_GUI-[0-9]*.rpm "$HOME/Downloads/"
 	fi
 	if dnf list --installed | grep -q rEFInd_GUI; then
 		sudo dnf remove -y rEFInd_GUI
 	fi
-	# rEFInd_GUI-[0-9]* skips the -debuginfo/-debugsource split packages
-	sudo dnf install -y "$HOME"/rpmbuild/RPMS/x86_64/rEFInd_GUI-[0-9]*.rpm
+	# rEFInd_GUI-[0-9]* skips src/debug rpms and anything stale
+	sudo dnf install -y "$HOME"/Downloads/rEFInd_GUI-[0-9]*.rpm
 fi
 
 if [ "$BAZZITE" = 0 ]; then
