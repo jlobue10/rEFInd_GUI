@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+# Binary installs to /etc/rEFInd (not /usr/bin) to match the rpm/PKGBUILD
+# layout that the desktop file and sudoers rule expect.
+
+%:
+	dh $@ --sourcedirectory=GUI/src --builddirectory=build-deb
+
+override_dh_auto_install:
+	install -D -m 0755 build-deb/rEFInd_GUI debian/refind-gui/etc/rEFInd/rEFInd_GUI
+	install -D -m 0644 rEFInd_bg_randomizer.service debian/refind-gui/etc/systemd/system/rEFInd_bg_randomizer.service

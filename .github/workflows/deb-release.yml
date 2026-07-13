@@ -1,0 +1,66 @@
+name: Deb Package Release
+
+# Builds the Debian/Ubuntu package (.deb) with dpkg-buildpackage inside an
+# ubuntu:22.04 container (older glibc/Qt baseline, so the package installs on
+# 22.04 and everything newer) and attaches it to the GitHub Release for the
+# tag.
+#
+# Runs automatically on version tags; workflow_dispatch takes an existing tag
+# so a package can be (re)built for a release after the fact.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing v* tag to build and attach the package to'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ubuntu:22.04
+    env:
+      TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y build-essential debhelper cmake qtbase5-dev qttools5-dev git ca-certificates
+
+      # Default checkout: the tag itself on tag pushes, the dispatched branch
+      # on manual runs. The packaging recipe (debian/) comes from that ref,
+      # while the packaged source is cloned from the tag below — so
+      # dispatching from main rebuilds an old release with the current recipe,
+      # and the version guard keeps the pairing honest.
+      - uses: actions/checkout@v4
+
+      - name: Check changelog version matches the tag
+        run: |
+          version="$(sed -n '1s/.*(\(.*\)).*/\1/p' debian/changelog)"
+          if [ "v${version}" != "${TAG}" ]; then
+            echo "::error::debian/changelog version=${version} does not match tag ${TAG}; add a changelog entry before tagging."
+            exit 1
+          fi
+
+      - name: Build package (dpkg-buildpackage)
+        run: |
+          git clone --branch "${TAG}" --depth 1 https://github.com/jlobue10/rEFInd_GUI src-tag
+          rm -rf src-tag/debian
+          cp -r debian src-tag/debian
+          cd src-tag
+          dpkg-buildpackage -us -uc -b
+          cd ..
+          mkdir out
+          cp refind-gui_*.deb out/
+          ls -l out
+
+      - name: Attach package to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          files: out/*.deb

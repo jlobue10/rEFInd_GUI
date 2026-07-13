@@ -1,0 +1,14 @@
+Source: refind-gui
+Section: utils
+Priority: optional
+Maintainer: Jon LoBue <jlobue10@gmail.com>
+Build-Depends: debhelper-compat (= 13), cmake, qtbase5-dev, qttools5-dev
+Standards-Version: 4.6.0
+Homepage: https://github.com/jlobue10/rEFInd_GUI
+
+Package: refind-gui
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}, mokutil, sbsigntool, xterm, zenity
+Description: Small GUI for customizing and installing rEFInd bootloader
+ GUI for installing the rEFInd boot manager and customizing its
+ configuration, background, and OS icons.
