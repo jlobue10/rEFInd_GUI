@@ -116,7 +116,20 @@ bool OSDetector::isLegionGo()
     bool ok = false;
     const QString product = runPowerShell(
         QStringLiteral("(Get-CimInstance -ClassName Win32_BaseBoard).Product"), &ok);
-    return ok && product.trimmed() == QStringLiteral("LNVNB161216");
+    // The Legion Go 2 reports the same baseboard product, so exclude it here.
+    return ok && product.trimmed() == QStringLiteral("LNVNB161216") && !isLegionGo2();
+}
+
+bool OSDetector::isLegionGo2()
+{
+    bool ok = false;
+    // SMBIOS product name (machine type), e.g. "83E1" on the original Legion Go.
+    const QString model = runPowerShell(
+        QStringLiteral("(Get-CimInstance -ClassName Win32_ComputerSystem).Model"), &ok);
+    if (!ok)
+        return false;
+    const QString mt = model.trimmed();
+    return mt == QStringLiteral("83N0") || mt == QStringLiteral("83N1");
 }
 
 QStringList OSDetector::runningOsIds()

@@ -28,6 +28,7 @@ public:
     QList<BootEntry> detect();
 
     static bool isLegionGo();
+    static bool isLegionGo2();
     // Partition GUID of the first ESP on removable media (SD card or USB), for
     // the static "Windows (SD)"/"Windows (USB)" combo fallbacks.
     QString removableEspPartUuid(bool sdCard);

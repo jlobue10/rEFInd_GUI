@@ -17,7 +17,7 @@
 #include <QVariant>
 #include <QVersionNumber>
 
-static const char APP_VERSION[] = "2.0.1";
+static const char APP_VERSION[] = "2.0.2";
 static const char VERSION_URL[] = "https://raw.githubusercontent.com/jlobue10/rEFInd_GUI/main/VERSION";
 static const QString NONE_OPTION = QStringLiteral("None");
 
@@ -309,8 +309,13 @@ void MainWindow::on_Create_Config_clicked()
     out << "hideui singleuser,hints,arrows,label,badges\n";
     out << "banner background.png\n";
     out << "banner_scale fillscreen\n";
-    // Legion Go panel is portrait-native; forcing landscape avoids rotation issues.
-    out << (OSDetector::isLegionGo() ? "resolution 2560 1600\n" : "resolution 3\n");
+    // Legion Go panels are portrait-native; forcing landscape avoids rotation issues.
+    if (OSDetector::isLegionGo2())
+        out << "resolution 1920 1200\n";
+    else if (OSDetector::isLegionGo())
+        out << "resolution 2560 1600\n";
+    else
+        out << "resolution 3\n";
     out << "enable_touch\n";
     out << (ui->Enable_Mouse_checkBox->isChecked() ? "" : "#") << "enable_mouse\n";
     out << "showtools\n";

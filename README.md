@@ -56,7 +56,7 @@ Let that command finish and then either run `systemctl reboot` or reboot another
 
 ## Legion Go
 
-Some simple logic has been added to default to 2560 x 1600 in the generated `refind.conf` file on a Legion Go device. This solves a portrait rotation issue.
+Some simple logic has been added to default to 2560 x 1600 in the generated `refind.conf` file on a Legion Go device (1920 x 1200 on a Legion Go 2). This solves a portrait rotation issue.
 
 ## Controller support in the boot menu
 

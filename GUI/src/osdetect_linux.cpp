@@ -98,12 +98,25 @@ void OSDetector::releaseEspRoot(const QString &root)
     Q_UNUSED(root); // nothing is mounted by espScanRoot() on Linux
 }
 
+static QString readDmiId(const char *name)
+{
+    QFile f(QStringLiteral("/sys/devices/virtual/dmi/id/") + QLatin1String(name));
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
+        return {};
+    return QString::fromUtf8(f.readAll()).trimmed();
+}
+
 bool OSDetector::isLegionGo()
 {
-    QFile board(QStringLiteral("/sys/devices/virtual/dmi/id/board_name"));
-    if (!board.open(QIODevice::ReadOnly | QIODevice::Text))
-        return false;
-    return QString::fromUtf8(board.readAll()).trimmed() == QStringLiteral("LNVNB161216");
+    // The Legion Go 2 reports the same board name, so exclude it here.
+    return readDmiId("board_name") == QStringLiteral("LNVNB161216") && !isLegionGo2();
+}
+
+bool OSDetector::isLegionGo2()
+{
+    // Machine-type product names, as matched by the kernel's pmc quirk list.
+    const QString product = readDmiId("product_name");
+    return product == QStringLiteral("83N0") || product == QStringLiteral("83N1");
 }
 
 QStringList OSDetector::runningOsIds()
