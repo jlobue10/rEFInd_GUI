@@ -135,6 +135,26 @@
 				|| echo "Warning: could not deactivate the Windows boot entry." >&2
 		fi
 	fi
+	# CachyOS manages Secure Boot with sbctl: when Secure Boot is enabled, the
+	# rEFInd binaries just written to the ESP must be signed with the enrolled
+	# sbctl keys or the firmware will refuse to load them. The SecureBoot
+	# efivar's fifth byte (after the 4-byte attribute header) is 1 when
+	# enforcing. sbctl output goes to stderr: stdout is zenity's protocol.
+	if grep -qE '^ID="?cachyos"?$' /etc/os-release 2>/dev/null; then
+		SB_STATE="$(od -An -tu1 -j4 -N1 \
+			/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null \
+			| tr -d '[:space:]')"
+		if [ "$SB_STATE" = "1" ]; then
+			echo 97
+			echo "# Signing EFI binaries for Secure Boot (sbctl)..."
+			if command -v sbctl-batch-sign >/dev/null 2>&1; then
+				sudo sbctl-batch-sign >&2 \
+					|| echo "Warning: sbctl-batch-sign failed; rEFInd may not load with Secure Boot enabled." >&2
+			else
+				echo "Warning: Secure Boot is enabled but sbctl-batch-sign was not found; EFI binaries were not signed." >&2
+			fi
+		fi
+	fi
 	echo 100
 	echo "# Installation finished."
 ) | zenity --title "Installing rEFInd" --progress --no-cancel --width=500 2>/dev/null
