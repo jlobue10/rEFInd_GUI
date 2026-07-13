@@ -1,0 +1,60 @@
+name: Arch Package Release
+
+# Builds the Arch package (.pkg.tar.zst) with makepkg inside an Arch container
+# and attaches it to the GitHub Release for the tag — gives the CachyOS/Arch
+# install path a prebuilt package instead of a local makepkg build.
+#
+# Runs automatically on version tags; workflow_dispatch takes an existing tag
+# so a package can be (re)built for a release after the fact.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing v* tag to build and attach the package to'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    env:
+      TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+    steps:
+      # Exact makedepends plus the runtime depends (makepkg verifies both are
+      # installed); makepkg then runs without -s, so a drifting PKGBUILD fails
+      # loudly here.
+      - name: Install build dependencies
+        run: pacman -Syu --noconfirm git cmake gcc make qt5-base qt5-tools mokutil sbsigntools xterm zenity
+
+      # Default checkout: the tag itself on tag pushes, the dispatched branch
+      # on manual runs. The packaging recipe (PKGBUILD + service file) comes
+      # from that ref, while the packaged source is the tag the PKGBUILD pins
+      # via v$pkgver — so dispatching from main rebuilds an old release with
+      # the current recipe, and the pkgver guard below keeps the pairing
+      # honest.
+      - uses: actions/checkout@v4
+
+      - name: Check PKGBUILD pkgver matches the tag
+        run: |
+          pkgver="$(sed -n 's/^pkgver=//p' PKGBUILD)"
+          if [ "v${pkgver}" != "${TAG}" ]; then
+            echo "::error::PKGBUILD pkgver=${pkgver} does not match tag ${TAG}; bump pkgver before tagging."
+            exit 1
+          fi
+
+      - name: Build package (makepkg)
+        run: |
+          useradd -m builder
+          chown -R builder: .
+          su builder -c 'makepkg --noconfirm'
+
+      - name: Attach package to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          files: '*.pkg.tar.zst'
