@@ -1,3 +1,12 @@
+refind-gui (2.0.3) unstable; urgency=medium
+
+  * Fetch the Xbox 360 controller UEFI driver from the jlobue10 fork
+    (v1.4.0) so the rEFInd boot menu supports Legion Go 2 controllers and
+    carries the ASUS Ally poll-timeout lockup fix; temporary until
+    upstream SkorionOS/UsbXbox360Dxe PR #6 is merged and released.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Mon, 13 Jul 2026 09:05:00 -0700
+
 refind-gui (2.0.2) unstable; urgency=medium
 
   * Detect the Legion Go 2 (DMI product name 83N0/83N1) and default the

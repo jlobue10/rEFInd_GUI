@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,11 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Mon Jul 13 2026 Jon LoBue <jlobue10@gmail.com> [2.0.3-1]
+- Fetch the Xbox 360 controller UEFI driver from the jlobue10 fork (v1.4.0)
+  so the rEFInd boot menu supports Legion Go 2 controllers and carries the
+  ASUS Ally poll-timeout lockup fix; temporary until upstream PR #6 merges
+
 * Mon Jul 13 2026 Jon LoBue <jlobue10@gmail.com> [2.0.2-1]
 - Detect the Legion Go 2 (DMI product name 83N0/83N1) and default the
   generated refind.conf to resolution 1920 1200 on it; the Go 2 shares the
