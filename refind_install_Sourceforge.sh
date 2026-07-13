@@ -114,11 +114,13 @@ else
 	# our "rEFInd" entry. Only that exact label is deleted pre-create --
 	# plain "rEFInd" entries from previous installs are kept until the
 	# new entry verifiably exists (see below).
+	# efibootmgr >= 18 appends "\t<device path>" after the label even
+	# without -v, so label matches must allow an optional tab suffix.
 	while read -r _num; do
 		echo "Deleting refind-install's rEFInd Boot Manager entry Boot$_num..."
 		sudo efibootmgr -b "$_num" -B >/dev/null 2>&1 \
 			|| echo "Warning: could not delete Boot$_num." >&2
-	done < <(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd Boot Manager$/\1/p')
+	done < <(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd Boot Manager(\t.*)?$/\1/p')
 	# Create the new entry BEFORE deleting old rEFInd entries. The old
 	# delete-then-create order left the machine with no rEFInd entry at
 	# all whenever the create failed, because the entry refind-install
@@ -128,7 +130,7 @@ else
 		# efibootmgr -c puts the new entry first in BootOrder; use that
 		# to identify it so the cleanup below never deletes it.
 		NEW_BOOTNUM="$(efibootmgr | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{4}).*/\1/p')"
-		if [ -n "$NEW_BOOTNUM" ] && efibootmgr | grep -qE "^Boot${NEW_BOOTNUM}\*? +rEFInd$"; then
+		if [ -n "$NEW_BOOTNUM" ] && efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd(\t.*)?$/\1/p' | grep -qx "$NEW_BOOTNUM"; then
 			while read -r _num; do
 				[ "$_num" = "$NEW_BOOTNUM" ] && continue
 				echo "Deleting old rEFInd entry Boot$_num..."
