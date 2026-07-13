@@ -60,9 +60,9 @@ Some simple logic has been added to default to 2560 x 1600 in the generated `ref
 
 ## Controller support in the boot menu
 
-Every rEFInd install path now drops the **[SkorionOS UsbXbox360Dxe](https://github.com/SkorionOS/UsbXbox360Dxe)** UEFI driver into rEFInd's `drivers_x64` folder on the ESP, so Xbox 360 / handheld gamepads (ASUS ROG Ally/Ally X, Legion Go, GPD, OneXPlayer, MSI Claw, 8BitDo, and 40+ others) can drive the rEFInd boot menu with mouse-emulation and key mappings. rEFInd auto-loads every driver it finds in `drivers_x64`, so nothing else is required.
+Every rEFInd install path now drops the **[SkorionOS UsbXbox360Dxe](https://github.com/SkorionOS/UsbXbox360Dxe)** UEFI driver into rEFInd's `drivers_x64` folder on the ESP, so Xbox 360 / handheld gamepads (ASUS ROG Ally/Ally X, Legion Go, Legion Go 2, GPD, OneXPlayer, MSI Claw, 8BitDo, and 40+ others) can drive the rEFInd boot menu with mouse-emulation and key mappings. rEFInd auto-loads every driver it finds in `drivers_x64`, so nothing else is required.
 
-The latest release of the driver is fetched at install time from `https://github.com/SkorionOS/UsbXbox360Dxe/releases/latest`, so you always get the newest build. Only the `.efi` is installed — on first boot the driver auto-creates its own config at `\EFI\Xbox360\config.ini` on the ESP, which you can edit to remap buttons/sticks. If the download fails (no network), the rEFInd install still completes; the driver is simply skipped.
+The latest release of the driver is fetched at install time from `https://github.com/jlobue10/UsbXbox360Dxe/releases/latest` (temporarily a fork of the SkorionOS driver that adds Legion Go 2 controller support — [upstream PR #6](https://github.com/SkorionOS/UsbXbox360Dxe/pull/6) — plus an ASUS Ally lockup fix; the source will switch back to SkorionOS once those are merged and released upstream), so you always get the newest build. Only the `.efi` is installed — on first boot the driver auto-creates its own config at `\EFI\Xbox360\config.ini` on the ESP, which you can edit to remap buttons/sticks. If the download fails (no network), the rEFInd install still completes; the driver is simply skipped.
 
 ## Secure boot considerations
 
