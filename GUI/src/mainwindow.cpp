@@ -17,7 +17,7 @@
 #include <QVariant>
 #include <QVersionNumber>
 
-static const char APP_VERSION[] = "2.0.2";
+static const char APP_VERSION[] = "2.0.3";
 static const char VERSION_URL[] = "https://raw.githubusercontent.com/jlobue10/rEFInd_GUI/main/VERSION";
 static const QString NONE_OPTION = QStringLiteral("None");
 
