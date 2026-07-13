@@ -98,10 +98,31 @@ fi
 
 if [ "$CACHYOS" = 0 ]; then
 	echo "Starting CachyOS based installation."
-	sudo pacman -S --needed base-devel git cmake qt5-base qt5-tools
-	if ! (cd "$CURRENT_WD" && makepkg -si); then
-		echo "Error: makepkg failed. Aborting." >&2
-		exit 1
+	# Prefer the CI-built package from the latest release; fall back to a
+	# local makepkg build when the release carries no package or the
+	# download fails.
+	mkdir -p "$HOME/Downloads"
+	cd "$HOME/Downloads" || exit 1
+	rm -f rEFInd_GUI*.pkg.tar.zst
+	PKG_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*x86_64\.pkg\.tar\.zst" | grep -v "debug" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
+	if [ -n "$PKG_URL" ] && wget "$PKG_URL"; then
+		echo -e '\nInstalling the prebuilt release package.\n'
+		INSTALL_PKG="$(basename "$PKG_URL")"
+		if pacman -Qs rEFInd_GUI > /dev/null; then
+			sudo pacman -R --noconfirm rEFInd_GUI
+		fi
+		if ! sudo pacman -U --noconfirm "./$INSTALL_PKG"; then
+			echo "Error: pacman failed to install $INSTALL_PKG. Aborting." >&2
+			exit 1
+		fi
+		rm -f "$INSTALL_PKG"
+	else
+		echo -e '\nNo release package available; building locally with makepkg.\n'
+		sudo pacman -S --needed base-devel git cmake qt5-base qt5-tools
+		if ! (cd "$CURRENT_WD" && makepkg -si); then
+			echo "Error: makepkg failed. Aborting." >&2
+			exit 1
+		fi
 	fi
 fi
 
