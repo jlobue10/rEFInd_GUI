@@ -61,9 +61,11 @@ try {
     # drivers_x64 folder makes wired/handheld gamepads (ROG Ally, Legion Go,
     # etc.) usable in the boot menu. The driver auto-creates its own config at
     # \EFI\Xbox360\config.ini on first boot, so only the .efi is needed here.
+    # NOTE: temporarily fetched from the jlobue10 fork (adds Legion Go 2 PIDs +
+    # Ally lockup fix); revert to SkorionOS once upstream PR #6 is merged/released.
     Write-Host 'Downloading UsbXbox360Dxe.efi controller driver...'
     $driverDest = Join-Path $dest 'drivers_x64\UsbXbox360Dxe.efi'
-    $driverUrl = 'https://github.com/SkorionOS/UsbXbox360Dxe/releases/latest/download/UsbXbox360Dxe.efi'
+    $driverUrl = 'https://github.com/jlobue10/UsbXbox360Dxe/releases/latest/download/UsbXbox360Dxe.efi'
     try {
         Invoke-WebRequest -Uri $driverUrl -OutFile $driverDest -MaximumRedirection 10
     } catch {

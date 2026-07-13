@@ -38,7 +38,9 @@ sudo cp -rf "$REFIND_BIN/refind/tools_x64/" "$ESP_MP/EFI/refind"
 # drivers_x64 folder makes wired/handheld gamepads (ROG Ally, Legion Go, etc.)
 # usable in the boot menu. The driver auto-creates its own config at
 # \EFI\Xbox360\config.ini on first boot, so only the .efi is needed here.
-XBOX360_DRV_URL="https://github.com/SkorionOS/UsbXbox360Dxe/releases/latest/download/UsbXbox360Dxe.efi"
+# NOTE: temporarily fetched from the jlobue10 fork (adds Legion Go 2 PIDs +
+# Ally lockup fix); revert to SkorionOS once upstream PR #6 is merged/released.
+XBOX360_DRV_URL="https://github.com/jlobue10/UsbXbox360Dxe/releases/latest/download/UsbXbox360Dxe.efi"
 echo "Downloading UsbXbox360Dxe.efi controller driver..."
 sudo mkdir -p "$ESP_MP/EFI/refind/drivers_x64"
 if wget -q -O "$DOWNLOAD_DIR/UsbXbox360Dxe.efi" "$XBOX360_DRV_URL"; then
