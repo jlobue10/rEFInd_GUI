@@ -1,0 +1,61 @@
+name: RPM Package Release
+
+# Builds the Fedora RPM with rpmbuild inside a Fedora container and attaches
+# it (plus the source RPM) to the GitHub Release for the tag — replaces the
+# manual VM build.
+#
+# Runs automatically on version tags; workflow_dispatch takes an existing tag
+# so a package can be (re)built for a release after the fact.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing v* tag to build and attach the package to'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: fedora:latest
+    env:
+      TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+    steps:
+      - name: Install build dependencies
+        run: dnf install -y rpm-build git-core cmake gcc-c++ make qt5-qtbase-devel qt5-qttools-devel
+
+      # Default checkout: the tag itself on tag pushes, the dispatched branch
+      # on manual runs. The packaging recipe (spec) comes from that ref, while
+      # the packaged source is the tag the spec pins via v%{version} — so
+      # dispatching from main rebuilds an old release with the current recipe,
+      # and the Version guard below keeps the pairing honest.
+      - uses: actions/checkout@v4
+
+      - name: Check spec Version matches the tag
+        run: |
+          version="$(sed -n 's/^Version:[[:space:]]*//p' rEFInd_GUI.spec)"
+          if [ "v${version}" != "${TAG}" ]; then
+            echo "::error::spec Version=${version} does not match tag ${TAG}; bump the spec before tagging."
+            exit 1
+          fi
+
+      - name: Build RPM (rpmbuild)
+        run: |
+          mkdir -p ~/rpmbuild/SPECS ~/rpmbuild/SOURCES
+          cp rEFInd_GUI.spec ~/rpmbuild/SPECS/
+          cp rEFInd_bg_randomizer.service ~/rpmbuild/SOURCES/
+          rpmbuild -ba ~/rpmbuild/SPECS/rEFInd_GUI.spec
+          mkdir out
+          cp ~/rpmbuild/RPMS/x86_64/rEFInd_GUI-*.rpm out/
+          cp ~/rpmbuild/SRPMS/rEFInd_GUI-*.src.rpm out/
+          ls -l out
+
+      - name: Attach RPMs to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          files: out/*.rpm

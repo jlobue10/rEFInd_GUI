@@ -1,4 +1,7 @@
 %global _name   rEFInd_GUI
+# No debuginfo/debugsource split packages; install scripts and the release
+# workflow glob the built package by name.
+%global debug_package %{nil}
 
 Name:           rEFInd_GUI
 Version:        2.0.0
@@ -9,7 +12,7 @@ License:        GPL3
 URL:            https://github.com/jlobue10/rEFInd_GUI
 Source0:        rEFInd_bg_randomizer.service
 
-BuildRequires:  cmake gcc-c++ qt5-qtbase-devel qt5-qttools-devel
+BuildRequires:  cmake gcc-c++ git-core make qt5-qtbase-devel qt5-qttools-devel
 Requires:       mokutil sbsigntools xterm zenity
 Provides:       rEFInd_GUI
 Conflicts:      rEFInd_GUI
@@ -20,7 +23,9 @@ rEFInd_GUI
 %prep
 rm -rf %{_builddir}/rEFInd_GUI
 cd %{_builddir}
-git clone %{url}
+# Pinned to the release tag so rebuilding an old version never silently
+# packages newer main-branch code.
+git clone --branch v%{version} --depth 1 %{url}
 cd $RPM_SOURCE_DIR
 cp -f %{_builddir}/rEFInd_GUI/{rEFInd_GUI.desktop,rEFInd_bg_randomizer.service} $RPM_SOURCE_DIR
 
