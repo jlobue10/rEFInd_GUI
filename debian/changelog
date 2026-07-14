@@ -1,3 +1,23 @@
+refind-gui (2.0.4) unstable; urgency=medium
+
+  * Resolve the ESP mountpoint via findmnt --target so /boot-mounted ESPs
+    (CachyOS/systemd-boot layout) no longer get a nested EFI/EFI/refind
+    install.
+  * Create the rEFInd NVRAM boot entry before deleting old ones and fall
+    back to sysfs when lsblk PKNAME is empty, so a failed create can no
+    longer leave the machine with no rEFInd entry at all.
+  * Remove refind-install's duplicate "rEFInd Boot Manager" entry; handle
+    efibootmgr >= 18 output that appends a device path after the label.
+  * End the install scripts with a verification summary read back from
+    live NVRAM, and keep the terminal open so the result is visible.
+  * Sign rEFInd's EFI binaries with sbctl-batch-sign on Secure Boot
+    CachyOS installs so the firmware accepts them.
+  * Windows: exit-code-checked bcdedit (failures no longer pass silently),
+    backup before any modification, put Windows Boot Manager first in the
+    firmware boot order, and the same read-back installation summary.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Mon, 13 Jul 2026 23:30:00 -0700
+
 refind-gui (2.0.3) unstable; urgency=medium
 
   * Fetch the Xbox 360 controller UEFI driver from the jlobue10 fork
