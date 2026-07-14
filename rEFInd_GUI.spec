@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,17 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Tue Jul 14 2026 Jon LoBue <jlobue10@gmail.com> [2.0.5-1]
+- Windows: register the background randomizer scheduled task with explicit
+  settings so it starts on battery power; the default settings meant the
+  logon trigger never fired on handhelds running on battery
+- Windows: the randomizer now targets whichever ESP actually contains
+  rEFInd, logs each run to rEFInd_bg_randomizer.log, avoids re-picking the
+  installed background, and reports its first run after enabling
+- Windows: all mountvol calls go through an exit-code-checked wrapper so
+  PowerShell 5.1 stderr redirection can no longer terminate the
+  install/config/randomizer scripts mid-mount
+
 * Mon Jul 13 2026 Jon LoBue <jlobue10@gmail.com> [2.0.4-1]
 - Resolve the ESP mountpoint via findmnt --target so /boot-mounted ESPs
   (CachyOS/systemd-boot layout) no longer get a nested EFI/EFI/refind install

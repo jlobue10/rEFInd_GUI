@@ -1,3 +1,17 @@
+refind-gui (2.0.5) unstable; urgency=medium
+
+  * Windows: register the background randomizer scheduled task with
+    explicit settings so it starts on battery power; the default settings
+    meant the logon trigger never fired on handhelds running on battery.
+  * Windows: the randomizer now targets whichever ESP actually contains
+    rEFInd, logs each run to rEFInd_bg_randomizer.log, avoids re-picking
+    the installed background, and reports its first run after enabling.
+  * Windows: all mountvol calls go through an exit-code-checked wrapper
+    so PowerShell 5.1 stderr redirection can no longer terminate the
+    install/config/randomizer scripts mid-mount.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Tue, 14 Jul 2026 07:30:00 -0700
+
 refind-gui (2.0.4) unstable; urgency=medium
 
   * Resolve the ESP mountpoint via findmnt --target so /boot-mounted ESPs
