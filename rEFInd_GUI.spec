@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,22 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Mon Jul 13 2026 Jon LoBue <jlobue10@gmail.com> [2.0.4-1]
+- Resolve the ESP mountpoint via findmnt --target so /boot-mounted ESPs
+  (CachyOS/systemd-boot layout) no longer get a nested EFI/EFI/refind install
+- Create the rEFInd NVRAM boot entry before deleting old ones and fall back
+  to sysfs when lsblk PKNAME is empty, so a failed create can no longer
+  leave the machine with no rEFInd entry at all
+- Remove refind-install's duplicate "rEFInd Boot Manager" entry; handle
+  efibootmgr >= 18 output that appends a device path after the label
+- End the install scripts with a verification summary read back from live
+  NVRAM, and keep the terminal open so the result is visible
+- Sign rEFInd's EFI binaries with sbctl-batch-sign on Secure Boot CachyOS
+  installs so the firmware accepts them
+- Windows: exit-code-checked bcdedit (failures no longer pass silently),
+  backup before any modification, put Windows Boot Manager first in the
+  firmware boot order, and the same read-back installation summary
+
 * Mon Jul 13 2026 Jon LoBue <jlobue10@gmail.com> [2.0.3-1]
 - Fetch the Xbox 360 controller UEFI driver from the jlobue10 fork (v1.4.0)
   so the rEFInd boot menu supports Legion Go 2 controllers and carries the
