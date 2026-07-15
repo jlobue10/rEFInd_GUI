@@ -36,6 +36,9 @@ cp -rf "$CURRENT_WD/icons/" "$HOME/.local/rEFInd_GUI"
 cp -rf "$CURRENT_WD/backgrounds/" "$HOME/.local/rEFInd_GUI"
 cp -f "$CURRENT_WD/refind_install_package_mgr.sh" "$CURRENT_WD/refind_install_Sourceforge.sh" "$HOME/.local/rEFInd_GUI"
 cp -f "$CURRENT_WD/refind-GUI.conf" "$HOME/.local/rEFInd_GUI/GUI/refind.conf"
+# Shortcut inside GUI/ (the folder the app's Open Folder button shows) to the
+# backgrounds folder the randomizer picks from.
+ln -sfn ../backgrounds "$HOME/.local/rEFInd_GUI/GUI/backgrounds"
 
 chmod +x "$HOME/.local/rEFInd_GUI/refind_install_package_mgr.sh" "$HOME/.local/rEFInd_GUI/refind_install_Sourceforge.sh"
 
