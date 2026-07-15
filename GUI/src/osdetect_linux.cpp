@@ -119,6 +119,14 @@ bool OSDetector::isLegionGo2()
     return product == QStringLiteral("83N0") || product == QStringLiteral("83N1");
 }
 
+bool OSDetector::isXboxAlly()
+{
+    const QString board = readDmiId("board_name");
+    // RC73XA = ROG Xbox Ally X, RC73YA = ROG Xbox Ally (prefix match to allow
+    // for board revision suffixes).
+    return board.startsWith(QLatin1String("RC73XA")) || board.startsWith(QLatin1String("RC73YA"));
+}
+
 QStringList OSDetector::runningOsIds()
 {
     QStringList ids;
