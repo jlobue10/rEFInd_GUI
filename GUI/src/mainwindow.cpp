@@ -228,6 +228,13 @@ void MainWindow::browsePng(QLineEdit *edit, const QString &title)
     if (!fileName.isEmpty()) {
         edit->setText(fileName);
         lastBrowseDir = QFileInfo(fileName).absolutePath();
+        // Persist immediately rather than waiting for the destructor's
+        // writeSettings: on handhelds the app is often force-terminated
+        // (Xbox overlay / task switcher, suspend), which skips destructors.
+        QSettings settings(settingsPath, QSettings::IniFormat);
+        settings.beginGroup(QStringLiteral("Paths"));
+        settings.setValue(QStringLiteral("LastBrowseDir"), lastBrowseDir);
+        settings.endGroup();
     }
 }
 
