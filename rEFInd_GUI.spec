@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,13 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Tue Jul 14 2026 Jon LoBue <jlobue10@gmail.com> [2.1.1-1]
+- Windows: embed the app icon in the exe so Explorer, the desktop
+  shortcut, and the taskbar show the rEFInd_GUI logo instead of the
+  generic executable icon
+- Load the window (title bar) icon from an embedded Qt resource so it
+  displays regardless of working directory
+
 * Tue Jul 14 2026 Jon LoBue <jlobue10@gmail.com> [2.1.0-1]
 - Add an Open Folder button (left of Exit) that opens the GUI data folder
   holding refind.conf and the staged background/icon PNGs in the file
