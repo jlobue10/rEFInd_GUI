@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.1.3
+Version:        2.1.4
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,16 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Wed Jul 15 2026 Jon LoBue <jlobue10@gmail.com> [2.1.4-1]
+- Install Config and the background randomizer now target the ESP that the
+  firmware rEFInd boot entry actually points at, so a stale EFI/refind on
+  another ESP no longer receives the config (multi-ESP dual-boot machines).
+- The Windows GUI now scans letterless non-system ESPs, so Linux
+  bootloaders such as CachyOS systemd-boot are detected and named after
+  their boot entry titles.
+- The ROG Xbox Ally and Ally X get "resolution 1920 1080" in generated
+  configs instead of the numbered mode 3, which picked the wrong mode.
+
 * Wed Jul 15 2026 Jon LoBue <jlobue10@gmail.com> [2.1.3-1]
 - The last-used browse folder is now saved immediately when a file is
   picked, so it persists even when the app is force-closed (overlay or
