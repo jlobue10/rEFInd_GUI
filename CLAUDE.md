@@ -46,6 +46,7 @@ The version is duplicated in several places that must be kept in sync:
 - `windows/rEFInd_GUI.iss`: `#define AppVersion`
 - `rEFInd_GUI.spec`: `Version:` (plus a `%changelog` entry)
 - `PKGBUILD`: `pkgver`
+- `debian/changelog`: new top entry (`refind-gui (X.Y.Z) unstable; ...`)
 
 ## Architecture
 
