@@ -1,3 +1,11 @@
+refind-gui (2.1.3) unstable; urgency=medium
+
+  * The last-used browse folder is now saved immediately when a file is
+    picked, so it persists even when the app is force-closed (overlay or
+    task switcher) rather than exited normally.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Wed, 15 Jul 2026 08:15:00 -0700
+
 refind-gui (2.1.2) unstable; urgency=medium
 
   * The background and OS icon Browse buttons now reopen in the folder

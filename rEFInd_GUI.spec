@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.1.2
+Version:        2.1.3
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,11 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Wed Jul 15 2026 Jon LoBue <jlobue10@gmail.com> [2.1.3-1]
+- The last-used browse folder is now saved immediately when a file is
+  picked, so it persists even when the app is force-closed (overlay or
+  task switcher) rather than exited normally.
+
 * Wed Jul 15 2026 Jon LoBue <jlobue10@gmail.com> [2.1.2-1]
 - The background and OS icon Browse buttons now reopen in the folder the
   previous browse picked from (persisted across restarts), falling back
