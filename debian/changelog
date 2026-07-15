@@ -1,3 +1,13 @@
+refind-gui (2.1.1) unstable; urgency=medium
+
+  * Windows: embed the app icon in the exe so Explorer, the desktop
+    shortcut, and the taskbar show the rEFInd_GUI logo instead of the
+    generic executable icon.
+  * Load the window (title bar) icon from an embedded Qt resource so
+    it displays regardless of working directory.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Tue, 14 Jul 2026 12:00:00 -0700
+
 refind-gui (2.1.0) unstable; urgency=medium
 
   * Add an Open Folder button (left of Exit) that opens the GUI data
