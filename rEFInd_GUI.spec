@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,11 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Wed Jul 15 2026 Jon LoBue <jlobue10@gmail.com> [2.1.2-1]
+- The background and OS icon Browse buttons now reopen in the folder the
+  previous browse picked from (persisted across restarts), falling back
+  to the home directory when that folder no longer exists
+
 * Tue Jul 14 2026 Jon LoBue <jlobue10@gmail.com> [2.1.1-1]
 - Windows: embed the app icon in the exe so Explorer, the desktop
   shortcut, and the taskbar show the rEFInd_GUI logo instead of the
