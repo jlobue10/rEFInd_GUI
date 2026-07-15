@@ -26,8 +26,8 @@
    <string>rEFInd Setup</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>UEFI_icon.png</normaloff>UEFI_icon.png</iconset>
+   <iconset resource="resources.qrc">
+    <normaloff>:/UEFI_icon.png</normaloff>:/UEFI_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="layoutWidget">
