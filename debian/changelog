@@ -1,3 +1,11 @@
+refind-gui (2.1.2) unstable; urgency=medium
+
+  * The background and OS icon Browse buttons now reopen in the folder
+    the previous browse picked from (persisted across restarts), falling
+    back to the home directory when that folder no longer exists.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Wed, 15 Jul 2026 12:00:00 -0700
+
 refind-gui (2.1.1) unstable; urgency=medium
 
   * Windows: embed the app icon in the exe so Explorer, the desktop
