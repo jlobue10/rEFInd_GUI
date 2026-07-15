@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.1.4
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,12 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Wed Jul 15 2026 Jon LoBue <jlobue10@gmail.com> [2.2.0-1]
+- Generated configs on devices without a specific quirk now use the built-in
+  panel's native resolution (from EDID/DRM, preferring the internal display
+  over external outputs) instead of the numbered video mode 3; mode 3 remains
+  the fallback when no panel can be detected.
+
 * Wed Jul 15 2026 Jon LoBue <jlobue10@gmail.com> [2.1.4-1]
 - Install Config and the background randomizer now target the ESP that the
   firmware rEFInd boot entry actually points at, so a stale EFI/refind on
