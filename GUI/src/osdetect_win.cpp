@@ -167,6 +167,42 @@ bool OSDetector::isXboxAlly()
     return board.startsWith(QLatin1String("RC73XA")) || board.startsWith(QLatin1String("RC73YA"));
 }
 
+QSize OSDetector::nativePanelResolution()
+{
+    // Preferred timing (first 18-byte DTD, bytes 54-71) of the panel's EDID,
+    // fetched via WMI. The internal display is preferred over external
+    // outputs: VideoOutputTechnology 0x80000000 = INTERNAL, 11 = embedded
+    // DisplayPort (eDP), 6 = LVDS.
+    static const QString script = QStringLiteral(
+        "$c=@(Get-CimInstance -Namespace root/wmi -ClassName WmiMonitorConnectionParams"
+        " -ErrorAction SilentlyContinue | Where-Object { $_.Active });"
+        "$p=$c | Where-Object { $_.VideoOutputTechnology -in @(2147483648,11,6) } | Select-Object -First 1;"
+        "if(-not $p){$p=$c | Select-Object -First 1};"
+        "if($p){"
+        "  $m=Get-CimInstance -Namespace root/wmi -ClassName WmiMonitorDescriptorMethods"
+        "   -ErrorAction SilentlyContinue | Where-Object { $_.InstanceName -eq $p.InstanceName } | Select-Object -First 1;"
+        "  if($m){"
+        "    $r=$m | Invoke-CimMethod -MethodName WmiGetMonitorRawEEdidV1Block -Arguments @{BlockId=[byte]0};"
+        "    $e=$r.BlockContent;"
+        "    if($e -and $e.Count -ge 72){"
+        "      $h=$e[56]+(($e[58] -band 0xF0)*16);"
+        "      $v=$e[59]+(($e[61] -band 0xF0)*16);"
+        "      if($h -gt 0 -and $v -gt 0){('{0}x{1}' -f $h,$v)}"
+        "    }"
+        "  }"
+        "}");
+    bool ok = false;
+    const QString out = runPowerShell(script, &ok).trimmed();
+    if (!ok)
+        return {};
+    const QStringList parts = out.split('x');
+    if (parts.size() != 2)
+        return {};
+    const int w = parts.at(0).toInt();
+    const int h = parts.at(1).toInt();
+    return (w > 0 && h > 0) ? QSize(w, h) : QSize();
+}
+
 QStringList OSDetector::runningOsIds()
 {
     return {}; // no os-release on Windows; the static vendor-dir map decides
