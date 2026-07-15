@@ -326,17 +326,25 @@ void MainWindow::on_Create_Config_clicked()
     out << "hideui singleuser,hints,arrows,label,badges\n";
     out << "banner background.png\n";
     out << "banner_scale fillscreen\n";
-    // Device quirks: Legion Go panels are portrait-native, so force landscape
-    // to avoid rotation issues; the Xbox Ally models need an explicit
-    // 1920x1080 because the numbered mode 3 doesn't pick the right one there.
-    if (OSDetector::isLegionGo2())
+    // Device quirks first: Legion Go panels are portrait-native, so force
+    // landscape to avoid rotation issues; the Xbox Ally models need an
+    // explicit 1920x1080 because the numbered mode 3 doesn't pick the right
+    // one there. Unknown devices get the built-in panel's native resolution
+    // from EDID/DRM (GOP virtually always offers native), and only when even
+    // that is unavailable fall back to numbered mode 3.
+    if (OSDetector::isLegionGo2()) {
         out << "resolution 1920 1200\n";
-    else if (OSDetector::isLegionGo())
+    } else if (OSDetector::isLegionGo()) {
         out << "resolution 2560 1600\n";
-    else if (OSDetector::isXboxAlly())
+    } else if (OSDetector::isXboxAlly()) {
         out << "resolution 1920 1080\n";
-    else
-        out << "resolution 3\n";
+    } else {
+        const QSize native = OSDetector::nativePanelResolution();
+        if (native.isValid() && !native.isEmpty())
+            out << "resolution " << native.width() << " " << native.height() << "\n";
+        else
+            out << "resolution 3\n";
+    }
     out << "enable_touch\n";
     out << (ui->Enable_Mouse_checkBox->isChecked() ? "" : "#") << "enable_mouse\n";
     out << "showtools\n";
