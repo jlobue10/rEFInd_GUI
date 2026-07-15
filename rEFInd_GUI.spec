@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.0.5
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,14 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Tue Jul 14 2026 Jon LoBue <jlobue10@gmail.com> [2.1.0-1]
+- Add an Open Folder button (left of Exit) that opens the GUI data folder
+  holding refind.conf and the staged background/icon PNGs in the file
+  manager
+- Installers now create a "backgrounds" shortcut inside the GUI folder
+  pointing at the background randomizer's image folder (symlink on Linux,
+  .lnk on Windows)
+
 * Tue Jul 14 2026 Jon LoBue <jlobue10@gmail.com> [2.0.5-1]
 - Windows: register the background randomizer scheduled task with explicit
   settings so it starts on battery power; the default settings meant the

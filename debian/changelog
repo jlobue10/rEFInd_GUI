@@ -1,3 +1,14 @@
+refind-gui (2.1.0) unstable; urgency=medium
+
+  * Add an Open Folder button (left of Exit) that opens the GUI data
+    folder holding refind.conf and the staged background/icon PNGs in
+    the system file manager.
+  * Installers now create a "backgrounds" shortcut inside the GUI
+    folder pointing at the background randomizer's image folder
+    (symlink on Linux, .lnk on Windows).
+
+ -- Jon LoBue <jlobue10@gmail.com>  Tue, 14 Jul 2026 12:00:00 -0700
+
 refind-gui (2.0.5) unstable; urgency=medium
 
   * Windows: register the background randomizer scheduled task with
