@@ -29,6 +29,8 @@ public:
 
     static bool isLegionGo();
     static bool isLegionGo2();
+    // ROG Xbox Ally (RC73YA) or ROG Xbox Ally X (RC73XA).
+    static bool isXboxAlly();
     // Partition GUID of the first ESP on removable media (SD card or USB), for
     // the static "Windows (SD)"/"Windows (USB)" combo fallbacks.
     QString removableEspPartUuid(bool sdCard);
@@ -42,6 +44,7 @@ private:
         QString partUuid;    // PARTUUID / partition GUID (lowercase, no braces)
         QString mountPoint;  // mount point / drive letter root; non-empty also for the in-use system ESP
         QString transport;   // "usb", "sd", "mmc", "nvme", ... (lowercase)
+        QString volumePath;  // Windows only: "\\?\Volume{guid}\" name for mountvol; empty on Linux
         bool removable = false;
     };
 
