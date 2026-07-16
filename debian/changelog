@@ -1,3 +1,18 @@
+refind-gui (2.3.0) unstable; urgency=medium
+
+  * The Windows installer now creates a dedicated "rEFInd" NVRAM boot entry
+    (like efibootmgr on Linux) instead of repointing the Windows Boot
+    Manager entry, whose optional-data blob showed up as a long hex tail
+    after refind_x64.efi in efibootmgr and was passed to rEFInd as junk
+    load options. Windows Boot Manager is left untouched; a repointed entry
+    from older versions is restored automatically.
+  * New automated Windows uninstall: the app uninstaller (and the
+    standalone windows/uninstall_rEFInd.ps1) removes the rEFInd boot entry
+    and EFI partition files, restores direct Windows boot, unregisters the
+    background randomizer task, and scrubs the per-user app directory.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Wed, 15 Jul 2026 12:20:00 -0700
+
 refind-gui (2.2.0) unstable; urgency=medium
 
   * Generated configs on devices without a specific quirk now use the
