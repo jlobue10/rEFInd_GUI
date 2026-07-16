@@ -117,6 +117,29 @@ Re-enable secure boot in BIOS, and enjoy the benefits of being able to play anti
 
 On **CachyOS** (which manages Secure Boot with sbctl out of the box) the rEFInd install scripts detect enabled Secure Boot and run `sbctl-batch-sign` automatically after installing, so the freshly written EFI binaries are signed without any manual steps.
 
+## Troubleshooting
+
+### Browse dialog shows no PNG previews / no "view as icons" option (KDE Plasma)
+
+When picking icons or a background, the Browse dialog may show no thumbnails and
+no right-click view-mode options. This isn't a bug in the app — it requests the
+desktop's **native** file dialog, but KDE only supplies that (with previews and
+view options) when the Qt **platform-integration** plugin matching the GUI's Qt
+version is installed. Without it, Qt silently falls back to a bare built-in
+dialog that has neither.
+
+Install the integration that matches the Qt the GUI was built against — check
+with `ldd $(command -v rEFInd_GUI)` and look for `libQt6Widgets` vs
+`libQt5Widgets`:
+
+- **Qt6 build:** the KDE Qt6 platform theme — `plasma-integration` on
+  Arch/CachyOS; on Fedora/Nobara it comes with `plasma-workspace` (KF6).
+- **Qt5 build:** the Qt5 build of the same — commonly `plasma-integration`
+  (Arch) or `plasma5-integration` depending on distro.
+
+Log out and back in (or just relaunch the app) afterwards. GNOME gives the same
+result via its platform theme (`qgnomeplatform` + `xdg-desktop-portal-gtk`).
+
 ## Misc.
 
 This is basically a variation of my [SteamDeck_rEFInd](https://github.com/jlobue10/SteamDeck_rEFInd) repo with various improvements including generic username support, support for multiple Linux distros and installing the config file, icons and background PNGs without needing to type the password for `sudo` privileges.
