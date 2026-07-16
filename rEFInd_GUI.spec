@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.3.1
+Version:        2.3.2
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,11 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Thu Jul 16 2026 Jon LoBue <jlobue10@gmail.com> [2.3.2-1]
+- The Windows installer no longer pre-checks "Launch rEFInd GUI" on the
+  finish page; the app now only starts after installation when explicitly
+  requested.
+
 * Thu Jul 16 2026 Jon LoBue <jlobue10@gmail.com> [2.3.1-1]
 - New Linux uninstall script (uninstall_rEFInd.sh, installed to
   ~/.local/rEFInd_GUI): removes the rEFInd boot entries for this distro's
