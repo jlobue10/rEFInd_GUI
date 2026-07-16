@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.2.0
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,18 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Wed Jul 15 2026 Jon LoBue <jlobue10@gmail.com> [2.3.0-1]
+- The Windows installer now creates a dedicated "rEFInd" NVRAM boot entry
+  (like efibootmgr on Linux) instead of repointing the Windows Boot Manager
+  entry, whose optional-data blob showed up as a long hex tail after
+  refind_x64.efi in efibootmgr and was passed to rEFInd as junk load options.
+  Windows Boot Manager is left untouched; a repointed entry from older
+  versions is restored automatically.
+- New automated Windows uninstall: the app uninstaller (and the standalone
+  windows/uninstall_rEFInd.ps1) removes the rEFInd boot entry and EFI
+  partition files, restores direct Windows boot, unregisters the background
+  randomizer task, and scrubs the per-user app directory.
+
 * Wed Jul 15 2026 Jon LoBue <jlobue10@gmail.com> [2.2.0-1]
 - Generated configs on devices without a specific quirk now use the built-in
   panel's native resolution (from EDID/DRM, preferring the internal display
