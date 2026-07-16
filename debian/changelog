@@ -1,3 +1,11 @@
+refind-gui (2.3.2) unstable; urgency=medium
+
+  * The Windows installer no longer pre-checks "Launch rEFInd GUI" on the
+    finish page; the app now only starts after installation when
+    explicitly requested.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Thu, 16 Jul 2026 09:45:00 -0700
+
 refind-gui (2.3.1) unstable; urgency=medium
 
   * New Linux uninstall script (uninstall_rEFInd.sh, installed to
