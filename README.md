@@ -1,11 +1,28 @@
 # rEFInd_GUI
 A graphical setup and customization utility to use alongside rEFInd (work in progress)
 
-## Installation (Currently Fedora / Nobara / Bazzite are supported. Others coming in a future update...)
+## Installation on Linux
+
+Supported distros: **Fedora / Nobara / Bazzite** (RPM), **CachyOS / Arch** (pacman), and **Debian / Ubuntu** (deb).
 
 ```
 curl -L https://github.com/jlobue10/rEFInd_GUI/raw/main/install-rEFInd-GUI.sh | sh
 ```
+
+The installer prefers the prebuilt package from the latest release and falls back to building locally.
+
+## Uninstalling (Linux)
+
+To remove rEFInd itself (boot entry, ESP files, background randomizer service), run:
+
+```
+sudo ~/.local/rEFInd_GUI/uninstall_rEFInd.sh
+```
+
+It deletes the rEFInd boot entries that target your distro's ESP (a rEFInd installed from the Windows side of a dual-boot machine is detected and left alone — use the Windows app's uninstaller for that one), re-activates the Windows boot entry the installer deactivated, and removes `EFI/refind`, `EFI/Xbox360`, and `/boot/refind_linux.conf`. Flags:
+
+- `--keep-esp-files` — undo only the boot entries; keep rEFInd's files on the ESP
+- `--remove-app` — also remove the rEFInd_GUI app itself: the distro package (`rEFInd_GUI` / `refind-gui`, via dnf, pacman, apt, or rpm-ostree on Bazzite — the rpm-ostree change needs a reboot to finish), `~/.local/rEFInd_GUI`, `/etc/rEFInd`, the sudoers rule, and the desktop entries
 
 ## Windows support (new in 2.0.0)
 
@@ -32,31 +49,30 @@ Release builds are Authenticode-signed (executable, installer, and PowerShell sc
 
 Windows notes:
 
-- The app requests **Administrator** rights at launch — everything it does (mounting the EFI System Partition via `mountvol`, `bcdedit`) needs them.
-- **Install rEFInd** downloads rEFInd from SourceForge and points the Windows Boot Manager firmware entry at rEFInd (`bcdedit /set {bootmgr} path \EFI\refind\refind_x64.efi`). Your previous settings are saved to `%LOCALAPPDATA%\rEFInd_GUI\bootmgr-backup.txt`, and the revert command is printed after installation. It also fetches the [Xbox 360 controller driver](#controller-support-in-the-boot-menu) into `EFI\refind\drivers_x64`.
+- The app requests **Administrator** rights at launch — everything it does (mounting the EFI System Partition, writing firmware boot variables) needs them.
+- **Install rEFInd** (v2.3.0+) downloads rEFInd from SourceForge and creates a dedicated `rEFInd` firmware boot entry — the exact equivalent of `efibootmgr -c` on Linux — first in the boot order. **Windows Boot Manager is left untouched** (rEFInd chainloads it); versions before 2.3.0 repointed `{bootmgr}` instead, which made the entry carry Windows' optional-data blob (the "long hex after refind_x64.efi" in `efibootmgr -v`) — installing 2.3.0+ over an old version restores `{bootmgr}` automatically. Previous boot settings are saved to `%LOCALAPPDATA%\rEFInd_GUI\bootmgr-backup.txt`. The installer also fetches the [Xbox 360 controller driver](#controller-support-in-the-boot-menu) into `EFI\refind\drivers_x64`.
+- **Uninstalling** "rEFInd GUI" from Settings > Apps asks whether to also remove rEFInd itself; choosing Yes deletes the rEFInd boot entry, removes `EFI\refind` and `EFI\Xbox360` from the ESP, restores direct Windows boot, unregisters the background randomizer task, and scrubs `%LOCALAPPDATA%\rEFInd_GUI`. A rEFInd installed from the Linux side (on another ESP) is detected and left alone. The same cleanup can be run standalone as Administrator: `powershell -ExecutionPolicy Bypass -File "%LOCALAPPDATA%\rEFInd_GUI\windows\uninstall_rEFInd.ps1"` (add `-KeepEspFiles` to keep rEFInd's files).
 - The background randomizer runs as a Scheduled Task at logon instead of a systemd service.
 - The SteamOS `firmware_bootnum` option is Linux-only (Windows has no `efibootmgr` equivalent).
 
 ## Automatic OS detection (new in 2.0.0)
 
-The GUI now scans the EFI System Partition(s) at startup (and via the **Rescan OSes** button) to detect what is actually installed: Windows, SteamOS, and any Linux distro with a vendor directory under `/boot/efi/EFI/` (shim, GRUB, or systemd-boot). The Boot Option boxes are populated with the detected OSes, and the generated `refind.conf` uses the real loader paths found on disk. The old Linux Distro selection box is gone — no more picking your distro by hand.
+The GUI scans **every reachable EFI System Partition** at startup (and via the **Rescan OSes** button) to detect what is actually installed: Windows, SteamOS, and any Linux distro with a vendor directory under `EFI/` (shim, GRUB, or systemd-boot). The Boot Option boxes are populated with the detected OSes, and the generated `refind.conf` uses the real loader paths and volumes found on disk — multi-ESP machines (e.g. Windows and Linux each with their own ESP) are fully covered. Since 2.2.0 the Windows build also mounts and scans letterless Linux ESPs, so a distro like CachyOS booting via systemd-boot is detected from the Windows side and named after its boot entries rather than a generic "systemd-boot". **Install Config** and the background randomizer write to the ESP that the firmware's rEFInd boot entry actually points at, so a stale rEFInd copy on another ESP can't swallow your config.
 
 ## Bazzite specific information
 
 Auto partitioning when installing Bazzite is supported with these manual boot stanzas.
 If you've used the cloud recovery on ASUS ROG ALLY or the system image to install Windows on Legion Go (or kept it at default), the 'SYSTEM' or 'SYSTEM_DRV' label on Windows' EFI partition is now detected automatically (on any distro, not just Bazzite) and used for the `volume` line in the generated `refind.conf` file when Create Config is pressed.
 
-If you need to uninstall rEFInd_GUI (for instance in order to re-run installation with a newer version), run:
+If you need to uninstall rEFInd_GUI on Bazzite (for instance in order to re-run installation with a newer version), run `sudo rpm-ostree uninstall rEFInd_GUI` and reboot — or use `uninstall_rEFInd.sh --remove-app` (see [Uninstalling](#uninstalling-linux)), which handles the rpm-ostree case too.
 
-```
-sudo rpm-ostree uninstall rEFInd_GUI
-```
+## Display resolution defaults
 
-Let that command finish and then either run `systemctl reboot` or reboot another way.
+The generated `refind.conf` picks a sensible `resolution` line per device:
 
-## Legion Go
-
-Some simple logic has been added to default to 2560 x 1600 in the generated `refind.conf` file on a Legion Go device (1920 x 1200 on a Legion Go 2). This solves a portrait rotation issue.
+- **Legion Go**: `2560 1600`, **Legion Go 2**: `1920 1200` — these panels are portrait-native, and forcing landscape solves a rotation issue.
+- **ROG Xbox Ally / Ally X**: `1920 1080` (the numbered video mode 3 picks the wrong mode on these).
+- **Any other device** (since 2.2.0): the built-in panel's **native resolution**, read from EDID/DRM — the internal display is preferred over external outputs, so a docked handheld still gets its own screen. Only when no panel can be detected does the config fall back to rEFInd's numbered mode 3.
 
 ## Controller support in the boot menu
 
@@ -83,7 +99,7 @@ sudo sbctl create-keys
 sudo sbctl enroll-keys --microsoft
 ```
 
-Now sign any efi file (this includes `refind_x64.efi` and `fwbootmgr.efi` for Windows) that is involved with your system's boot process (recommend creating backup copies beforehand) with this command. I've saved this `sudo sbctl sign -s` as an alias --> `securesign`.
+Now sign any efi file (this includes `refind_x64.efi` and `bootmgfw.efi` for Windows) that is involved with your system's boot process (recommend creating backup copies beforehand) with this command. I've saved this `sudo sbctl sign -s` as an alias --> `securesign`.
 
 ```
 sudo sbctl sign -s object-to-be-signed
@@ -98,6 +114,8 @@ sudo sbctl sign -s /boot/efi/EFI/refind/drivers_x64/UsbXbox360Dxe.efi
 ```
 
 Re-enable secure boot in BIOS, and enjoy the benefits of being able to play anti-cheat games in Windows and a fully functioning Linux distro, side-by-side without toggling the secure boot setting in BIOS.
+
+On **CachyOS** (which manages Secure Boot with sbctl out of the box) the rEFInd install scripts detect enabled Secure Boot and run `sbctl-batch-sign` automatically after installing, so the freshly written EFI binaries are signed without any manual steps.
 
 ## Misc.
 
