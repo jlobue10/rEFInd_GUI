@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.3.0
+Version:        2.3.1
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,17 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Thu Jul 16 2026 Jon LoBue <jlobue10@gmail.com> [2.3.1-1]
+- New Linux uninstall script (uninstall_rEFInd.sh, installed to
+  ~/.local/rEFInd_GUI): removes the rEFInd boot entries for this distro's
+  ESP (leaving a Windows-side rEFInd alone), re-activates the Windows boot
+  entry, removes the ESP files and refind_linux.conf, and disables the
+  background randomizer; --remove-app also removes the GUI package and its
+  files, --keep-esp-files limits cleanup to the boot entries.
+- README overhaul: uninstall documentation for both platforms, current
+  supported-distro list, v2.3.0 boot-entry semantics, and consolidated
+  display-resolution notes.
+
 * Wed Jul 15 2026 Jon LoBue <jlobue10@gmail.com> [2.3.0-1]
 - The Windows installer now creates a dedicated "rEFInd" NVRAM boot entry
   (like efibootmgr on Linux) instead of repointing the Windows Boot Manager
