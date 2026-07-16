@@ -1,3 +1,18 @@
+refind-gui (2.3.1) unstable; urgency=medium
+
+  * New Linux uninstall script (uninstall_rEFInd.sh, installed to
+    ~/.local/rEFInd_GUI): removes the rEFInd boot entries for this
+    distro's ESP (leaving a Windows-side rEFInd alone), re-activates the
+    Windows boot entry, removes the ESP files and refind_linux.conf, and
+    disables the background randomizer; --remove-app also removes the GUI
+    package and its files, --keep-esp-files limits cleanup to the boot
+    entries.
+  * README overhaul: uninstall documentation for both platforms, current
+    supported-distro list, v2.3.0 boot-entry semantics, and consolidated
+    display-resolution notes.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Thu, 16 Jul 2026 08:30:00 -0700
+
 refind-gui (2.3.0) unstable; urgency=medium
 
   * The Windows installer now creates a dedicated "rEFInd" NVRAM boot entry
