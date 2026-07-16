@@ -27,6 +27,13 @@ bool setBackgroundRandomizer(bool enable);
 // SteamOS firmware_bootnum lookup needs efibootmgr (Linux only).
 bool firmwareBootnumSupported();
 
+// KDE Plasma (and other Linux desktops) only show PNG thumbnails and view-mode
+// options in the file dialog when the matching Qt platform integration is
+// installed; without it Qt's built-in dialog previews nothing. On Linux we drive
+// a non-native QFileDialog with our own PNG preview pane instead. Windows keeps
+// its native Explorer dialog, which already previews images.
+bool useImagePreviewDialog();
+
 // Which OS should lead the auto-selection (slot 1 + default boot):
 // Windows on the Windows build, the running Linux distro on Linux.
 bool preferWindowsAsDefault();
