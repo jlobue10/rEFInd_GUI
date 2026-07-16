@@ -50,11 +50,6 @@ bool firmwareBootnumSupported()
     return false;
 }
 
-bool useImagePreviewDialog()
-{
-    return false; // the native Explorer dialog already previews images
-}
-
 bool preferWindowsAsDefault()
 {
     return true;
@@ -104,11 +99,6 @@ bool setBackgroundRandomizer(bool enable)
 bool firmwareBootnumSupported()
 {
     return true;
-}
-
-bool useImagePreviewDialog()
-{
-    return true; // drive Qt's own dialog with a PNG preview pane (desktop parity)
 }
 
 bool preferWindowsAsDefault()
