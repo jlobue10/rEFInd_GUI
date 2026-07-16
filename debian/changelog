@@ -1,3 +1,12 @@
+refind-gui (2.3.3) unstable; urgency=medium
+
+  * Windows install script: numbered colored progress steps with an
+    overall progress bar, colorized SUCCESS/WARNING/FAILED summary, a
+    Secure Boot warning when sbctl signing must be done from the Linux
+    side, and the window now stays open until the user closes it.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Thu, 16 Jul 2026 09:50:00 -0700
+
 refind-gui (2.3.2) unstable; urgency=medium
 
   * The Windows installer no longer pre-checks "Launch rEFInd GUI" on the

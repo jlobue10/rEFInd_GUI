@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.3.2
+Version:        2.3.3
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,12 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Thu Jul 16 2026 Jon LoBue <jlobue10@gmail.com> [2.3.3-1]
+- Windows install script: numbered colored progress steps with an overall
+  progress bar, colorized SUCCESS/WARNING/FAILED summary, a Secure Boot
+  warning when sbctl signing must be done from the Linux side, and the
+  window now stays open until the user closes it.
+
 * Thu Jul 16 2026 Jon LoBue <jlobue10@gmail.com> [2.3.2-1]
 - The Windows installer no longer pre-checks "Launch rEFInd GUI" on the
   finish page; the app now only starts after installation when explicitly
