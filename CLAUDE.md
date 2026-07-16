@@ -62,7 +62,9 @@ Platform-specific code is confined to three files; everything else is shared. Ne
 
 ## Install-time file layout (context for editing the shell scripts)
 
-`install-rEFInd-GUI.sh` is the user-facing entry point (curl | sh). It copies `GUI/`, `icons/`, `backgrounds/`, and the install scripts to `~/.local/rEFInd_GUI/`, builds/installs the RPM (or rpm-ostree layers a release RPM on Bazzite, or `makepkg -si` on CachyOS), and installs root-owned pieces to `/etc/rEFInd/` (the built binary, `install_config_from_GUI.sh`, `rEFInd_bg_randomizer.sh`).
+`install-rEFInd-GUI.sh` is the user-facing entry point (curl | sh). It copies `GUI/`, `icons/`, `backgrounds/`, and the install/uninstall scripts to `~/.local/rEFInd_GUI/`, builds/installs the RPM (or rpm-ostree layers a release RPM on Bazzite, or `makepkg -si` on CachyOS), and installs root-owned pieces to `/etc/rEFInd/` (the built binary, `install_config_from_GUI.sh`, `rEFInd_bg_randomizer.sh`).
+
+`uninstall_rEFInd.sh` (repo root, run via sudo) is the Linux counterpart of `windows/uninstall_rEFInd.ps1` — keep their behavior in parity: delete the rEFInd boot entries whose partition GUID matches this distro's ESP (loader-path match covers both the `rEFInd` and refind-install's `rEFInd Boot Manager` labels; entries on other ESPs — a Windows-side install — are reported and left alone), re-activate the Windows boot entry that `refind_install_*.sh` deactivated with `efibootmgr -A`, remove `EFI/refind`, `EFI/Xbox360`, and `/boot/refind_linux.conf` (`--keep-esp-files` skips), disable the randomizer service, and with `--remove-app` also remove the package (dnf/pacman/apt/rpm-ostree), `~/.local/rEFInd_GUI`, `/etc/rEFInd`, the sudoers rule, and desktop entries. It resolves the invoking user's home via `SUDO_USER` (under sudo, `$HOME` is root's).
 
 The literal tokens `USER` and `HOME` inside `install_config_from_GUI`, `install_config_from_GUI.sh`, `rEFInd_GUI.desktop`, and `rEFInd_bg_randomizer.sh` are placeholders replaced by `sed` during installation — don't "fix" them to `$USER`/`$HOME`.
 
