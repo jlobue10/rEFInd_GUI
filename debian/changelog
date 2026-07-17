@@ -1,3 +1,12 @@
+refind-gui (2.3.4) unstable; urgency=medium
+
+  * Build against Qt6 instead of Qt5 so the app gets the native KDE Plasma
+    file dialog (icon view modes and PNG previews); Plasma 6 systems only
+    ship the Qt6 platform theme plugin, which left Qt5 builds with Qt's
+    bare fallback dialog.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Fri, 17 Jul 2026 12:00:00 -0700
+
 refind-gui (2.3.3) unstable; urgency=medium
 
   * Windows install script: numbered colored progress steps with an

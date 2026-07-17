@@ -121,24 +121,18 @@ On **CachyOS** (which manages Secure Boot with sbctl out of the box) the rEFInd 
 
 ### Browse dialog shows no PNG previews / no "view as icons" option (KDE Plasma)
 
-When picking icons or a background, the Browse dialog may show no thumbnails and
-no right-click view-mode options. This isn't a bug in the app — it requests the
-desktop's **native** file dialog, but KDE only supplies that (with previews and
-view options) when the Qt **platform-integration** plugin matching the GUI's Qt
-version is installed. Without it, Qt silently falls back to a bare built-in
-dialog that has neither.
+The app requests the desktop's **native** file dialog, and KDE only supplies
+that (with previews and view options) when the Qt **platform-integration**
+plugin matching the GUI's Qt version is installed — otherwise Qt silently falls
+back to a bare built-in dialog that has neither. Since v2.3.4 the Linux
+packages build against **Qt6**, whose KDE integration ships by default on
+Plasma 6 distros (CachyOS, Fedora/Nobara, Bazzite), so this works out of the
+box — if you still see the bare dialog, update to v2.3.4 or newer.
 
-Install the integration that matches the Qt the GUI was built against — check
-with `ldd $(command -v rEFInd_GUI)` and look for `libQt6Widgets` vs
-`libQt5Widgets`:
-
-- **Qt6 build:** the KDE Qt6 platform theme — `plasma-integration` on
-  Arch/CachyOS; on Fedora/Nobara it comes with `plasma-workspace` (KF6).
-- **Qt5 build:** the Qt5 build of the same — commonly `plasma-integration`
-  (Arch) or `plasma5-integration` depending on distro.
-
-Log out and back in (or just relaunch the app) afterwards. GNOME gives the same
-result via its platform theme (`qgnomeplatform` + `xdg-desktop-portal-gtk`).
+On an older Qt5 build (check `ldd /etc/rEFInd/rEFInd_GUI` for `libQt5Widgets`),
+install the Qt5 KDE integration (`plasma5-integration`, where the distro still
+ships it) — or just update. GNOME gives the same result via its platform theme
+(`qgnomeplatform` + `xdg-desktop-portal-gtk`).
 
 ## Misc.
 

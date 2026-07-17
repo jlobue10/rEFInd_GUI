@@ -55,7 +55,7 @@ if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 		echo -e '\nInstalling the prebuilt release rpm.\n'
 	else
 		echo -e '\nNo release rpm available; building locally with rpmbuild.\n'
-		sudo dnf install -y rpm-build cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel qt5-qtbase-devel qt5-qttools-devel
+		sudo dnf install -y rpm-build cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel
 		mkdir -p "$HOME/rpmbuild/SPECS" "$HOME/rpmbuild/SOURCES"
 		cp -f "$CURRENT_WD/rEFInd_GUI.spec" "$HOME/rpmbuild/SPECS"
 		cp -f "$CURRENT_WD/rEFInd_bg_randomizer.service" "$HOME/rpmbuild/SOURCES"
@@ -124,7 +124,7 @@ if [ "$CACHYOS" = 0 ]; then
 		rm -f "$INSTALL_PKG"
 	else
 		echo -e '\nNo release package available; building locally with makepkg.\n'
-		sudo pacman -S --needed base-devel git cmake qt5-base qt5-tools
+		sudo pacman -S --needed base-devel git cmake qt6-base qt6-tools
 		if ! (cd "$CURRENT_WD" && makepkg -si); then
 			echo "Error: makepkg failed. Aborting." >&2
 			exit 1
@@ -155,7 +155,7 @@ if [ "$DEB_BASE" = 0 ]; then
 	else
 		echo -e '\nNo release package available; building locally with dpkg-buildpackage.\n'
 		sudo apt-get update
-		sudo apt-get install -y build-essential debhelper cmake qtbase5-dev qttools5-dev
+		sudo apt-get install -y build-essential debhelper cmake qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools
 		if ! (cd "$CURRENT_WD" && dpkg-buildpackage -us -uc -b); then
 			echo "Error: dpkg-buildpackage failed. Aborting." >&2
 			exit 1
