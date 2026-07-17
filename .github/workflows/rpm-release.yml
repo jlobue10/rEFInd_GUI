@@ -26,7 +26,7 @@ jobs:
       TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
     steps:
       - name: Install build dependencies
-        run: dnf install -y rpm-build git-core cmake gcc-c++ make qt5-qtbase-devel qt5-qttools-devel
+        run: dnf install -y rpm-build git-core cmake gcc-c++ make qt6-qtbase-devel qt6-qttools-devel
 
       # Default checkout: the tag itself on tag pushes, the dispatched branch
       # on manual runs. The packaging recipe (spec) comes from that ref, while

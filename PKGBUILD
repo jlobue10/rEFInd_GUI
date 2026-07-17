@@ -1,6 +1,6 @@
 # Maintainer: Jonathan LoBue <jlobue10@gmail.com>
 pkgname=rEFInd_GUI
-pkgver=2.3.3
+pkgver=2.3.4
 pkgrel=1
 pkgdesc="Small GUI for customizing and installing rEFInd bootloader"
 arch=('x86_64')
@@ -8,8 +8,8 @@ url="https://github.com/jlobue10/rEFInd_GUI"
 license=('GPL3')
 # No debug split package; install scripts glob the built package by name
 options=('!debug')
-depends=('mokutil' 'sbsigntools' 'xterm' 'zenity')
-makedepends=('cmake' 'gcc' 'qt5-base' 'qt5-tools' 'git')
+depends=('mokutil' 'qt6-base' 'sbsigntools' 'xterm' 'zenity')
+makedepends=('cmake' 'gcc' 'qt6-base' 'qt6-tools' 'git')
 source=("rEFInd_bg_randomizer.service")
 md5sums=('SKIP')  # Replace with real checksum for AUR
 

@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.3.3
+Version:        2.3.4
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -12,7 +12,7 @@ License:        GPL3
 URL:            https://github.com/jlobue10/rEFInd_GUI
 Source0:        rEFInd_bg_randomizer.service
 
-BuildRequires:  cmake gcc-c++ git-core make qt5-qtbase-devel qt5-qttools-devel
+BuildRequires:  cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel
 Requires:       mokutil sbsigntools xterm zenity
 Provides:       rEFInd_GUI
 Conflicts:      rEFInd_GUI
@@ -49,6 +49,12 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Fri Jul 17 2026 Jon LoBue <jlobue10@gmail.com> [2.3.4-1]
+- Build against Qt6 instead of Qt5 so the app gets the native KDE Plasma
+  file dialog (icon view modes and PNG previews); Plasma 6 systems only
+  ship the Qt6 platform theme plugin, which left Qt5 builds with Qt's
+  bare fallback dialog
+
 * Thu Jul 16 2026 Jon LoBue <jlobue10@gmail.com> [2.3.3-1]
 - Windows install script: numbered colored progress steps with an overall
   progress bar, colorized SUCCESS/WARNING/FAILED summary, a Secure Boot
