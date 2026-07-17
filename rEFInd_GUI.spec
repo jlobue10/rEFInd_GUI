@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.3.4
+Version:        2.3.5
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,13 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Fri Jul 17 2026 Jon LoBue <jlobue10@gmail.com> [2.3.5-1]
+- Windows install script: the summary now reports what actually landed on
+  the ESP (rEFInd loader, config, Xbox 360 controller driver with its
+  timestamp), calls out a failed controller-driver download including
+  whether a stale copy was kept, and reports success-with-warning instead
+  of plain success when the driver was not updated (issue #23 follow-up)
+
 * Fri Jul 17 2026 Jon LoBue <jlobue10@gmail.com> [2.3.4-1]
 - Build against Qt6 instead of Qt5 so the app gets the native KDE Plasma
   file dialog (icon view modes and PNG previews); Plasma 6 systems only

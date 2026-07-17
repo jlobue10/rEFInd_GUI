@@ -8,7 +8,7 @@
 ; app itself requests Administrator at launch via its embedded manifest.
 
 #define AppName "rEFInd GUI"
-#define AppVersion "2.3.4"
+#define AppVersion "2.3.5"
 #define AppExe "rEFInd_GUI.exe"
 
 [Setup]

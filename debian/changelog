@@ -1,3 +1,13 @@
+refind-gui (2.3.5) unstable; urgency=medium
+
+  * Windows install script: the summary now reports what actually landed on
+    the ESP (rEFInd loader, config, Xbox 360 controller driver with its
+    timestamp), calls out a failed controller-driver download including
+    whether a stale copy was kept, and reports success-with-warning instead
+    of plain success when the driver was not updated (issue #23 follow-up).
+
+ -- Jon LoBue <jlobue10@gmail.com>  Fri, 17 Jul 2026 16:30:00 -0700
+
 refind-gui (2.3.4) unstable; urgency=medium
 
   * Build against Qt6 instead of Qt5 so the app gets the native KDE Plasma
