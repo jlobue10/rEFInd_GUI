@@ -150,8 +150,6 @@ ships it) — or just update. GNOME gives the same result via its platform theme
 
 This is basically a variation of my [SteamDeck_rEFInd](https://github.com/jlobue10/SteamDeck_rEFInd) repo with various improvements including generic username support, support for multiple Linux distros and installing the config file, icons and background PNGs without needing to type the password for `sudo` privileges.
 
-More coming soon...
-
 ## Acknowledgements
 
 This project is only intended to simplify the installation and configuration of the rEFInd boot manager — including some Secure Boot setup support (CachyOS with sbctl signing). All credit for the rEFInd boot manager itself goes to **Roderick W. Smith** ([rodsbooks.com/refind](https://www.rodsbooks.com/refind/)); rEFInd performs all of the complicated bootloader tasks.
