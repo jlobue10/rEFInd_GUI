@@ -15,7 +15,11 @@ $ErrorActionPreference = 'Stop'
 
 # Visual feedback: numbered, colored step banners plus an overall progress bar
 # so the elevated console shows at a glance how far the install has gotten.
-$TotalSteps = 6
+# The ROG Xbox Ally / Ally X (baseboard RC73YA / RC73XA) get one extra step:
+# downloading the I2C touchscreen driver (see the AllyTouchI2cDxe block below).
+$board = (Get-CimInstance Win32_BaseBoard -ErrorAction SilentlyContinue).Product
+$IsXboxAlly = ($board -like 'RC73XA*' -or $board -like 'RC73YA*')
+$TotalSteps = if ($IsXboxAlly) { 7 } else { 6 }
 $script:StepNum = 0
 function Write-Step([string]$Message) {
     $script:StepNum++
@@ -183,6 +187,8 @@ $backup = $null
 $installError = $null
 $entryId = $null
 $driverError = $null
+$touchError = $null
+$touchDest = $null
 $espFiles = $null
 try {
     Write-Step 'Downloading rEFInd from SourceForge...'
@@ -228,6 +234,23 @@ try {
         Write-Warning "Failed to download UsbXbox360Dxe.efi; skipping controller driver. $_"
     }
 
+    # AllyTouchI2cDxe touchscreen UEFI driver: the ROG Xbox Ally / Ally X
+    # built-in Novatek touchscreen is HID-over-I2C, which a USB driver
+    # structurally cannot see; this driver produces AbsolutePointer so the
+    # rEFInd menu is touch-usable. Only these devices get it (baseboard
+    # detected above, where $TotalSteps is set).
+    if ($IsXboxAlly) {
+        Write-Step 'Downloading AllyTouchI2cDxe.efi touchscreen driver...'
+        $touchDest = Join-Path $dest 'drivers_x64\AllyTouchI2cDxe.efi'
+        $touchUrl = 'https://github.com/jlobue10/AllyTouchI2cDxe/releases/latest/download/AllyTouchI2cDxe.efi'
+        try {
+            Invoke-WebRequest -Uri $touchUrl -OutFile $touchDest -MaximumRedirection 10
+        } catch {
+            $touchError = "$($_.Exception.Message)"
+            Write-Warning "Failed to download AllyTouchI2cDxe.efi; skipping touchscreen driver. $_"
+        }
+    }
+
     # Back up any existing config, then apply the GUI-generated one.
     Write-Step 'Applying the GUI-generated configuration...'
     $conf = Join-Path $dest 'refind.conf'
@@ -253,6 +276,10 @@ try {
             @{ Name = 'GUI config (refind.conf)';                Path = $conf },
             @{ Name = 'Controller driver (UsbXbox360Dxe.efi)';   Path = $driverDest })) {
         $espFiles[$check.Name] = Get-Item -LiteralPath $check.Path -ErrorAction SilentlyContinue
+    }
+    if ($touchDest) {
+        $espFiles['Touchscreen driver (AllyTouchI2cDxe.efi)'] =
+            Get-Item -LiteralPath $touchDest -ErrorAction SilentlyContinue
     }
 
     Write-Step 'Creating the rEFInd firmware boot entry...'
@@ -372,6 +399,13 @@ if ($driverError) {
         Write-Host 'A PREVIOUS copy of the driver was kept -- it may be outdated.' -ForegroundColor Yellow
     }
 }
+$touchOnEsp = $espFiles -and $null -ne $espFiles['Touchscreen driver (AllyTouchI2cDxe.efi)']
+if ($touchError) {
+    Write-Host "Touchscreen driver download failed: $touchError" -ForegroundColor Yellow
+    if ($touchOnEsp) {
+        Write-Host 'A PREVIOUS copy of the touchscreen driver was kept -- it may be outdated.' -ForegroundColor Yellow
+    }
+}
 $bootmgrNow = Invoke-Bcdedit '/enum', '{bootmgr}'
 $bcdPath = $null
 $m = $bootmgrNow.Output | Select-String -Pattern '^\s*path\s+(\S+)\s*$' | Select-Object -First 1
@@ -393,6 +427,13 @@ if ($installError) {
     Write-Host 'Fix: re-run Install rEFInd with a working network connection, or download' -ForegroundColor Yellow
     Write-Host 'UsbXbox360Dxe.efi from github.com/jlobue10/UsbXbox360Dxe/releases and' -ForegroundColor Yellow
     Write-Host 'copy it to EFI\refind\drivers_x64\ on the ESP.' -ForegroundColor Yellow
+} elseif ($touchError -or ($touchDest -and -not $touchOnEsp)) {
+    Write-Host 'SUCCESS, with a warning: rEFInd is installed and first in the firmware' -ForegroundColor Yellow
+    Write-Host 'boot order, but the Ally touchscreen driver was NOT updated (see above)' -ForegroundColor Yellow
+    Write-Host '-- touch may not work in the boot menu. Fix: re-run Install rEFInd with a' -ForegroundColor Yellow
+    Write-Host 'working network connection, or download AllyTouchI2cDxe.efi from' -ForegroundColor Yellow
+    Write-Host 'github.com/jlobue10/AllyTouchI2cDxe/releases and copy it to' -ForegroundColor Yellow
+    Write-Host 'EFI\refind\drivers_x64\ on the ESP.' -ForegroundColor Yellow
 } else {
     Write-Host 'SUCCESS: rEFInd is installed and first in the firmware boot order.' -ForegroundColor Green
     Write-Host '(Windows Boot Manager was left untouched; rEFInd chainloads it.)'

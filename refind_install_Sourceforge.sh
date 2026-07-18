@@ -82,6 +82,23 @@ if wget -q -O "$DOWNLOAD_DIR/UsbXbox360Dxe.efi" "$XBOX360_DRV_URL"; then
 else
 	echo "Warning: failed to download UsbXbox360Dxe.efi; skipping controller driver." >&2
 fi
+# AllyTouchI2cDxe touchscreen UEFI driver: the ROG Xbox Ally / Ally X
+# (DMI board RC73YA / RC73XA) built-in Novatek touchscreen is HID-over-I2C,
+# which a USB driver structurally cannot see; this driver produces
+# AbsolutePointer so the rEFInd menu is touch-usable. Only these devices
+# get it. Like the controller driver, download failure is non-fatal.
+case "$(cat /sys/class/dmi/id/board_name 2>/dev/null)" in
+RC73XA*|RC73YA*)
+	ALLYTOUCH_DRV_URL="https://github.com/jlobue10/AllyTouchI2cDxe/releases/latest/download/AllyTouchI2cDxe.efi"
+	echo "Downloading AllyTouchI2cDxe.efi touchscreen driver..."
+	if wget -q -O "$DOWNLOAD_DIR/AllyTouchI2cDxe.efi" "$ALLYTOUCH_DRV_URL"; then
+		sudo cp -f "$DOWNLOAD_DIR/AllyTouchI2cDxe.efi" "$ESP_MP/EFI/refind/drivers_x64/AllyTouchI2cDxe.efi"
+		rm -f "$DOWNLOAD_DIR/AllyTouchI2cDxe.efi"
+	else
+		echo "Warning: failed to download AllyTouchI2cDxe.efi; skipping touchscreen driver." >&2
+	fi
+	;;
+esac
 echo "Installing rEFInd files..."
 sudo "$REFIND_BIN/refind-install"
 sudo cp -rf "$REFIND_BIN/refind/icons/" "$ESP_MP/EFI/refind"

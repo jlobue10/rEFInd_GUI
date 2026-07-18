@@ -50,7 +50,7 @@ Release builds are Authenticode-signed (executable, installer, and PowerShell sc
 Windows notes:
 
 - The app requests **Administrator** rights at launch — everything it does (mounting the EFI System Partition, writing firmware boot variables) needs them.
-- **Install rEFInd** (v2.3.0+) downloads rEFInd from SourceForge and creates a dedicated `rEFInd` firmware boot entry — the exact equivalent of `efibootmgr -c` on Linux — first in the boot order. **Windows Boot Manager is left untouched** (rEFInd chainloads it); versions before 2.3.0 repointed `{bootmgr}` instead, which made the entry carry Windows' optional-data blob (the "long hex after refind_x64.efi" in `efibootmgr -v`) — installing 2.3.0+ over an old version restores `{bootmgr}` automatically. Previous boot settings are saved to `%LOCALAPPDATA%\rEFInd_GUI\bootmgr-backup.txt`. The installer also fetches the [Xbox 360 controller driver](#controller-support-in-the-boot-menu) into `EFI\refind\drivers_x64`.
+- **Install rEFInd** (v2.3.0+) downloads rEFInd from SourceForge and creates a dedicated `rEFInd` firmware boot entry — the exact equivalent of `efibootmgr -c` on Linux — first in the boot order. **Windows Boot Manager is left untouched** (rEFInd chainloads it); versions before 2.3.0 repointed `{bootmgr}` instead, which made the entry carry Windows' optional-data blob (the "long hex after refind_x64.efi" in `efibootmgr -v`) — installing 2.3.0+ over an old version restores `{bootmgr}` automatically. Previous boot settings are saved to `%LOCALAPPDATA%\rEFInd_GUI\bootmgr-backup.txt`. The installer also fetches the [Xbox 360 controller driver](#controller-support-in-the-boot-menu) into `EFI\refind\drivers_x64` — and, on the ROG Xbox Ally / Ally X, the [touchscreen driver](#touchscreen-support-in-the-boot-menu) too.
 - **Uninstalling** "rEFInd GUI" from Settings > Apps asks whether to also remove rEFInd itself; choosing Yes deletes the rEFInd boot entry, removes `EFI\refind` and `EFI\Xbox360` from the ESP, restores direct Windows boot, unregisters the background randomizer task, and scrubs `%LOCALAPPDATA%\rEFInd_GUI`. A rEFInd installed from the Linux side (on another ESP) is detected and left alone. The same cleanup can be run standalone as Administrator: `powershell -ExecutionPolicy Bypass -File "%LOCALAPPDATA%\rEFInd_GUI\windows\uninstall_rEFInd.ps1"` (add `-KeepEspFiles` to keep rEFInd's files).
 - The background randomizer runs as a Scheduled Task at logon instead of a systemd service.
 - The SteamOS `firmware_bootnum` option is Linux-only (Windows has no `efibootmgr` equivalent).
@@ -79,6 +79,12 @@ The generated `refind.conf` picks a sensible `resolution` line per device:
 Every rEFInd install path now drops the **[SkorionOS UsbXbox360Dxe](https://github.com/SkorionOS/UsbXbox360Dxe)** UEFI driver into rEFInd's `drivers_x64` folder on the ESP, so Xbox 360 / handheld gamepads (ASUS ROG Ally/Ally X, Legion Go, Legion Go 2, GPD, OneXPlayer, MSI Claw, 8BitDo, and 40+ others) can drive the rEFInd boot menu with mouse-emulation and key mappings. rEFInd auto-loads every driver it finds in `drivers_x64`, so nothing else is required.
 
 The latest release of the driver is fetched at install time from `https://github.com/jlobue10/UsbXbox360Dxe/releases/latest` (temporarily a fork of the SkorionOS driver that adds Legion Go 2 controller support — [upstream PR #6](https://github.com/SkorionOS/UsbXbox360Dxe/pull/6) — plus an ASUS Ally lockup fix and a right-stick fix so both sticks move the cursor, confirmed working on a Legion Go 2 in [issue #23](https://github.com/jlobue10/rEFInd_GUI/issues/23); the source will switch back to SkorionOS once **all** of those are merged and released upstream), so you always get the newest build. Only the `.efi` is installed — on first boot the driver auto-creates its own config at `\EFI\Xbox360\config.ini` on the ESP, which you can edit to remap buttons/sticks. If the download fails (no network), the rEFInd install still completes; the driver is simply skipped.
+
+## Touchscreen support in the boot menu
+
+On the **ROG Xbox Ally and Xbox Ally X** (since 2.3.6), every rEFInd install path also drops the **[AllyTouchI2cDxe](https://github.com/jlobue10/AllyTouchI2cDxe)** UEFI driver into `drivers_x64`, making the built-in touchscreen work in the rEFInd boot menu — tap to move the selection and launch entries. The touchscreen on these devices is HID-over-I2C (a Novatek panel on the SoC's I2C bus), which a USB driver structurally cannot see; AllyTouchI2cDxe speaks HID-over-I2C directly and feeds rEFInd's native touch support (`EFI_ABSOLUTE_POINTER_PROTOCOL`). Confirmed working on an Xbox Ally X.
+
+Other devices are unaffected — the driver is only installed when an Xbox Ally / Ally X is detected (DMI board `RC73XA`/`RC73YA`). Like the controller driver, it's fetched from `releases/latest` at install time, and a failed download only skips it.
 
 ## Secure boot considerations
 
@@ -111,6 +117,12 @@ If you use the bundled Xbox 360 controller driver (see [Controller support in th
 
 ```
 sudo sbctl sign -s /boot/efi/EFI/refind/drivers_x64/UsbXbox360Dxe.efi
+```
+
+The same goes for the Ally touchscreen driver (see [Touchscreen support in the boot menu](#touchscreen-support-in-the-boot-menu)) if it was installed:
+
+```
+sudo sbctl sign -s /boot/efi/EFI/refind/drivers_x64/AllyTouchI2cDxe.efi
 ```
 
 Re-enable secure boot in BIOS, and enjoy the benefits of being able to play anti-cheat games in Windows and a fully functioning Linux distro, side-by-side without toggling the secure boot setting in BIOS.
