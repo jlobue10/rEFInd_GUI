@@ -74,6 +74,25 @@
 		echo "# Warning: failed to download UsbXbox360Dxe.efi; skipping controller driver."
 	fi
 	rm -f "$XBOX360_DRV_TMP"
+	# AllyTouchI2cDxe touchscreen UEFI driver: the ROG Xbox Ally / Ally X
+	# (DMI board RC73YA / RC73XA) built-in Novatek touchscreen is HID-over-I2C,
+	# which a USB driver structurally cannot see; this driver produces
+	# AbsolutePointer so the rEFInd menu is touch-usable. Only these devices
+	# get it. Like the controller driver, download failure is non-fatal.
+	case "$(cat /sys/class/dmi/id/board_name 2>/dev/null)" in
+	RC73XA*|RC73YA*)
+		echo "# Installing Ally touchscreen driver..."
+		ALLYTOUCH_DRV_URL="https://github.com/jlobue10/AllyTouchI2cDxe/releases/latest/download/AllyTouchI2cDxe.efi"
+		ALLYTOUCH_DRV_TMP="$(mktemp)"
+		if curl -fsSL "$ALLYTOUCH_DRV_URL" -o "$ALLYTOUCH_DRV_TMP" 2>/dev/null \
+			|| wget -q -O "$ALLYTOUCH_DRV_TMP" "$ALLYTOUCH_DRV_URL"; then
+			sudo cp -f "$ALLYTOUCH_DRV_TMP" "$ESP_MP/EFI/refind/drivers_x64/AllyTouchI2cDxe.efi"
+		else
+			echo "# Warning: failed to download AllyTouchI2cDxe.efi; skipping touchscreen driver."
+		fi
+		rm -f "$ALLYTOUCH_DRV_TMP"
+		;;
+	esac
 	echo 95
 	echo "# Updating EFI boot entries..."
 	# Resolve the ESP's parent disk and partition number for efibootmgr.

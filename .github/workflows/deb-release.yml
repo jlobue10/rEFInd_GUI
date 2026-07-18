@@ -30,7 +30,7 @@ jobs:
       - name: Install build dependencies
         run: |
           apt-get update
-          apt-get install -y build-essential debhelper cmake qtbase5-dev qttools5-dev git ca-certificates
+          apt-get install -y build-essential debhelper cmake qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools libgl1-mesa-dev git ca-certificates
 
       # Default checkout: the tag itself on tag pushes, the dispatched branch
       # on manual runs. The packaging recipe (debian/) comes from that ref,

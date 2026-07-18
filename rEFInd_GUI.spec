@@ -12,7 +12,7 @@ License:        GPL3
 URL:            https://github.com/jlobue10/rEFInd_GUI
 Source0:        rEFInd_bg_randomizer.service
 
-BuildRequires:  cmake gcc-c++ git-core make qt5-qtbase-devel qt5-qttools-devel
+BuildRequires:  cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel
 Requires:       mokutil sbsigntools xterm zenity
 Provides:       rEFInd_GUI
 Conflicts:      rEFInd_GUI
@@ -52,6 +52,27 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 * Sat Jul 18 2026 Jon LoBue <jlobue10@gmail.com> [2.3.7-1]
 - The GUI-generated refind.conf now sets log_level 0 alongside enable_mouse
   so rEFInd never writes a boot log.
+
+* Fri Jul 17 2026 Jon LoBue <jlobue10@gmail.com> [2.3.6-1]
+- All three rEFInd install scripts now also install the AllyTouchI2cDxe
+  UEFI touchscreen driver on the ROG Xbox Ally / Ally X (DMI board
+  RC73XA/RC73YA), making the built-in touchscreen usable in the rEFInd
+  boot menu. Confirmed working on an Xbox Ally X. Other devices are
+  unaffected; a failed download warns and continues, like the controller
+  driver.
+
+* Fri Jul 17 2026 Jon LoBue <jlobue10@gmail.com> [2.3.5-1]
+- Windows install script: the summary now reports what actually landed on
+  the ESP (rEFInd loader, config, Xbox 360 controller driver with its
+  timestamp), calls out a failed controller-driver download including
+  whether a stale copy was kept, and reports success-with-warning instead
+  of plain success when the driver was not updated (issue #23 follow-up)
+
+* Fri Jul 17 2026 Jon LoBue <jlobue10@gmail.com> [2.3.4-1]
+- Build against Qt6 instead of Qt5 so the app gets the native KDE Plasma
+  file dialog (icon view modes and PNG previews); Plasma 6 systems only
+  ship the Qt6 platform theme plugin, which left Qt5 builds with Qt's
+  bare fallback dialog
 
 * Thu Jul 16 2026 Jon LoBue <jlobue10@gmail.com> [2.3.3-1]
 - Windows install script: numbered colored progress steps with an overall
