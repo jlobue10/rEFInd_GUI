@@ -70,7 +70,7 @@ If you need to uninstall rEFInd_GUI on Bazzite (for instance in order to re-run 
 
 The generated `refind.conf` picks a sensible `resolution` line per device:
 
-- **Legion Go**: `2560 1600`, **Legion Go 2**: `1920 1200` — these panels are portrait-native, and forcing landscape solves a rotation issue.
+- **Legion Go**: `2560 1600`, **Legion Go 2**: `1920 1200` — some of these panels are portrait-native, and forcing landscape solves a rotation issue.
 - **ROG Xbox Ally / Ally X**: `1920 1080` (the numbered video mode 3 picks the wrong mode on these).
 - **Any other device** (since 2.2.0): the built-in panel's **native resolution**, read from EDID/DRM — the internal display is preferred over external outputs, so a docked handheld still gets its own screen. Only when no panel can be detected does the config fall back to rEFInd's numbered mode 3.
 
