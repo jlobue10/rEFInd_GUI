@@ -1,3 +1,10 @@
+refind-gui (2.3.7) unstable; urgency=medium
+
+  * The GUI-generated refind.conf now sets log_level 0 alongside
+    enable_mouse so rEFInd never writes a boot log.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sat, 18 Jul 2026 09:00:00 -0700
+
 refind-gui (2.3.3) unstable; urgency=medium
 
   * Windows install script: numbered colored progress steps with an

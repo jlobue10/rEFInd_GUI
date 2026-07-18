@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.3.3
+Version:        2.3.7
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,10 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sat Jul 18 2026 Jon LoBue <jlobue10@gmail.com> [2.3.7-1]
+- The GUI-generated refind.conf now sets log_level 0 alongside enable_mouse
+  so rEFInd never writes a boot log.
+
 * Thu Jul 16 2026 Jon LoBue <jlobue10@gmail.com> [2.3.3-1]
 - Windows install script: numbered colored progress steps with an overall
   progress bar, colorized SUCCESS/WARNING/FAILED summary, a Secure Boot
