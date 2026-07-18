@@ -127,7 +127,7 @@ sudo sbctl sign -s /boot/efi/EFI/refind/drivers_x64/AllyTouchI2cDxe.efi
 
 Re-enable secure boot in BIOS, and enjoy the benefits of being able to play anti-cheat games in Windows and a fully functioning Linux distro, side-by-side without toggling the secure boot setting in BIOS.
 
-On **CachyOS** (which manages Secure Boot with sbctl out of the box) the rEFInd install scripts detect enabled Secure Boot and run `sbctl-batch-sign` automatically after installing, so the freshly written EFI binaries are signed without any manual steps.
+On **CachyOS** (which manages Secure Boot with sbctl out of the box — see the [CachyOS Secure Boot setup guide](https://wiki.cachyos.org/configuration/secure_boot_setup/)) the rEFInd install scripts detect enabled Secure Boot and run `sbctl-batch-sign` automatically after installing, so the freshly written EFI binaries are signed without any manual steps.
 
 ## Troubleshooting
 
