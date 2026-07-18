@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.3.5
+Version:        2.3.6
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,14 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Fri Jul 17 2026 Jon LoBue <jlobue10@gmail.com> [2.3.6-1]
+- All three rEFInd install scripts now also install the AllyTouchI2cDxe
+  UEFI touchscreen driver on the ROG Xbox Ally / Ally X (DMI board
+  RC73XA/RC73YA), making the built-in touchscreen usable in the rEFInd
+  boot menu. Confirmed working on an Xbox Ally X. Other devices are
+  unaffected; a failed download warns and continues, like the controller
+  driver.
+
 * Fri Jul 17 2026 Jon LoBue <jlobue10@gmail.com> [2.3.5-1]
 - Windows install script: the summary now reports what actually landed on
   the ESP (rEFInd loader, config, Xbox 360 controller driver with its

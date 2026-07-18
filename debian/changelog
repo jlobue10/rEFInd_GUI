@@ -1,3 +1,14 @@
+refind-gui (2.3.6) unstable; urgency=medium
+
+  * All three rEFInd install scripts now also install the AllyTouchI2cDxe
+    UEFI touchscreen driver on the ROG Xbox Ally / Ally X (DMI board
+    RC73XA/RC73YA), making the built-in touchscreen usable in the rEFInd
+    boot menu. Confirmed working on an Xbox Ally X. Other devices are
+    unaffected; a failed download warns and continues, like the
+    controller driver.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Fri, 17 Jul 2026 21:30:00 -0700
+
 refind-gui (2.3.5) unstable; urgency=medium
 
   * Windows install script: the summary now reports what actually landed on
