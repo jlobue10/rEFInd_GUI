@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.3.6
+Version:        2.3.7
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,10 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sat Jul 18 2026 Jon LoBue <jlobue10@gmail.com> [2.3.7-1]
+- The GUI-generated refind.conf now sets log_level 0 alongside enable_mouse
+  so rEFInd never writes a boot log.
+
 * Fri Jul 17 2026 Jon LoBue <jlobue10@gmail.com> [2.3.6-1]
 - All three rEFInd install scripts now also install the AllyTouchI2cDxe
   UEFI touchscreen driver on the ROG Xbox Ally / Ally X (DMI board
