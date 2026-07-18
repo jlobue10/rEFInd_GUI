@@ -90,7 +90,7 @@ Other devices are unaffected — the driver is only installed when an Xbox Ally 
 
 User mileage may vary on this topic, but for handheld devices such as the ASUS ROG ALLY/ ALLY X and others, finding a way to dual boot your Linux distro of choice alongside Windows and using rEFInd is a nice quality of life improvement.
 
-What I've done on my own personal ASUS ROG ALLY X is install Nobara (latest version as of now, 41) and rEFInd and then install **[sbctl](https://github.com/Foxboron/sbctl)** . `sbctl` makes secure boot installation and management nearly trivial.
+What I've done on my own personal ASUS ROG ALLY X in the past (I've since switched to CachyOS) is to install Nobara and rEFInd and then install **[sbctl](https://github.com/Foxboron/sbctl)** . `sbctl` makes secure boot installation and management nearly trivial.
 For Fedora based distros such as Nobara, run these steps to get `sbctl` installed.
 
 ```
