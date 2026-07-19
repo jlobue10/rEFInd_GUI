@@ -82,9 +82,9 @@ The latest release of the driver is fetched at install time from `https://github
 
 ## Touchscreen support in the boot menu
 
-On the **ROG Xbox Ally and Xbox Ally X** (since 2.3.6), every rEFInd install path also drops the **[AllyTouchI2cDxe](https://github.com/jlobue10/AllyTouchI2cDxe)** UEFI driver into `drivers_x64`, making the built-in touchscreen work in the rEFInd boot menu — tap to move the selection and launch entries. The touchscreen on these devices is HID-over-I2C (a Novatek panel on the SoC's I2C bus), which a USB driver structurally cannot see; AllyTouchI2cDxe speaks HID-over-I2C directly and feeds rEFInd's native touch support (`EFI_ABSOLUTE_POINTER_PROTOCOL`). Confirmed working on an Xbox Ally X.
+On the **ROG Xbox Ally, Xbox Ally X** (since 2.3.6) and **Steam Deck OLED** (since 2.4.2), every rEFInd install path also drops the **[TouchI2cDxe](https://github.com/jlobue10/TouchI2cDxe)** UEFI driver (formerly AllyTouchI2cDxe) into `drivers_x64`, making the built-in touchscreen work in the rEFInd boot menu — tap to move the selection and launch entries. The touchscreen on these devices is HID-over-I2C (a Novatek panel on the Ally, a FocalTech panel on the OLED Deck, both on the SoC's I2C bus), which a USB driver structurally cannot see; TouchI2cDxe speaks HID-over-I2C directly and feeds rEFInd's native touch support (`EFI_ABSOLUTE_POINTER_PROTOCOL`). Confirmed working on an Xbox Ally X. On the OLED Deck the driver also rotates the panel's portrait touch matrix onto rEFInd's landscape screen mode.
 
-Other devices are unaffected — the driver is only installed when an Xbox Ally / Ally X is detected (DMI board `RC73XA`/`RC73YA`). Like the controller driver, it's fetched from `releases/latest` at install time, and a failed download only skips it.
+Other devices are unaffected — the driver is only installed when an Xbox Ally / Ally X (DMI board `RC73XA`/`RC73YA`) or Steam Deck OLED (DMI product `Galileo`) is detected. Like the controller driver, it's fetched from `releases/latest` at install time, and a failed download only skips it. Installs that previously received `AllyTouchI2cDxe.efi` get it replaced by `TouchI2cDxe.efi` on the next rEFInd install.
 
 ## Secure boot considerations
 
@@ -119,10 +119,10 @@ If you use the bundled Xbox 360 controller driver (see [Controller support in th
 sudo sbctl sign -s /boot/efi/EFI/refind/drivers_x64/UsbXbox360Dxe.efi
 ```
 
-The same goes for the Ally touchscreen driver (see [Touchscreen support in the boot menu](#touchscreen-support-in-the-boot-menu)) if it was installed:
+The same goes for the touchscreen driver (see [Touchscreen support in the boot menu](#touchscreen-support-in-the-boot-menu)) if it was installed:
 
 ```
-sudo sbctl sign -s /boot/efi/EFI/refind/drivers_x64/AllyTouchI2cDxe.efi
+sudo sbctl sign -s /boot/efi/EFI/refind/drivers_x64/TouchI2cDxe.efi
 ```
 
 Re-enable secure boot in BIOS, and enjoy the benefits of being able to play anti-cheat games in Windows and a fully functioning Linux distro, side-by-side without toggling the secure boot setting in BIOS.

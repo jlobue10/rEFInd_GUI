@@ -74,25 +74,34 @@
 		echo "# Warning: failed to download UsbXbox360Dxe.efi; skipping controller driver."
 	fi
 	rm -f "$XBOX360_DRV_TMP"
-	# AllyTouchI2cDxe touchscreen UEFI driver: the ROG Xbox Ally / Ally X
-	# (DMI board RC73YA / RC73XA) built-in Novatek touchscreen is HID-over-I2C,
-	# which a USB driver structurally cannot see; this driver produces
-	# AbsolutePointer so the rEFInd menu is touch-usable. Only these devices
-	# get it. Like the controller driver, download failure is non-fatal.
+	# TouchI2cDxe touchscreen UEFI driver (successor of AllyTouchI2cDxe):
+	# built-in HID-over-I2C touchscreens -- ROG Xbox Ally / Ally X (DMI board
+	# RC73YA / RC73XA, Novatek) and Steam Deck OLED (DMI product Galileo,
+	# FocalTech) -- are structurally invisible to a USB driver; this driver
+	# produces AbsolutePointer so the rEFInd menu is touch-usable. Only these
+	# devices get it. Like the controller driver, download failure is non-fatal.
+	TOUCH_DEVICE=""
 	case "$(cat /sys/class/dmi/id/board_name 2>/dev/null)" in
-	RC73XA*|RC73YA*)
-		echo "# Installing Ally touchscreen driver..."
-		ALLYTOUCH_DRV_URL="https://github.com/jlobue10/AllyTouchI2cDxe/releases/latest/download/AllyTouchI2cDxe.efi"
-		ALLYTOUCH_DRV_TMP="$(mktemp)"
-		if curl -fsSL "$ALLYTOUCH_DRV_URL" -o "$ALLYTOUCH_DRV_TMP" 2>/dev/null \
-			|| wget -q -O "$ALLYTOUCH_DRV_TMP" "$ALLYTOUCH_DRV_URL"; then
-			sudo cp -f "$ALLYTOUCH_DRV_TMP" "$ESP_MP/EFI/refind/drivers_x64/AllyTouchI2cDxe.efi"
-		else
-			echo "# Warning: failed to download AllyTouchI2cDxe.efi; skipping touchscreen driver."
-		fi
-		rm -f "$ALLYTOUCH_DRV_TMP"
-		;;
+	RC73XA*|RC73YA*) TOUCH_DEVICE=1 ;;
 	esac
+	case "$(cat /sys/class/dmi/id/product_name 2>/dev/null)" in
+	Galileo) TOUCH_DEVICE=1 ;;
+	esac
+	if [ -n "$TOUCH_DEVICE" ]; then
+		echo "# Installing touchscreen driver..."
+		TOUCH_DRV_URL="https://github.com/jlobue10/TouchI2cDxe/releases/latest/download/TouchI2cDxe.efi"
+		TOUCH_DRV_TMP="$(mktemp)"
+		if curl -fsSL "$TOUCH_DRV_URL" -o "$TOUCH_DRV_TMP" 2>/dev/null \
+			|| wget -q -O "$TOUCH_DRV_TMP" "$TOUCH_DRV_URL"; then
+			sudo cp -f "$TOUCH_DRV_TMP" "$ESP_MP/EFI/refind/drivers_x64/TouchI2cDxe.efi"
+			# TouchI2cDxe supersedes AllyTouchI2cDxe; leaving both would load
+			# two AbsolutePointer producers for the same panel.
+			sudo rm -f "$ESP_MP/EFI/refind/drivers_x64/AllyTouchI2cDxe.efi"
+		else
+			echo "# Warning: failed to download TouchI2cDxe.efi; skipping touchscreen driver."
+		fi
+		rm -f "$TOUCH_DRV_TMP"
+	fi
 	echo 95
 	echo "# Updating EFI boot entries..."
 	# Resolve the ESP's parent disk and partition number for efibootmgr.

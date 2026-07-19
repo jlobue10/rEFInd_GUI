@@ -15,11 +15,13 @@ $ErrorActionPreference = 'Stop'
 
 # Visual feedback: numbered, colored step banners plus an overall progress bar
 # so the elevated console shows at a glance how far the install has gotten.
-# The ROG Xbox Ally / Ally X (baseboard RC73YA / RC73XA) get one extra step:
-# downloading the I2C touchscreen driver (see the AllyTouchI2cDxe block below).
+# Devices with a supported HID-over-I2C touchscreen -- ROG Xbox Ally / Ally X
+# (baseboard RC73YA / RC73XA) and Steam Deck OLED (product Galileo) -- get one
+# extra step: downloading the touchscreen driver (TouchI2cDxe block below).
 $board = (Get-CimInstance Win32_BaseBoard -ErrorAction SilentlyContinue).Product
-$IsXboxAlly = ($board -like 'RC73XA*' -or $board -like 'RC73YA*')
-$TotalSteps = if ($IsXboxAlly) { 7 } else { 6 }
+$product = (Get-CimInstance Win32_ComputerSystemProduct -ErrorAction SilentlyContinue).Name
+$IsTouchDevice = ($board -like 'RC73XA*' -or $board -like 'RC73YA*' -or $product -eq 'Galileo')
+$TotalSteps = if ($IsTouchDevice) { 7 } else { 6 }
 $script:StepNum = 0
 function Write-Step([string]$Message) {
     $script:StepNum++
@@ -234,20 +236,25 @@ try {
         Write-Warning "Failed to download UsbXbox360Dxe.efi; skipping controller driver. $_"
     }
 
-    # AllyTouchI2cDxe touchscreen UEFI driver: the ROG Xbox Ally / Ally X
-    # built-in Novatek touchscreen is HID-over-I2C, which a USB driver
-    # structurally cannot see; this driver produces AbsolutePointer so the
-    # rEFInd menu is touch-usable. Only these devices get it (baseboard
-    # detected above, where $TotalSteps is set).
-    if ($IsXboxAlly) {
-        Write-Step 'Downloading AllyTouchI2cDxe.efi touchscreen driver...'
-        $touchDest = Join-Path $dest 'drivers_x64\AllyTouchI2cDxe.efi'
-        $touchUrl = 'https://github.com/jlobue10/AllyTouchI2cDxe/releases/latest/download/AllyTouchI2cDxe.efi'
+    # TouchI2cDxe touchscreen UEFI driver (successor of AllyTouchI2cDxe): the
+    # ROG Xbox Ally / Ally X (Novatek) and Steam Deck OLED (FocalTech)
+    # built-in touchscreens are HID-over-I2C, which a USB driver structurally
+    # cannot see; this driver produces AbsolutePointer so the rEFInd menu is
+    # touch-usable. Only these devices get it (detected above, where
+    # $TotalSteps is set).
+    if ($IsTouchDevice) {
+        Write-Step 'Downloading TouchI2cDxe.efi touchscreen driver...'
+        $touchDest = Join-Path $dest 'drivers_x64\TouchI2cDxe.efi'
+        $touchUrl = 'https://github.com/jlobue10/TouchI2cDxe/releases/latest/download/TouchI2cDxe.efi'
         try {
             Invoke-WebRequest -Uri $touchUrl -OutFile $touchDest -MaximumRedirection 10
+            # TouchI2cDxe supersedes AllyTouchI2cDxe; leaving both would load
+            # two AbsolutePointer producers for the same panel.
+            Remove-Item -Force -ErrorAction SilentlyContinue `
+                (Join-Path $dest 'drivers_x64\AllyTouchI2cDxe.efi')
         } catch {
             $touchError = "$($_.Exception.Message)"
-            Write-Warning "Failed to download AllyTouchI2cDxe.efi; skipping touchscreen driver. $_"
+            Write-Warning "Failed to download TouchI2cDxe.efi; skipping touchscreen driver. $_"
         }
     }
 
@@ -278,7 +285,7 @@ try {
         $espFiles[$check.Name] = Get-Item -LiteralPath $check.Path -ErrorAction SilentlyContinue
     }
     if ($touchDest) {
-        $espFiles['Touchscreen driver (AllyTouchI2cDxe.efi)'] =
+        $espFiles['Touchscreen driver (TouchI2cDxe.efi)'] =
             Get-Item -LiteralPath $touchDest -ErrorAction SilentlyContinue
     }
 
@@ -399,7 +406,7 @@ if ($driverError) {
         Write-Host 'A PREVIOUS copy of the driver was kept -- it may be outdated.' -ForegroundColor Yellow
     }
 }
-$touchOnEsp = $espFiles -and $null -ne $espFiles['Touchscreen driver (AllyTouchI2cDxe.efi)']
+$touchOnEsp = $espFiles -and $null -ne $espFiles['Touchscreen driver (TouchI2cDxe.efi)']
 if ($touchError) {
     Write-Host "Touchscreen driver download failed: $touchError" -ForegroundColor Yellow
     if ($touchOnEsp) {
@@ -429,10 +436,10 @@ if ($installError) {
     Write-Host 'copy it to EFI\refind\drivers_x64\ on the ESP.' -ForegroundColor Yellow
 } elseif ($touchError -or ($touchDest -and -not $touchOnEsp)) {
     Write-Host 'SUCCESS, with a warning: rEFInd is installed and first in the firmware' -ForegroundColor Yellow
-    Write-Host 'boot order, but the Ally touchscreen driver was NOT updated (see above)' -ForegroundColor Yellow
+    Write-Host 'boot order, but the touchscreen driver was NOT updated (see above)' -ForegroundColor Yellow
     Write-Host '-- touch may not work in the boot menu. Fix: re-run Install rEFInd with a' -ForegroundColor Yellow
-    Write-Host 'working network connection, or download AllyTouchI2cDxe.efi from' -ForegroundColor Yellow
-    Write-Host 'github.com/jlobue10/AllyTouchI2cDxe/releases and copy it to' -ForegroundColor Yellow
+    Write-Host 'working network connection, or download TouchI2cDxe.efi from' -ForegroundColor Yellow
+    Write-Host 'github.com/jlobue10/TouchI2cDxe/releases and copy it to' -ForegroundColor Yellow
     Write-Host 'EFI\refind\drivers_x64\ on the ESP.' -ForegroundColor Yellow
 } else {
     Write-Host 'SUCCESS: rEFInd is installed and first in the firmware boot order.' -ForegroundColor Green
