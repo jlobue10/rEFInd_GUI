@@ -42,9 +42,13 @@
 	ESP_MP=""
 	for _cand in /boot/efi /efi /boot; do
 		[ -e "$_cand" ] || continue
+		# The candidate may sit behind a systemd automount (SteamOS mounts /esp
+		# and /efi that way): resolving "<dir>/." establishes the real mount
+		# and tail -1 below skips the autofs row findmnt lists first.
+		stat "$_cand/." >/dev/null 2>&1
 		_mp="$(findmnt -no TARGET --target "$_cand" 2>/dev/null | head -1)"
 		[ -n "$_mp" ] || continue
-		case "$(findmnt -no FSTYPE --target "$_cand" 2>/dev/null | head -1)" in
+		case "$(findmnt -no FSTYPE --target "$_cand" 2>/dev/null | tail -1)" in
 			vfat|msdos|fat) ;; *) continue ;;
 		esac
 		if [ -d "$_mp/EFI/refind" ]; then ESP_MP="$_mp"; break; fi
@@ -110,7 +114,7 @@
 	# 2.42), which produced `efibootmgr -c -d /dev/ ...` -- a failed create --
 	# so fall back to sysfs, where a partition's parent directory is its disk.
 	# Diagnostics go to stderr: stdout is zenity's progress protocol.
-	ESP_DEV="$(findmnt -no SOURCE "$ESP_MP" | head -1)"
+	ESP_DEV="$(findmnt -no SOURCE "$ESP_MP" | grep -m1 "^/dev/")"
 	ESP_PART="$(basename "$ESP_DEV")"
 	ESP_PARTNUM="$(cat "/sys/class/block/$ESP_PART/partition" 2>/dev/null)"
 	ESP_PARENT="$(lsblk -no PKNAME "$ESP_DEV" 2>/dev/null | head -1)"

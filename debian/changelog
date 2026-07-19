@@ -1,3 +1,13 @@
+refind-gui (2.6.1) unstable; urgency=medium
+
+  * Fix OS detection and Deep Scan on systems that mount the ESP through a
+    systemd automount (SteamOS 3.9's /esp and /efi): detection now triggers
+    the automounts, recovers entries for unmounted ESPs from the scan cache
+    or firmware boot variables, Deep Scan temp-mounts unmounted ESPs, and
+    the scripts no longer mistake the autofs row for the ESP device.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sun, 19 Jul 2026 17:00:00 -0700
+
 refind-gui (2.6.0) unstable; urgency=medium
 
   * Steam Deck LCD (Jupiter) touchscreen support in rEFInd: the install

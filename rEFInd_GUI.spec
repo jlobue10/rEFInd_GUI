@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.6.0
+Version:        2.6.1
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,13 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.6.1-1]
+- Fix OS detection and Deep Scan on systems that mount the ESP through a
+  systemd automount (SteamOS 3.9's /esp and /efi): detection now triggers
+  the automounts, recovers entries for unmounted ESPs from the scan cache
+  or firmware boot variables, Deep Scan temp-mounts unmounted ESPs, and
+  the scripts no longer mistake the autofs row for the ESP device.
+
 * Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.6.0-1]
 - Steam Deck LCD (Jupiter) touchscreen support in rEFInd: the install
   scripts now fetch the TouchI2cDxe driver (v1.2.0 adds the Jupiter
