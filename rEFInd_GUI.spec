@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.4.0
+Version:        2.4.1
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,10 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.4.1-1]
+- Fix the overlap between the Rescan OSes and Deep Scan buttons by moving
+  the Enable Mouse checkbox up into the Boot Option #3 row.
+
 * Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.4.0-1]
 - OS detection now recovers boot entries when the ESP is mounted root-only
   (the Fedora-family umask=0077 default): entries are read back from the

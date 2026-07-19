@@ -1,3 +1,10 @@
+refind-gui (2.4.1) unstable; urgency=medium
+
+  * Fix the overlap between the Rescan OSes and Deep Scan buttons by moving
+    the Enable Mouse checkbox up into the Boot Option #3 row.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sun, 19 Jul 2026 10:00:00 -0700
+
 refind-gui (2.4.0) unstable; urgency=medium
 
   * OS detection now recovers boot entries when the ESP is mounted root-only
