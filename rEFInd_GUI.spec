@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.4.1
+Version:        2.5.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,13 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.5.0-1]
+- Steam Deck OLED touchscreen support in rEFInd: the install scripts now
+  fetch the TouchI2cDxe UEFI driver (successor of AllyTouchI2cDxe) for
+  supported HID-over-I2C touch panels (ROG Xbox Ally / Ally X and Steam
+  Deck OLED), removing a stale AllyTouchI2cDxe.efi after a successful
+  download.
+
 * Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.4.1-1]
 - Fix the overlap between the Rescan OSes and Deep Scan buttons by moving
   the Enable Mouse checkbox up into the Boot Option #3 row.
