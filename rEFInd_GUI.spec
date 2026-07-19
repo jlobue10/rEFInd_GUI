@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.5.0
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,11 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.6.0-1]
+- Steam Deck LCD (Jupiter) touchscreen support in rEFInd: the install
+  scripts now fetch the TouchI2cDxe driver (v1.2.0 adds the Jupiter
+  profile) on both Steam Deck models, not just the OLED.
+
 * Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.5.0-1]
 - Steam Deck OLED touchscreen support in rEFInd: the install scripts now
   fetch the TouchI2cDxe UEFI driver (successor of AllyTouchI2cDxe) for

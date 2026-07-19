@@ -1,3 +1,11 @@
+refind-gui (2.6.0) unstable; urgency=medium
+
+  * Steam Deck LCD (Jupiter) touchscreen support in rEFInd: the install
+    scripts now fetch the TouchI2cDxe UEFI driver (v1.2.0 adds the Jupiter
+    profile) on both Steam Deck models, not just the OLED.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sun, 19 Jul 2026 16:30:00 -0700
+
 refind-gui (2.5.0) unstable; urgency=medium
 
   * Steam Deck OLED touchscreen support in rEFInd: the install scripts now
