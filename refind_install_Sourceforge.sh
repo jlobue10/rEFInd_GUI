@@ -84,16 +84,17 @@ else
 fi
 # TouchI2cDxe touchscreen UEFI driver (successor of AllyTouchI2cDxe):
 # built-in HID-over-I2C touchscreens -- ROG Xbox Ally / Ally X (DMI board
-# RC73YA / RC73XA, Novatek) and Steam Deck OLED (DMI product Galileo,
-# FocalTech) -- are structurally invisible to a USB driver; this driver
-# produces AbsolutePointer so the rEFInd menu is touch-usable. Only these
-# devices get it. Like the controller driver, download failure is non-fatal.
+# RC73YA / RC73XA, Novatek) and Steam Deck OLED/LCD (DMI product Galileo /
+# Jupiter, FocalTech) -- are structurally invisible to a USB driver; this
+# driver produces AbsolutePointer so the rEFInd menu is touch-usable. Only
+# these devices get it. Like the controller driver, download failure is
+# non-fatal.
 TOUCH_DEVICE=""
 case "$(cat /sys/class/dmi/id/board_name 2>/dev/null)" in
 RC73XA*|RC73YA*) TOUCH_DEVICE=1 ;;
 esac
 case "$(cat /sys/class/dmi/id/product_name 2>/dev/null)" in
-Galileo) TOUCH_DEVICE=1 ;;
+Galileo|Jupiter) TOUCH_DEVICE=1 ;;
 esac
 if [ -n "$TOUCH_DEVICE" ]; then
 	TOUCH_DRV_URL="https://github.com/jlobue10/TouchI2cDxe/releases/latest/download/TouchI2cDxe.efi"
