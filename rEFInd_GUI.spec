@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.3.7
+Version:        2.4.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,17 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.4.0-1]
+- OS detection now recovers boot entries when the ESP is mounted root-only
+  (the Fedora-family umask=0077 default): entries are read back from the
+  firmware's boot variables, and a new opt-in Deep Scan button performs an
+  elevated filesystem scan for loaders with no boot entry.
+- Install Config and the background randomizer now write to the ESP the
+  firmware actually boots rEFInd from, skipping stale NVRAM entries and
+  scanning all ESPs before falling back to the mounted one.
+- Install Config reports real success/failure detail from the install script
+  on both platforms, and fails clearly when no config has been created yet.
+
 * Sat Jul 18 2026 Jon LoBue <jlobue10@gmail.com> [2.3.7-1]
 - The GUI-generated refind.conf now sets log_level 0 alongside enable_mouse
   so rEFInd never writes a boot log.
