@@ -54,6 +54,12 @@ MainWindow::MainWindow(QWidget *parent)
         ui->Firmware_bootnum_CheckBox->setEnabled(false);
         ui->Firmware_bootnum_CheckBox->setToolTip(tr("Requires efibootmgr (Linux only)"));
     }
+    if (!Platform::espDeepScanUseful()) {
+        // Every ESP is readable already (or this is the elevated Windows
+        // build), so a privileged scan would find nothing extra.
+        ui->Deep_Scan_pushButton->setEnabled(false);
+        ui->Deep_Scan_pushButton->setToolTip(tr("Not needed: no unreadable EFI System Partition was found"));
+    }
     ui->Install_Source_comboBox->clear();
     ui->Install_Source_comboBox->addItems(Platform::installSourceOptions());
 
@@ -214,6 +220,16 @@ void MainWindow::on_Rescan_pushButton_clicked()
     detected = detector.detect();
     populateBootCombos();
     applyAutoSelection();
+}
+
+void MainWindow::on_Deep_Scan_pushButton_clicked()
+{
+    // Blocks while the script prompts for a password; it shows its own
+    // success/error dialogs, so only re-detect here. Detection prefers the
+    // cache the script just wrote over the firmware boot entries.
+    if (Platform::runEspDeepScan() != 0)
+        return;
+    on_Rescan_pushButton_clicked();
 }
 
 void MainWindow::browsePng(QLineEdit *edit, const QString &title)
@@ -396,15 +412,33 @@ void MainWindow::on_Create_Config_clicked()
     copyPng(ui->Boot_Option_04_Icon_lineEdit, guiConfigDir + "/os_icon4.png");
 }
 
+// Dialog-sized excerpt of a script's captured output: PowerShell failures can
+// dump long error records, and the useful line is at the end.
+static QString outputTail(const QString &output)
+{
+    const QStringList lines = output.trimmed().split('\n');
+    if (lines.size() <= 20)
+        return lines.join('\n');
+    return QStringLiteral("[...]\n") + QStringList(lines.mid(lines.size() - 20)).join('\n');
+}
+
 void MainWindow::on_Install_Config_clicked()
 {
-    const int rc = Platform::installConfig();
-    if (rc == 0)
+    QString output;
+    const int rc = Platform::installConfig(&output);
+    const QString details = outputTail(output);
+    if (rc == 0) {
         QMessageBox::information(this, tr("Install Config"),
-                                 tr("Config and PNGs installed to the EFI partition."));
-    else
+                                 details.isEmpty()
+                                     ? tr("The config was installed successfully.")
+                                     : tr("The config was installed successfully.\n\n%1").arg(details));
+    } else {
         QMessageBox::critical(this, tr("Install Config"),
-                              tr("Installing the config failed (exit code %1).").arg(rc));
+                              details.isEmpty()
+                                  ? tr("Installing the config failed (code %1).").arg(rc)
+                                  : tr("Installing the config failed (code %1).\n\n%2")
+                                        .arg(rc).arg(details));
+    }
 }
 
 bool MainWindow::copyPng(QLineEdit *edit, const QString &destPath)

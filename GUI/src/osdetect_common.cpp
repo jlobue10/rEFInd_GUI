@@ -2,6 +2,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QMap>
 #include <QProcess>
 
@@ -270,6 +271,64 @@ QString OSDetector::espVolumeId(const Partition &p)
     return !p.partUuid.isEmpty() ? p.partUuid : p.label;
 }
 
+bool OSDetector::classifyLoaderPath(const QString &loaderPath, BootEntry &entry)
+{
+    const QString lower = loaderPath.toLower();
+
+    if (lower == QLatin1String("/efi/microsoft/boot/bootmgfw.efi")) {
+        entry.displayName = QStringLiteral("Windows");
+        entry.menuName = QStringLiteral("Windows");
+        entry.loaderPath = QStringLiteral("/EFI/Microsoft/Boot/bootmgfw.efi");
+        return true;
+    }
+    if (lower == QLatin1String("/efi/steamos/steamcl.efi")) {
+        entry.displayName = QStringLiteral("SteamOS");
+        entry.menuName = QStringLiteral("SteamOS");
+        entry.loaderPath = QStringLiteral("/EFI/steamos/steamcl.efi");
+        entry.supportsFirmwareBootnum = true;
+        return true;
+    }
+    // Everything else under /EFI/Microsoft (bootmgr.efi, memtest.efi,
+    // Recovery\...) is Windows plumbing, not a bootable OS of its own — the
+    // deep scan lists every .efi it finds, so without this a Windows ESP
+    // surfaces a bogus "Microsoft" entry next to the real "Windows" one.
+    if (lower.startsWith(QLatin1String("/efi/microsoft/")))
+        return false;
+
+    // /EFI/<vendor>/<loader>.efi — a loader with no vendor dir is not an OS.
+    const QString vendorLower = lower.section('/', 2, 2);
+    if (vendorLower.isEmpty() || vendorLower.endsWith(QLatin1String(".efi")))
+        return false;
+    // Mirror scanEspRoot()'s skip list: rEFInd itself, the removable-media
+    // fallback loader, and utility/driver dirs are not distinct OS installs.
+    static const QStringList skipDirs = {
+        QStringLiteral("boot"), QStringLiteral("refind"), QStringLiteral("keys"),
+        QStringLiteral("fonts"), QStringLiteral("memtest86"), QStringLiteral("shellx64"),
+    };
+    if (skipDirs.contains(vendorLower) || vendorLower.startsWith(QLatin1String("drivers"))
+        || vendorLower.startsWith(QLatin1String("tools")))
+        return false;
+
+    entry.displayName = displayNameForVendorDir(loaderPath.section('/', 2, 2));
+    entry.menuName = entry.displayName;
+    entry.loaderPath = loaderPath;
+    return true;
+}
+
+bool OSDetector::espRootUnreadable(const QString &rootPath)
+{
+    if (rootPath.isEmpty())
+        return false;
+    const QFileInfo efiDir(rootPath + QStringLiteral("/EFI"));
+    if (efiDir.exists())
+        return !efiDir.isReadable();
+    // EFI/ may be invisible only because the mount point itself cannot be
+    // traversed, which from here is indistinguishable from an ESP that
+    // genuinely has no EFI/ directory -- so check the mount point too.
+    const QFileInfo root(rootPath);
+    return root.exists() && !root.isReadable();
+}
+
 bool OSDetector::isRunningSystemEsp(const Partition &p)
 {
     // The running OS's ESP is the one mounted at its EFI location. On Windows
@@ -300,7 +359,24 @@ QList<BootEntry> OSDetector::detect()
             continue;
         const QString runningName = isRunningSystemEsp(p) ? runningOsName() : QString();
         const QString volume = espVolumeId(p);
-        const QList<BootEntry> here = scanEspRoot(root, runningName);
+        QList<BootEntry> here = scanEspRoot(root, runningName);
+        // Detection runs unprivileged, so a root-only ESP mount reads as empty
+        // rather than as an error -- on the Steam Deck that silently hid both
+        // SteamOS and Windows, leaving only label-matched media like Ventoy.
+        // The firmware's boot variables are world-readable, so recover the
+        // entries from there instead of showing nothing.
+        // Prefer a cached elevated scan when the user has run one: it sees the
+        // whole EFI/ tree, including loaders with no firmware boot entry.
+        // Otherwise fall back to the boot variables, which cost no password.
+        if (here.isEmpty() && espRootUnreadable(root)) {
+            here = deepScanEntriesForEsp(p);
+            if (here.isEmpty())
+                here = firmwareEntriesForEsp(p);
+            if (here.isEmpty())
+                qWarning("ESP at %s is unreadable and no entries could be recovered from "
+                         "the firmware; run the GUI's Deep Scan for a privileged scan",
+                         qUtf8Printable(root));
+        }
         for (BootEntry e : here) {
             if (e.volume.isEmpty())
                 e.volume = volume;

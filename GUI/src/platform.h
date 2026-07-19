@@ -16,9 +16,20 @@ QString dataDir();
 // window. Returns false if the launch itself failed.
 bool runInstallerScript(const QString &installSource);
 
-// Installs the generated config + PNGs onto the ESP (blocking).
-// Returns the process exit code (0 = success).
-int installConfig();
+// Installs the generated config + PNGs onto the ESP (blocking, no visible
+// window). Returns the process exit code (0 = success) and captures the
+// script's combined output into *output for the caller to present.
+int installConfig(QString *output = nullptr);
+
+// Runs the elevated ESP scan (scan_esp.sh), caching the EFI/ tree for
+// detection to read. Blocks while the script prompts for a password and shows
+// its own result dialogs. Returns 0 on success. Linux only: the Windows build
+// runs elevated and scans ESPs directly.
+int runEspDeepScan();
+
+// Whether an ESP the GUI wants to scan is unreadable, so the Deep Scan button
+// is worth offering. False on Windows.
+bool espDeepScanUseful();
 
 // Enables/disables the boot-background randomizer (systemd unit / scheduled
 // task) in a visible terminal window. Returns false if the launch failed.
