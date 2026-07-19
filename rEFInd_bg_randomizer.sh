@@ -87,7 +87,14 @@ fi
 
 # 3. The ESP mounted at the usual location.
 if [ -z "$ESP" ]; then
-	ESP="$(findmnt -no TARGET /boot/efi 2>/dev/null || findmnt -no TARGET /efi 2>/dev/null || findmnt -no TARGET /boot 2>/dev/null)"
+	# head -1: on an automounted path findmnt lists the autofs row and the
+	# real mount with the same target; stat of "<dir>/." triggers the
+	# automount first (a plain stat does not - AT_NO_AUTOMOUNT).
+	for _cand in /boot/efi /efi /boot; do
+		stat "$_cand/." >/dev/null 2>&1
+		ESP="$(findmnt -no TARGET "$_cand" 2>/dev/null | head -1)"
+		[ -n "$ESP" ] && break
+	done
 	[ -z "$ESP" ] && ESP="/boot/efi"
 fi
 
