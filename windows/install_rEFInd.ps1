@@ -16,11 +16,13 @@ $ErrorActionPreference = 'Stop'
 # Visual feedback: numbered, colored step banners plus an overall progress bar
 # so the elevated console shows at a glance how far the install has gotten.
 # Devices with a supported HID-over-I2C touchscreen -- ROG Xbox Ally / Ally X
-# (baseboard RC73YA / RC73XA) and Steam Deck OLED (product Galileo) -- get one
-# extra step: downloading the touchscreen driver (TouchI2cDxe block below).
+# (baseboard RC73YA / RC73XA) and Steam Deck OLED/LCD (product Galileo /
+# Jupiter) -- get one extra step: downloading the touchscreen driver
+# (TouchI2cDxe block below).
 $board = (Get-CimInstance Win32_BaseBoard -ErrorAction SilentlyContinue).Product
 $product = (Get-CimInstance Win32_ComputerSystemProduct -ErrorAction SilentlyContinue).Name
-$IsTouchDevice = ($board -like 'RC73XA*' -or $board -like 'RC73YA*' -or $product -eq 'Galileo')
+$IsTouchDevice = ($board -like 'RC73XA*' -or $board -like 'RC73YA*' -or
+    $product -eq 'Galileo' -or $product -eq 'Jupiter')
 $TotalSteps = if ($IsTouchDevice) { 7 } else { 6 }
 $script:StepNum = 0
 function Write-Step([string]$Message) {
@@ -237,7 +239,7 @@ try {
     }
 
     # TouchI2cDxe touchscreen UEFI driver (successor of AllyTouchI2cDxe): the
-    # ROG Xbox Ally / Ally X (Novatek) and Steam Deck OLED (FocalTech)
+    # ROG Xbox Ally / Ally X (Novatek) and Steam Deck OLED/LCD (FocalTech)
     # built-in touchscreens are HID-over-I2C, which a USB driver structurally
     # cannot see; this driver produces AbsolutePointer so the rEFInd menu is
     # touch-usable. Only these devices get it (detected above, where
