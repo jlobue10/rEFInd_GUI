@@ -34,13 +34,13 @@ mkdir -p "$HOME/.local/rEFInd_GUI"
 cp -rf "$CURRENT_WD/GUI/" "$HOME/.local/rEFInd_GUI"
 cp -rf "$CURRENT_WD/icons/" "$HOME/.local/rEFInd_GUI"
 cp -rf "$CURRENT_WD/backgrounds/" "$HOME/.local/rEFInd_GUI"
-cp -f "$CURRENT_WD/refind_install_package_mgr.sh" "$CURRENT_WD/refind_install_Sourceforge.sh" "$CURRENT_WD/uninstall_rEFInd.sh" "$HOME/.local/rEFInd_GUI"
+cp -f "$CURRENT_WD/refind_install_package_mgr.sh" "$CURRENT_WD/refind_install_Sourceforge.sh" "$CURRENT_WD/uninstall_rEFInd.sh" "$CURRENT_WD/scan_esp.sh" "$HOME/.local/rEFInd_GUI"
 cp -f "$CURRENT_WD/refind-GUI.conf" "$HOME/.local/rEFInd_GUI/GUI/refind.conf"
 # Shortcut inside GUI/ (the folder the app's Open Folder button shows) to the
 # backgrounds folder the randomizer picks from.
 ln -sfn ../backgrounds "$HOME/.local/rEFInd_GUI/GUI/backgrounds"
 
-chmod +x "$HOME/.local/rEFInd_GUI/refind_install_package_mgr.sh" "$HOME/.local/rEFInd_GUI/refind_install_Sourceforge.sh" "$HOME/.local/rEFInd_GUI/uninstall_rEFInd.sh"
+chmod +x "$HOME/.local/rEFInd_GUI/refind_install_package_mgr.sh" "$HOME/.local/rEFInd_GUI/refind_install_Sourceforge.sh" "$HOME/.local/rEFInd_GUI/uninstall_rEFInd.sh" "$HOME/.local/rEFInd_GUI/scan_esp.sh"
 
 if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 	echo -e '\nFedora based installation starting.\n'

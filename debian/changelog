@@ -1,3 +1,18 @@
+refind-gui (2.4.0) unstable; urgency=medium
+
+  * OS detection now recovers boot entries when the ESP is mounted root-only
+    (the Fedora-family umask=0077 default): entries are read back from the
+    firmware's boot variables, and a new opt-in Deep Scan button performs an
+    elevated filesystem scan for loaders with no boot entry.
+  * Install Config and the background randomizer now write to the ESP the
+    firmware actually boots rEFInd from, skipping stale NVRAM entries and
+    scanning all ESPs before falling back to the mounted one.
+  * Install Config reports real success/failure detail from the install
+    script on both platforms, and fails clearly when no config has been
+    created yet.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sun, 19 Jul 2026 09:00:00 -0700
+
 refind-gui (2.3.7) unstable; urgency=medium
 
   * The GUI-generated refind.conf now sets log_level 0 alongside
