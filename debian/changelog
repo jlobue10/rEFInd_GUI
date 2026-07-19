@@ -1,3 +1,13 @@
+refind-gui (2.5.0) unstable; urgency=medium
+
+  * Steam Deck OLED touchscreen support in rEFInd: the install scripts now
+    fetch the TouchI2cDxe UEFI driver (successor of AllyTouchI2cDxe) for
+    supported HID-over-I2C touch panels -- ROG Xbox Ally / Ally X and Steam
+    Deck OLED -- and remove a stale AllyTouchI2cDxe.efi after a successful
+    download.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sun, 19 Jul 2026 13:00:00 -0700
+
 refind-gui (2.4.1) unstable; urgency=medium
 
   * Fix the overlap between the Rescan OSes and Deep Scan buttons by moving
