@@ -5,7 +5,7 @@
 *.service text eol=lf
 *.desktop text eol=lf
 *.conf text eol=lf
-install_config_from_GUI text eol=lf
+zz_install_config_from_GUI text eol=lf
 *.ps1 text eol=crlf
 *.png binary
 *.ico binary

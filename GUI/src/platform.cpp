@@ -123,8 +123,10 @@ bool runInstallerScript(const QString &installSource)
 
 int installConfig(QString *output)
 {
-    // Allowed without a password via /etc/sudoers.d/install_config_from_GUI;
-    // -n keeps the GUI from hanging on a prompt if that rule is missing.
+    // Allowed without a password via /etc/sudoers.d/zz_install_config_from_GUI
+    // (zz_ so it sorts after any passworded catch-all drop-in -- sudo takes
+    // the last lexical match); -n keeps the GUI from hanging on a prompt if
+    // that rule is missing.
     QProcess proc;
     proc.setProcessChannelMode(QProcess::MergedChannels);
     proc.start(QStringLiteral("sudo"),
