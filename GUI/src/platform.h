@@ -21,6 +21,15 @@ bool runInstallerScript(const QString &installSource);
 // script's combined output into *output for the caller to present.
 int installConfig(QString *output = nullptr);
 
+// True when the config-install script on disk is byte-identical (SHA-256) to
+// the copy this build shipped, so it is safe to run with root privileges. On
+// mismatch (tampered, missing, or from another version) returns false and
+// puts the offending file's path in *detail — the caller must refuse to run
+// it and suggest reinstalling. Always true on Windows: the .ps1 scripts are
+// Authenticode-signed instead, and signing rewrites the file so a build-time
+// hash could never match.
+bool installConfigScriptTrusted(QString *detail = nullptr);
+
 // Runs the elevated ESP scan (scan_esp.sh), caching the EFI/ tree for
 // detection to read. Blocks while the script prompts for a password and shows
 // its own result dialogs. Returns 0 on success. Linux only: the Windows build

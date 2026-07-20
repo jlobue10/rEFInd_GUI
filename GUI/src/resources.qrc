@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>UEFI_icon.png</file>
+        <!-- Reference copy for the tamper hash check in
+             Platform::installConfigScriptTrusted (Linux). -->
+        <file alias="install_config_from_GUI.sh">../../install_config_from_GUI.sh</file>
     </qresource>
 </RCC>
