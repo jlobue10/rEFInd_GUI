@@ -1,6 +1,8 @@
 #include "platform.h"
 
+#include <QCryptographicHash>
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QProcess>
 #include <QProcessEnvironment>
@@ -61,6 +63,15 @@ int installConfig(QString *output)
     if (output)
         *output = QString::fromLocal8Bit(proc.readAll());
     return proc.exitStatus() == QProcess::NormalExit ? proc.exitCode() : -1;
+}
+
+bool installConfigScriptTrusted(QString *detail)
+{
+    // The .ps1 scripts are Authenticode-signed at release time, and signing
+    // rewrites the file, so a hash embedded at build time could never match.
+    if (detail)
+        detail->clear();
+    return true;
 }
 
 int runEspDeepScan()
@@ -128,6 +139,29 @@ int installConfig(QString *output)
     if (output)
         *output = QString::fromLocal8Bit(proc.readAll());
     return proc.exitStatus() == QProcess::NormalExit ? proc.exitCode() : -1;
+}
+
+bool installConfigScriptTrusted(QString *detail)
+{
+    // /etc/rEFInd/install_config_from_GUI.sh runs as root via the passwordless
+    // sudoers rule, so refuse to invoke it unless it hashes identically to the
+    // copy this build shipped (embedded as a Qt resource at build time). The
+    // installer seds the literal HOME placeholder to the user's home before
+    // copying the script to /etc; replicate that on the embedded reference so
+    // the hashes are comparable.
+    const QString installedPath = QStringLiteral("/etc/rEFInd/install_config_from_GUI.sh");
+    if (detail)
+        *detail = installedPath;
+    QFile ref(QStringLiteral(":/install_config_from_GUI.sh"));
+    if (!ref.open(QIODevice::ReadOnly))
+        return false;
+    QByteArray expected = ref.readAll();
+    expected.replace(QByteArrayLiteral("HOME"), QDir::homePath().toUtf8());
+    QFile installed(installedPath);
+    if (!installed.open(QIODevice::ReadOnly))
+        return false;
+    return QCryptographicHash::hash(installed.readAll(), QCryptographicHash::Sha256)
+        == QCryptographicHash::hash(expected, QCryptographicHash::Sha256);
 }
 
 int runEspDeepScan()
