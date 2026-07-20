@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.6.1
+Version:        2.6.2
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,13 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.6.2-1]
+- Refuse to run the config-install script when it does not match the copy
+  shipped with this build (SHA-256 tamper check): the GUI now hashes
+  /etc/rEFInd/install_config_from_GUI.sh against an embedded reference
+  before running it as root, and shows a warning suggesting reinstall on
+  a mismatch instead of running it.
+
 * Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.6.1-1]
 - Fix OS detection and Deep Scan on systems that mount the ESP through a
   systemd automount (SteamOS 3.9's /esp and /efi): detection now triggers

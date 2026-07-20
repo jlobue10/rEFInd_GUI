@@ -1,3 +1,13 @@
+refind-gui (2.6.2) unstable; urgency=medium
+
+  * Refuse to run the config-install script when it does not match the copy
+    shipped with this build (SHA-256 tamper check): the GUI now hashes
+    /etc/rEFInd/install_config_from_GUI.sh against an embedded reference
+    before running it as root, and shows a warning suggesting reinstall on
+    a mismatch instead of running it.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sun, 19 Jul 2026 19:38:04 -0700
+
 refind-gui (2.6.1) unstable; urgency=medium
 
   * Fix OS detection and Deep Scan on systems that mount the ESP through a
