@@ -155,7 +155,7 @@ if [ "$REMOVE_APP" -eq 1 ]; then
 		echo "No installed rEFInd_GUI package found; removing files only."
 	fi
 	rm -rf "$REAL_HOME/.local/rEFInd_GUI"
-	rm -f /etc/sudoers.d/install_config_from_GUI
+	rm -f /etc/sudoers.d/zz_install_config_from_GUI /etc/sudoers.d/install_config_from_GUI
 	rm -rf /etc/rEFInd
 	rm -f /usr/share/applications/rEFInd_GUI.desktop "$REAL_HOME/Desktop/refind_GUI.desktop"
 	echo "Removed the app data, /etc/rEFInd, the sudoers rule, and desktop entries."

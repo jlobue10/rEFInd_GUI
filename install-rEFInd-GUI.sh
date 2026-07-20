@@ -168,7 +168,7 @@ if [ "$DEB_BASE" = 0 ]; then
 	fi
 fi
 
-sed -i "s@USER@$USER@g" "$CURRENT_WD/install_config_from_GUI"
+sed -i "s@USER@$USER@g" "$CURRENT_WD/zz_install_config_from_GUI"
 sed -i "s@HOME@$HOME@g" "$CURRENT_WD/rEFInd_GUI.desktop"
 sed -i "s@HOME@$HOME@g" "$CURRENT_WD/install_config_from_GUI.sh"
 sed -i "s@USER@$USER@g" "$CURRENT_WD/rEFInd_bg_randomizer.sh"
@@ -181,10 +181,22 @@ sudo chown root:root /etc/rEFInd/install_config_from_GUI.sh /etc/rEFInd/rEFInd_b
 sudo chmod 755 /etc/rEFInd/install_config_from_GUI.sh /etc/rEFInd/rEFInd_bg_randomizer.sh
 
 # The sudoers rule must only be installed after the root-owned script it
-# whitelists is in place, and must be root-owned mode 0440.
-sudo cp -f "$CURRENT_WD/install_config_from_GUI" /etc/sudoers.d/install_config_from_GUI
-sudo chown root:root /etc/sudoers.d/install_config_from_GUI
-sudo chmod 440 /etc/sudoers.d/install_config_from_GUI
+# whitelists is in place, and must be root-owned mode 0440. It is only
+# installed if visudo validates it -- a broken file in /etc/sudoers.d can
+# lock sudo up entirely. The zz_ name is load-bearing: sudo applies the LAST
+# matching sudoers entry in lexical file order, and a passworded catch-all
+# drop-in sorting later (e.g. SteamOS's /etc/sudoers.d/wheel) would override
+# a rule named install_config_from_GUI -- which is also why the old-name rule
+# from previous versions is removed.
+if sudo visudo -cf "$CURRENT_WD/zz_install_config_from_GUI" > /dev/null 2>&1; then
+	sudo cp -f "$CURRENT_WD/zz_install_config_from_GUI" /etc/sudoers.d/zz_install_config_from_GUI
+	sudo chown root:root /etc/sudoers.d/zz_install_config_from_GUI
+	sudo chmod 440 /etc/sudoers.d/zz_install_config_from_GUI
+	sudo rm -f /etc/sudoers.d/install_config_from_GUI
+else
+	echo "Warning: the generated sudoers rule failed visudo validation and was NOT installed." >&2
+	echo "Install Config will ask for your sudo password." >&2
+fi
 
 if [ "$BAZZITE" = 0 ]; then
 	sudo cp -f "$CURRENT_WD/rEFInd_GUI.desktop" /etc/rEFInd/rEFInd_GUI.desktop

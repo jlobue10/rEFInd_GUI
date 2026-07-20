@@ -1,0 +1,15 @@
+# Lets the GUI's Install Config button run the root-owned config-install
+# script without a password prompt. install-rEFInd-GUI.sh replaces USER with
+# the installing user and copies this to
+# /etc/sudoers.d/zz_install_config_from_GUI (root:root 0440, after a
+# visudo -cf check).
+#
+# The zz_ prefix is load-bearing: sudo parses /etc/sudoers.d in lexical order
+# and applies the LAST matching entry, so on any distro that ships a
+# passworded catch-all drop-in (SteamOS 3.9's /etc/sudoers.d/wheel with
+# "(ALL) ALL" is the known case), a file sorting before it is silently
+# overridden and the password prompt comes back. zz_ sorts after everything
+# a distro plausibly ships.
+#
+# The trailing "" forbids passing any arguments to the whitelisted script.
+USER ALL = NOPASSWD: /etc/rEFInd/install_config_from_GUI.sh ""
