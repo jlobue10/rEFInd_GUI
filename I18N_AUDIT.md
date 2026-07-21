@@ -11,8 +11,8 @@ sources mirror this repo's).
 |---|---|---|
 | Qt GUI translation pipeline | Dead: no `.qm` ever built or embedded | Working: `.qm` compiled at build time and embedded under `:/i18n` |
 | GUI `tr()` coverage | Good, with a few gaps | Complete (About box, "None" combo entry, `Platform` error strings) |
-| Shipped languages | English only | English + German (`de`), Spanish (`es`), French (`fr`) |
-| Desktop entry | English `Comment=` only | Localized `Comment[de/es/fr]=` |
+| Shipped languages | English only | English + German (`de`), Spanish (`es`), French (`fr`), Japanese (`ja`), Korean (`ko`), Simplified Chinese (`zh_CN`) |
+| Desktop entry | English `Comment=` only | Localized `Comment[de/es/fr/ja/ko/zh_CN]=` |
 | Bash scripts | English only | Unchanged — audited, recommendations below |
 | PowerShell scripts | English only | Unchanged — audited, recommendations below |
 | Inno Setup installer | English only | Unchanged — recommendation below |
@@ -69,7 +69,7 @@ sources mirror this repo's).
 
 ## Shipped translations
 
-`GUI/src/rEFInd_GUI_{de,es,fr}.ts` cover all 82 messages.
+`GUI/src/rEFInd_GUI_{de,es,fr,ja,ko,zh_CN}.ts` cover all 82 messages.
 `rEFInd_GUI_en_US.ts` is the source-language reference and intentionally has
 empty translations (source text is used as-is). The language is picked from
 the system locale automatically; there is no in-app language switcher (a
@@ -136,7 +136,7 @@ Recommended approach when it is tackled:
 
 ## Other surfaces
 
-- `rEFInd_GUI.desktop`: localized `Comment[de/es/fr]` added (done).
+- `rEFInd_GUI.desktop`: localized `Comment[de/es/fr/ja/ko/zh_CN]` added (done).
 - `README.md`: English-only; per-language READMEs are only worth it with a
   commitment to keep them in sync — not recommended now.
 - `refind.conf` / rEFInd boot menu: rEFInd itself has no i18n; the icon-based

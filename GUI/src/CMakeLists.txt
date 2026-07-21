@@ -20,6 +20,9 @@ set(TS_FILES
     rEFInd_GUI_de.ts
     rEFInd_GUI_es.ts
     rEFInd_GUI_fr.ts
+    rEFInd_GUI_ja.ts
+    rEFInd_GUI_ko.ts
+    rEFInd_GUI_zh_CN.ts
 )
 
 set(PROJECT_SOURCES
