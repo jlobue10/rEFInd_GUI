@@ -11,8 +11,8 @@ sources mirror this repo's).
 |---|---|---|
 | Qt GUI translation pipeline | Dead: no `.qm` ever built or embedded | Working: `.qm` compiled at build time and embedded under `:/i18n` |
 | GUI `tr()` coverage | Good, with a few gaps | Complete (About box, "None" combo entry, `Platform` error strings) |
-| Shipped languages | English only | English + German (`de`), Spanish (`es`), French (`fr`), Japanese (`ja`), Korean (`ko`), Simplified Chinese (`zh_CN`) |
-| Desktop entry | English `Comment=` only | Localized `Comment[de/es/fr/ja/ko/zh_CN]=` |
+| Shipped languages | English only | English + German (`de`), Spanish (`es`), French (`fr`), Japanese (`ja`), Korean (`ko`), Simplified Chinese (`zh_CN`), Ukrainian (`uk`), Arabic (`ar`), Persian/Farsi (`fa`) |
+| Desktop entry | English `Comment=` only | Localized `Comment[<lang>]=` |
 | Bash scripts | English only | Unchanged — audited, recommendations below |
 | PowerShell scripts | English only | Unchanged — audited, recommendations below |
 | Inno Setup installer | English only | Unchanged — recommendation below |
@@ -69,12 +69,14 @@ sources mirror this repo's).
 
 ## Shipped translations
 
-`GUI/src/rEFInd_GUI_{de,es,fr,ja,ko,zh_CN}.ts` cover all 82 messages.
+`GUI/src/rEFInd_GUI_{ar,de,es,fa,fr,ja,ko,uk,zh_CN}.ts` cover all 82 messages.
 `rEFInd_GUI_en_US.ts` is the source-language reference and intentionally has
 empty translations (source text is used as-is). The language is picked from
 the system locale automatically; there is no in-app language switcher (a
 possible future improvement — a combo writing a `Language` key to the INI and
 installing the translator before `MainWindow` construction).
+
+Arabic and Persian are right-to-left languages: their catalogs translate Qt's `QT_LAYOUT_DIRECTION` key to `RTL` (anchored in `main.cpp` so `lupdate` keeps the key), which makes Qt mirror the entire widget layout automatically. The rEFInd boot screen itself stays left-to-right, so strings that reference on-screen icon order ("leftmost icon") still mean the physical left.
 
 ### Adding a language (contributor guide)
 
@@ -136,7 +138,7 @@ Recommended approach when it is tackled:
 
 ## Other surfaces
 
-- `rEFInd_GUI.desktop`: localized `Comment[de/es/fr/ja/ko/zh_CN]` added (done).
+- `rEFInd_GUI.desktop`: localized `Comment[<lang>]` added (done).
 - `README.md`: English-only; per-language READMEs are only worth it with a
   commitment to keep them in sync — not recommended now.
 - `refind.conf` / rEFInd boot menu: rEFInd itself has no i18n; the icon-based

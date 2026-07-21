@@ -452,4 +452,12 @@ Los fondos y los iconos de SO deben ser imágenes PNG reales (no solo archivos c
         <translation>No se pudo iniciar sudo.</translation>
     </message>
 </context>
+<context>
+    <name>QGuiApplication</name>
+    <message>
+        <location filename="main.cpp" line="47" />
+        <source>QT_LAYOUT_DIRECTION</source>
+        <translation>LTR</translation>
+    </message>
+</context>
 </TS>

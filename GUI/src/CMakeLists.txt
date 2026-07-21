@@ -17,11 +17,14 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 # update_translations target (Qt 6) or lupdate directly — see I18N_AUDIT.md.
 set(TS_FILES
     rEFInd_GUI_en_US.ts
+    rEFInd_GUI_ar.ts
     rEFInd_GUI_de.ts
     rEFInd_GUI_es.ts
+    rEFInd_GUI_fa.ts
     rEFInd_GUI_fr.ts
     rEFInd_GUI_ja.ts
     rEFInd_GUI_ko.ts
+    rEFInd_GUI_uk.ts
     rEFInd_GUI_zh_CN.ts
 )
 

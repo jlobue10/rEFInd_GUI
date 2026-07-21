@@ -452,4 +452,12 @@ Hintergründe und OS-Symbole müssen echte PNG-Bilder sein (nicht nur Dateien mi
         <translation>sudo konnte nicht gestartet werden.</translation>
     </message>
 </context>
+<context>
+    <name>QGuiApplication</name>
+    <message>
+        <location filename="main.cpp" line="47" />
+        <source>QT_LAYOUT_DIRECTION</source>
+        <translation>LTR</translation>
+    </message>
+</context>
 </TS>

@@ -452,4 +452,12 @@ Les arrière-plans et les icônes d'OS doivent être de véritables images PNG (
         <translation>sudo n'a pas pu être démarré.</translation>
     </message>
 </context>
+<context>
+    <name>QGuiApplication</name>
+    <message>
+        <location filename="main.cpp" line="47" />
+        <source>QT_LAYOUT_DIRECTION</source>
+        <translation>LTR</translation>
+    </message>
+</context>
 </TS>
