@@ -11,7 +11,7 @@ sources mirror this repo's).
 |---|---|---|
 | Qt GUI translation pipeline | Dead: no `.qm` ever built or embedded | Working: `.qm` compiled at build time and embedded under `:/i18n` |
 | GUI `tr()` coverage | Good, with a few gaps | Complete (About box, "None" combo entry, `Platform` error strings) |
-| Shipped languages | English only | English + German (`de`), Spanish (`es`), French (`fr`), Japanese (`ja`), Korean (`ko`), Simplified Chinese (`zh_CN`), Ukrainian (`uk`), Arabic (`ar`), Persian/Farsi (`fa`), Hindi (`hi`), Portuguese (`pt`), Bengali (`bn`), Russian (`ru`), Turkish (`tr`), Vietnamese (`vi`), Urdu (`ur`), Indonesian (`id`), Italian (`it`) |
+| Shipped languages | English only | English + German (`de`), Spanish (`es`), French (`fr`), Japanese (`ja`), Korean (`ko`), Simplified Chinese (`zh_CN`), Ukrainian (`uk`), Arabic (`ar`), Persian/Farsi (`fa`), Hindi (`hi`), Portuguese (`pt`), Bengali (`bn`), Russian (`ru`), Turkish (`tr`), Vietnamese (`vi`), Urdu (`ur`), Indonesian (`id`), Italian (`it`), Sicilian (`scn`) |
 | Desktop entry | English `Comment=` only | Localized `Comment[<lang>]=` |
 | Bash scripts | English only | Unchanged — audited, recommendations below |
 | PowerShell scripts | English only | Unchanged — audited, recommendations below |
@@ -69,7 +69,7 @@ sources mirror this repo's).
 
 ## Shipped translations
 
-`GUI/src/rEFInd_GUI_{ar,bn,de,es,fa,fr,hi,id,it,ja,ko,pt,ru,tr,uk,ur,vi,zh_CN}.ts` cover all 82 messages.
+`GUI/src/rEFInd_GUI_{ar,bn,de,es,fa,fr,hi,id,it,ja,ko,pt,ru,scn,tr,uk,ur,vi,zh_CN}.ts` cover all 82 messages.
 `rEFInd_GUI_en_US.ts` is the source-language reference and intentionally has
 empty translations (source text is used as-is). The language is picked from
 the system locale automatically; there is no in-app language switcher (a
@@ -77,6 +77,8 @@ possible future improvement — a combo writing a `Language` key to the INI and
 installing the translator before `MainWindow` construction).
 
 Arabic, Persian, and Urdu are right-to-left languages: their catalogs translate Qt's `QT_LAYOUT_DIRECTION` key to `RTL` (anchored in `main.cpp` so `lupdate` keeps the key), which makes Qt mirror the entire widget layout automatically. The rEFInd boot screen itself stays left-to-right, so strings that reference on-screen icon order ("leftmost icon") still mean the physical left.
+
+Sicilian (`scn`) has one extra requirement: `QLocale` only gained the Sicilian language code in Qt 6.7, so automatic pickup from an `scn_IT` system locale needs Qt ≥ 6.7 — satisfied by the pinned SteamOS build (Qt 6.9) and current Windows builds; on older Qt the catalog is still embedded but the UI falls back to English.
 
 ### Adding a language (contributor guide)
 

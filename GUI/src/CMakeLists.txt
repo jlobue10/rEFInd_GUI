@@ -30,6 +30,7 @@ set(TS_FILES
     rEFInd_GUI_ko.ts
     rEFInd_GUI_pt.ts
     rEFInd_GUI_ru.ts
+    rEFInd_GUI_scn.ts
     rEFInd_GUI_tr.ts
     rEFInd_GUI_uk.ts
     rEFInd_GUI_ur.ts

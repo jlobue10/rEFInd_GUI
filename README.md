@@ -152,10 +152,10 @@ This is basically a variation of my [SteamDeck_rEFInd](https://github.com/jlobue
 
 ## Translations
 
-The GUI follows the system language and currently ships translations for 18 languages alongside English —
+The GUI follows the system language and currently ships translations for 19 languages alongside English —
 German, Spanish, French, Italian, Portuguese, Russian, Ukrainian, Turkish,
 Japanese, Korean, Simplified Chinese, Vietnamese, Indonesian, Hindi,
-Bengali, Arabic, Persian (Farsi), and Urdu (right-to-left layout included
+Bengali, Sicilian, Arabic, Persian (Farsi), and Urdu (right-to-left layout included
 for Arabic, Persian, and Urdu) (untranslated strings fall back to
 English). Translation contributions are welcome — see the contributor guide in
 [I18N_AUDIT.md](I18N_AUDIT.md): add a `rEFInd_GUI_<lang>.ts` file under

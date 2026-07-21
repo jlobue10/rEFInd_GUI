@@ -19,6 +19,7 @@ Comment[id]=GUI kustomisasi rEFInd
 Comment[hi]=rEFInd अनुकूलन GUI
 Comment[bn]=rEFInd কাস্টমাইজেশন GUI
 Comment[ur]=rEFInd کی تخصیص کے لیے GUI
+Comment[scn]=GUI di pirsunalizzazzioni di rEFInd
 Exec=/etc/rEFInd/rEFInd_GUI
 GenericName=rEFInd GUI
 Name=rEFInd GUI
