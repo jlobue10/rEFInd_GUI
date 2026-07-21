@@ -1,3 +1,14 @@
+refind-gui (2.7.0) unstable; urgency=medium
+
+  * Add a Boot Icon Size option (96/128/160/192/256/512 px): non-default
+    sizes emit big_icon_size and a proportionally scaled small_icon_size
+    into the generated refind.conf; the selection persists in the GUI
+    settings.
+  * Ship 256 and 512 px Steam and Windows 11 icons so the larger sizes
+    have native-resolution art.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Mon, 20 Jul 2026 19:31:37 -0700
+
 refind-gui (2.6.2) unstable; urgency=medium
 
   * Refuse to run the config-install script when it does not match the copy
