@@ -624,7 +624,7 @@
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="placeholderText">
-        <string>5</string>
+        <string notr="true">5</string>
        </property>
       </widget>
      </item>
@@ -809,12 +809,12 @@
          </property>
          <item>
           <property name="text">
-           <string>Package Mgr</string>
+           <string notr="true">Package Mgr</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Sourceforge</string>
+           <string notr="true">Sourceforge</string>
           </property>
          </item>
         </widget>
@@ -830,7 +830,7 @@
         </size>
        </property>
        <property name="placeholderText">
-        <string>~/.local/rEFInd_GUI/GUI/os_icon2.png</string>
+        <string notr="true">~/.local/rEFInd_GUI/GUI/os_icon2.png</string>
        </property>
       </widget>
      </item>
@@ -843,7 +843,7 @@
         </size>
        </property>
        <property name="placeholderText">
-        <string>~/.local/rEFInd_GUI/GUI/os_icon1.png</string>
+        <string notr="true">~/.local/rEFInd_GUI/GUI/os_icon1.png</string>
        </property>
       </widget>
      </item>
@@ -859,7 +859,7 @@
         <string>rEFInd Background selection</string>
        </property>
        <property name="placeholderText">
-        <string>~/.local/rEFInd_GUI/GUI/background.png</string>
+        <string notr="true">~/.local/rEFInd_GUI/GUI/background.png</string>
        </property>
       </widget>
      </item>
@@ -872,7 +872,7 @@
         </size>
        </property>
        <property name="placeholderText">
-        <string>~/.local/rEFInd_GUI/GUI/os_icon3.png</string>
+        <string notr="true">~/.local/rEFInd_GUI/GUI/os_icon3.png</string>
        </property>
       </widget>
      </item>
@@ -885,7 +885,7 @@
         </size>
        </property>
        <property name="placeholderText">
-        <string>~/.local/rEFInd_GUI/GUI/os_icon4.png</string>
+        <string notr="true">~/.local/rEFInd_GUI/GUI/os_icon4.png</string>
        </property>
       </widget>
      </item>

@@ -1,6 +1,9 @@
 [Desktop Entry]
 Categories=System;
 Comment=rEFInd Customization GUI
+Comment[de]=GUI zur rEFInd-Anpassung
+Comment[es]=GUI de personalización de rEFInd
+Comment[fr]=GUI de personnalisation de rEFInd
 Exec=/etc/rEFInd/rEFInd_GUI
 GenericName=rEFInd GUI
 Name=rEFInd GUI
