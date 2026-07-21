@@ -18,13 +18,22 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 set(TS_FILES
     rEFInd_GUI_en_US.ts
     rEFInd_GUI_ar.ts
+    rEFInd_GUI_bn.ts
     rEFInd_GUI_de.ts
     rEFInd_GUI_es.ts
     rEFInd_GUI_fa.ts
     rEFInd_GUI_fr.ts
+    rEFInd_GUI_hi.ts
+    rEFInd_GUI_id.ts
+    rEFInd_GUI_it.ts
     rEFInd_GUI_ja.ts
     rEFInd_GUI_ko.ts
+    rEFInd_GUI_pt.ts
+    rEFInd_GUI_ru.ts
+    rEFInd_GUI_tr.ts
     rEFInd_GUI_uk.ts
+    rEFInd_GUI_ur.ts
+    rEFInd_GUI_vi.ts
     rEFInd_GUI_zh_CN.ts
 )
 
