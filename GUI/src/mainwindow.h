@@ -69,7 +69,9 @@ private:
     void browsePng(QLineEdit *edit, const QString &title);
     void checkPNGFile(QLineEdit *edit);
     bool copyPng(QLineEdit *edit, const QString &destPath);
-    QString createBootStanza(const BootEntry &entry, int slot);
+    QString createBootStanza(const BootEntry &entry, const QString &iconPath);
+    QList<BootEntry> extraEntries(const QList<Selection> &selections) const;
+    static QString stockIconFor(const BootEntry &entry);
     QString steamFirmwareBootNum();
     void toggleBackgroundRandomizer(bool enable);
     QList<Selection> currentSelections();

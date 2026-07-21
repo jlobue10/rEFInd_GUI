@@ -130,7 +130,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="466" />
-        <location filename="mainwindow.cpp" line="967" />
+        <location filename="mainwindow.cpp" line="1017" />
         <source>Open Folder</source>
         <translation>فولڈر کھولیں</translation>
     </message>
@@ -211,9 +211,9 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="748" />
-        <location filename="mainwindow.cpp" line="692" />
-        <location filename="mainwindow.cpp" line="708" />
-        <location filename="mainwindow.cpp" line="713" />
+        <location filename="mainwindow.cpp" line="740" />
+        <location filename="mainwindow.cpp" line="756" />
+        <location filename="mainwindow.cpp" line="761" />
         <source>Install Config</source>
         <translation>کنفیگ انسٹال کریں</translation>
     </message>
@@ -224,7 +224,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="770" />
-        <location filename="mainwindow.cpp" line="601" />
+        <location filename="mainwindow.cpp" line="642" />
         <source>Create Config</source>
         <translation>کنفیگ بنائیں</translation>
     </message>
@@ -250,17 +250,27 @@
         <translation>انٹرفیس کی زبان</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="874" />
+        <location filename="mainwindow.ui" line="849" />
+        <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots</source>
+        <translation>اُن شناخت شدہ بوٹ لوڈرز کے لیے بھی بوٹ اندراجات لکھتا ہے جو چاروں خانوں میں سے کسی میں نہیں ہیں</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="852" />
+        <source>Include all OSes</source>
+        <translation>تمام OS شامل کریں</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="884" />
         <source>Preview the rEFInd boot screen and the generated refind.conf</source>
         <translation>rEFInd بوٹ اسکرین اور تیار شدہ refind.conf کا پیش منظر</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="877" />
+        <location filename="mainwindow.ui" line="887" />
         <source>Preview</source>
         <translation>پیش منظر</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="918" />
+        <location filename="mainwindow.ui" line="928" />
         <source>rEFInd Background selection</source>
         <translation>rEFInd پس منظر کا انتخاب</translation>
     </message>
@@ -355,12 +365,12 @@
         <translation>انسٹالیشن اسکرپٹ شروع نہیں ہو سکا۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="602" />
+        <location filename="mainwindow.cpp" line="643" />
         <source>Could not write %1</source>
         <translation>%1 لکھا نہیں جا سکا</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="693" />
+        <location filename="mainwindow.cpp" line="741" />
         <source>The config-install script was NOT run:
 
 %1
@@ -377,12 +387,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 اصل اسکرپٹ بحال کرنے کے لیے GUI دوبارہ انسٹال کریں، پھر دوبارہ کوشش کریں۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="710" />
+        <location filename="mainwindow.cpp" line="758" />
         <source>The config was installed successfully.</source>
         <translation>کنفیگریشن کامیابی سے انسٹال ہو گئی۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="711" />
+        <location filename="mainwindow.cpp" line="759" />
         <source>The config was installed successfully.
 
 %1</source>
@@ -391,12 +401,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="715" />
+        <location filename="mainwindow.cpp" line="763" />
         <source>Installing the config failed (code %1).</source>
         <translation>کنفیگریشن کی تنصیب ناکام رہی (کوڈ %1)۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="716" />
+        <location filename="mainwindow.cpp" line="764" />
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -405,22 +415,22 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="730" />
+        <location filename="mainwindow.cpp" line="778" />
         <source>Copy PNG</source>
         <translation>PNG کاپی کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="731" />
+        <location filename="mainwindow.cpp" line="779" />
         <source>Could not copy %1 to %2</source>
         <translation>%1 کو %2 میں کاپی نہیں کیا جا سکا</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="756" />
+        <location filename="mainwindow.cpp" line="804" />
         <source>Invalid PNG</source>
         <translation>غلط PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="757" />
+        <location filename="mainwindow.cpp" line="805" />
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -429,42 +439,42 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 پس منظر اور OS آئیکن اصل PNG تصاویر ہونی چاہئیں (صرف ‎.png ایکسٹینشن والی فائلیں نہیں)۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="883" />
+        <location filename="mainwindow.cpp" line="933" />
         <source>Check For Update</source>
         <translation>اپ ڈیٹ چیک کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="886" />
+        <location filename="mainwindow.cpp" line="936" />
         <source>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;اصل GUI بنانے والا: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;جانچ اور معیار کی یقین دہانی کے لیے Deck Wizard کا خصوصی شکریہ&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Deck Wizard ڈوئل بوٹ ٹیوٹوریل&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="933" />
+        <location filename="mainwindow.cpp" line="983" />
         <source>&lt;p align='center'&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;اپ ڈیٹ چیک ناکام رہا۔ براہ کرم اپنا انٹرنیٹ کنکشن چیک کریں اور دوبارہ کوشش کریں۔&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="936" />
+        <location filename="mainwindow.cpp" line="986" />
         <source>&lt;p align='center'&gt;An update is available &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;اپ ڈیٹ &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;یہاں&lt;/a&gt; دستیاب ہے&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="940" />
+        <location filename="mainwindow.cpp" line="990" />
         <source>&lt;p align='center'&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;کوئی اپ ڈیٹ نہیں ملا۔ آپ تازہ ترین ورژن استعمال کر رہے ہیں۔&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="950" />
+        <location filename="mainwindow.cpp" line="1000" />
         <source>Background Randomizer</source>
         <translation>بے ترتیب پس منظر</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="951" />
+        <location filename="mainwindow.cpp" line="1001" />
         <source>Failed to launch the randomizer setup.</source>
         <translation>بے ترتیب پس منظر کا سیٹ اپ شروع نہیں ہو سکا۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="968" />
+        <location filename="mainwindow.cpp" line="1018" />
         <source>Failed to open %1 in the file manager.</source>
         <translation>فائل مینیجر میں %1 کھولا نہیں جا سکا۔</translation>
     </message>

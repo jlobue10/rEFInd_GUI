@@ -130,7 +130,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="466" />
-        <location filename="mainwindow.cpp" line="967" />
+        <location filename="mainwindow.cpp" line="1017" />
         <source>Open Folder</source>
         <translation>Grapi cartella</translation>
     </message>
@@ -211,9 +211,9 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="748" />
-        <location filename="mainwindow.cpp" line="692" />
-        <location filename="mainwindow.cpp" line="708" />
-        <location filename="mainwindow.cpp" line="713" />
+        <location filename="mainwindow.cpp" line="740" />
+        <location filename="mainwindow.cpp" line="756" />
+        <location filename="mainwindow.cpp" line="761" />
         <source>Install Config</source>
         <translation>Nstalla config</translation>
     </message>
@@ -224,7 +224,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="770" />
-        <location filename="mainwindow.cpp" line="601" />
+        <location filename="mainwindow.cpp" line="642" />
         <source>Create Config</source>
         <translation>Crea config</translation>
     </message>
@@ -250,17 +250,27 @@
         <translation>Lingua di l'interfaccia</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="874" />
+        <location filename="mainwindow.ui" line="849" />
+        <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots</source>
+        <translation>Scrivi puru stanzi d'avviu pi li bootloader attruvati ca nun sunnu nta li quattru posti</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="852" />
+        <source>Include all OSes</source>
+        <translation>Cumprenni tutti li sistemi</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="884" />
         <source>Preview the rEFInd boot screen and the generated refind.conf</source>
         <translation>Antiprima di la schirmata d'avviu di rEFInd e di lu refind.conf giniratu</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="877" />
+        <location filename="mainwindow.ui" line="887" />
         <source>Preview</source>
         <translation>Antiprima</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="918" />
+        <location filename="mainwindow.ui" line="928" />
         <source>rEFInd Background selection</source>
         <translation>Silizzioni di lu sfunnu di rEFInd</translation>
     </message>
@@ -355,12 +365,12 @@
         <translation>Nun si potti avviari lu script di nstallazzioni.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="602" />
+        <location filename="mainwindow.cpp" line="643" />
         <source>Could not write %1</source>
         <translation>Nun si potti scrìviri %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="693" />
+        <location filename="mainwindow.cpp" line="741" />
         <source>The config-install script was NOT run:
 
 %1
@@ -377,12 +387,12 @@ Nun currispunni a la copia furnuta cu sta virsioni di l'app. Vistu ca s'esèquit
 Torna a nstallari la GUI pi ripristinari lu script origginali, poi riprova.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="710" />
+        <location filename="mainwindow.cpp" line="758" />
         <source>The config was installed successfully.</source>
         <translation>La cunfigurazzioni fu nstallata currettamenti.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="711" />
+        <location filename="mainwindow.cpp" line="759" />
         <source>The config was installed successfully.
 
 %1</source>
@@ -391,12 +401,12 @@ Torna a nstallari la GUI pi ripristinari lu script origginali, poi riprova.</tra
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="715" />
+        <location filename="mainwindow.cpp" line="763" />
         <source>Installing the config failed (code %1).</source>
         <translation>La nstallazzioni di la cunfigurazzioni fallìu (còdici %1).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="716" />
+        <location filename="mainwindow.cpp" line="764" />
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -405,22 +415,22 @@ Torna a nstallari la GUI pi ripristinari lu script origginali, poi riprova.</tra
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="730" />
+        <location filename="mainwindow.cpp" line="778" />
         <source>Copy PNG</source>
         <translation>Copia PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="731" />
+        <location filename="mainwindow.cpp" line="779" />
         <source>Could not copy %1 to %2</source>
         <translation>Nun si potti cupiari %1 nta %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="756" />
+        <location filename="mainwindow.cpp" line="804" />
         <source>Invalid PNG</source>
         <translation>PNG nun vàlidu</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="757" />
+        <location filename="mainwindow.cpp" line="805" />
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -429,42 +439,42 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 Li sfunni e l'iconi di sistema hannu a èssiri veri immàggini PNG (no simprici file cu l'estinzioni .png).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="883" />
+        <location filename="mainwindow.cpp" line="933" />
         <source>Check For Update</source>
         <translation>Cerca aggiurnamenti</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="886" />
+        <location filename="mainwindow.cpp" line="936" />
         <source>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Criaturi origginali di la GUI: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Un ringrazziamentu spiciali a Deck Wizard pi li testi e lu cuntrollu di qualità&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Tutorial dual boot di Deck Wizard&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="933" />
+        <location filename="mainwindow.cpp" line="983" />
         <source>&lt;p align='center'&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;Lu cuntrollu di l'aggiurnamenti fallìu. Cuntrolla la cunnissioni a Internet e riprova.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="936" />
+        <location filename="mainwindow.cpp" line="986" />
         <source>&lt;p align='center'&gt;An update is available &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;C'è un aggiurnamentu dispunìbbili &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;ccà&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="940" />
+        <location filename="mainwindow.cpp" line="990" />
         <source>&lt;p align='center'&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;Nuddu aggiurnamentu attruvatu. Stai usannu la virsioni cchiù ricenti.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="950" />
+        <location filename="mainwindow.cpp" line="1000" />
         <source>Background Randomizer</source>
         <translation>Sfunnu casuali</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="951" />
+        <location filename="mainwindow.cpp" line="1001" />
         <source>Failed to launch the randomizer setup.</source>
         <translation>Nun si potti avviari la cunfigurazzioni di lu sfunnu casuali.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="968" />
+        <location filename="mainwindow.cpp" line="1018" />
         <source>Failed to open %1 in the file manager.</source>
         <translation>Nun si potti gràpiri %1 nta lu gestori di file.</translation>
     </message>

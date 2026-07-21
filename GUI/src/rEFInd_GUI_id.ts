@@ -130,7 +130,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="466" />
-        <location filename="mainwindow.cpp" line="967" />
+        <location filename="mainwindow.cpp" line="1017" />
         <source>Open Folder</source>
         <translation>Buka folder</translation>
     </message>
@@ -211,9 +211,9 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="748" />
-        <location filename="mainwindow.cpp" line="692" />
-        <location filename="mainwindow.cpp" line="708" />
-        <location filename="mainwindow.cpp" line="713" />
+        <location filename="mainwindow.cpp" line="740" />
+        <location filename="mainwindow.cpp" line="756" />
+        <location filename="mainwindow.cpp" line="761" />
         <source>Install Config</source>
         <translation>Pasang konfigurasi</translation>
     </message>
@@ -224,7 +224,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="770" />
-        <location filename="mainwindow.cpp" line="601" />
+        <location filename="mainwindow.cpp" line="642" />
         <source>Create Config</source>
         <translation>Buat konfigurasi</translation>
     </message>
@@ -250,17 +250,27 @@
         <translation>Bahasa antarmuka</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="874" />
+        <location filename="mainwindow.ui" line="849" />
+        <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots</source>
+        <translation>Juga menulis entri boot untuk bootloader terdeteksi yang tidak berada di salah satu dari empat slot</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="852" />
+        <source>Include all OSes</source>
+        <translation>Sertakan semua OS</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="884" />
         <source>Preview the rEFInd boot screen and the generated refind.conf</source>
         <translation>Pratinjau layar boot rEFInd dan refind.conf yang dihasilkan</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="877" />
+        <location filename="mainwindow.ui" line="887" />
         <source>Preview</source>
         <translation>Pratinjau</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="918" />
+        <location filename="mainwindow.ui" line="928" />
         <source>rEFInd Background selection</source>
         <translation>Pilihan latar belakang rEFInd</translation>
     </message>
@@ -355,12 +365,12 @@
         <translation>Gagal menjalankan skrip pemasangan.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="602" />
+        <location filename="mainwindow.cpp" line="643" />
         <source>Could not write %1</source>
         <translation>Tidak dapat menulis %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="693" />
+        <location filename="mainwindow.cpp" line="741" />
         <source>The config-install script was NOT run:
 
 %1
@@ -377,12 +387,12 @@ Skrip tidak cocok dengan salinan yang disertakan pada versi aplikasi ini. Karena
 Pasang ulang GUI untuk memulihkan skrip asli, lalu coba lagi.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="710" />
+        <location filename="mainwindow.cpp" line="758" />
         <source>The config was installed successfully.</source>
         <translation>Konfigurasi berhasil dipasang.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="711" />
+        <location filename="mainwindow.cpp" line="759" />
         <source>The config was installed successfully.
 
 %1</source>
@@ -391,12 +401,12 @@ Pasang ulang GUI untuk memulihkan skrip asli, lalu coba lagi.</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="715" />
+        <location filename="mainwindow.cpp" line="763" />
         <source>Installing the config failed (code %1).</source>
         <translation>Pemasangan konfigurasi gagal (kode %1).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="716" />
+        <location filename="mainwindow.cpp" line="764" />
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -405,22 +415,22 @@ Pasang ulang GUI untuk memulihkan skrip asli, lalu coba lagi.</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="730" />
+        <location filename="mainwindow.cpp" line="778" />
         <source>Copy PNG</source>
         <translation>Salin PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="731" />
+        <location filename="mainwindow.cpp" line="779" />
         <source>Could not copy %1 to %2</source>
         <translation>Tidak dapat menyalin %1 ke %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="756" />
+        <location filename="mainwindow.cpp" line="804" />
         <source>Invalid PNG</source>
         <translation>PNG tidak valid</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="757" />
+        <location filename="mainwindow.cpp" line="805" />
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -429,42 +439,42 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 Latar belakang dan ikon OS harus berupa gambar PNG asli (bukan sekadar berkas berekstensi .png).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="883" />
+        <location filename="mainwindow.cpp" line="933" />
         <source>Check For Update</source>
         <translation>Periksa pembaruan</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="886" />
+        <location filename="mainwindow.cpp" line="936" />
         <source>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Pembuat GUI asli: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Terima kasih khusus kepada Deck Wizard atas pengujian dan penjaminan mutu&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Tutorial dual boot Deck Wizard&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="933" />
+        <location filename="mainwindow.cpp" line="983" />
         <source>&lt;p align='center'&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;Pemeriksaan pembaruan gagal. Periksa koneksi internet Anda dan coba lagi.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="936" />
+        <location filename="mainwindow.cpp" line="986" />
         <source>&lt;p align='center'&gt;An update is available &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;Pembaruan tersedia &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;di sini&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="940" />
+        <location filename="mainwindow.cpp" line="990" />
         <source>&lt;p align='center'&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;Tidak ada pembaruan. Anda menggunakan versi terbaru.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="950" />
+        <location filename="mainwindow.cpp" line="1000" />
         <source>Background Randomizer</source>
         <translation>Latar belakang acak</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="951" />
+        <location filename="mainwindow.cpp" line="1001" />
         <source>Failed to launch the randomizer setup.</source>
         <translation>Gagal menjalankan penyiapan latar belakang acak.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="968" />
+        <location filename="mainwindow.cpp" line="1018" />
         <source>Failed to open %1 in the file manager.</source>
         <translation>Gagal membuka %1 di pengelola berkas.</translation>
     </message>
