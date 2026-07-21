@@ -130,7 +130,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="466" />
-        <location filename="mainwindow.cpp" line="691" />
+        <location filename="mainwindow.cpp" line="967" />
         <source>Open Folder</source>
         <translation>फ़ोल्डर खोलें</translation>
     </message>
@@ -211,9 +211,9 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="748" />
-        <location filename="mainwindow.cpp" line="454" />
-        <location filename="mainwindow.cpp" line="469" />
-        <location filename="mainwindow.cpp" line="474" />
+        <location filename="mainwindow.cpp" line="692" />
+        <location filename="mainwindow.cpp" line="708" />
+        <location filename="mainwindow.cpp" line="713" />
         <source>Install Config</source>
         <translation>कॉन्फ़िग इंस्टॉल करें</translation>
     </message>
@@ -224,13 +224,13 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="770" />
-        <location filename="mainwindow.cpp" line="348" />
+        <location filename="mainwindow.cpp" line="601" />
         <source>Create Config</source>
         <translation>कॉन्फ़िग बनाएँ</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="789" />
-        <location filename="mainwindow.cpp" line="304" />
+        <location filename="mainwindow.cpp" line="469" />
         <source>Install rEFInd</source>
         <translation>rEFInd इंस्टॉल करें</translation>
     </message>
@@ -240,97 +240,127 @@
         <translation>rEFInd इंस्टॉल करने की विधि</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="859" />
+        <location filename="mainwindow.ui" line="829" />
+        <source>Language</source>
+        <translation>भाषा</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="842" />
+        <source>User interface language</source>
+        <translation>इंटरफ़ेस की भाषा</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="874" />
+        <source>Preview the rEFInd boot screen and the generated refind.conf</source>
+        <translation>rEFInd बूट स्क्रीन और बनाई गई refind.conf का पूर्वावलोकन करें</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="877" />
+        <source>Preview</source>
+        <translation>पूर्वावलोकन</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="918" />
         <source>rEFInd Background selection</source>
         <translation>rEFInd पृष्ठभूमि चयन</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="31" />
+        <location filename="mainwindow.cpp" line="41" />
         <source>None</source>
         <translation>कोई नहीं</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="44" />
+        <location filename="mainwindow.cpp" line="107" />
         <source>Small (96)</source>
         <translation>छोटा (96)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="45" />
+        <location filename="mainwindow.cpp" line="108" />
         <source>Default (128)</source>
         <translation>डिफ़ॉल्ट (128)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="46" />
+        <location filename="mainwindow.cpp" line="109" />
         <source>Medium (160)</source>
         <translation>मध्यम (160)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="47" />
+        <location filename="mainwindow.cpp" line="110" />
         <source>Large (192)</source>
         <translation>बड़ा (192)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="48" />
+        <location filename="mainwindow.cpp" line="111" />
         <source>Extra Large (256)</source>
         <translation>बहुत बड़ा (256)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="49" />
+        <location filename="mainwindow.cpp" line="112" />
         <source>XXL (512)</source>
         <translation>XXL (512)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="74" />
+        <location filename="mainwindow.cpp" line="114" />
         <source>Requires efibootmgr (Linux only)</source>
         <translation>efibootmgr आवश्यक (केवल Linux)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="80" />
+        <location filename="mainwindow.cpp" line="118" />
         <source>Not needed: no unreadable EFI System Partition was found</source>
         <translation>आवश्यक नहीं: कोई अपठनीय EFI सिस्टम विभाजन नहीं मिला</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="262" />
+        <location filename="mainwindow.cpp" line="127" />
+        <source>System default</source>
+        <translation>सिस्टम डिफ़ॉल्ट</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="226" />
+        <source>Scanning…</source>
+        <translation>स्कैन हो रहा है…</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="427" />
         <source>Image (*.png)</source>
         <translation>छवि (*.png)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="278" />
+        <location filename="mainwindow.cpp" line="443" />
         <source>Select Background PNG</source>
         <translation>पृष्ठभूमि PNG चुनें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="283" />
+        <location filename="mainwindow.cpp" line="448" />
         <source>Select OS Icon 1 PNG</source>
         <translation>OS आइकन 1 PNG चुनें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="288" />
+        <location filename="mainwindow.cpp" line="453" />
         <source>Select OS Icon 2 PNG</source>
         <translation>OS आइकन 2 PNG चुनें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="293" />
+        <location filename="mainwindow.cpp" line="458" />
         <source>Select OS Icon 3 PNG</source>
         <translation>OS आइकन 3 PNG चुनें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="298" />
+        <location filename="mainwindow.cpp" line="463" />
         <source>Select OS Icon 4 PNG</source>
         <translation>OS आइकन 4 PNG चुनें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="305" />
+        <location filename="mainwindow.cpp" line="470" />
         <source>Failed to launch the installation script.</source>
         <translation>इंस्टॉलेशन स्क्रिप्ट शुरू नहीं हो सकी।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="349" />
+        <location filename="mainwindow.cpp" line="602" />
         <source>Could not write %1</source>
         <translation>%1 लिखा नहीं जा सका</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="455" />
+        <location filename="mainwindow.cpp" line="693" />
         <source>The config-install script was NOT run:
 
 %1
@@ -347,12 +377,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 मूल स्क्रिप्ट बहाल करने के लिए GUI फिर से इंस्टॉल करें, फिर पुनः प्रयास करें।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="471" />
+        <location filename="mainwindow.cpp" line="710" />
         <source>The config was installed successfully.</source>
         <translation>कॉन्फ़िगरेशन सफलतापूर्वक इंस्टॉल हो गया।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="472" />
+        <location filename="mainwindow.cpp" line="711" />
         <source>The config was installed successfully.
 
 %1</source>
@@ -361,12 +391,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="476" />
+        <location filename="mainwindow.cpp" line="715" />
         <source>Installing the config failed (code %1).</source>
         <translation>कॉन्फ़िगरेशन इंस्टॉल विफल रहा (कोड %1)।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="477" />
+        <location filename="mainwindow.cpp" line="716" />
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -375,22 +405,22 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="491" />
+        <location filename="mainwindow.cpp" line="730" />
         <source>Copy PNG</source>
         <translation>PNG कॉपी करें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="492" />
+        <location filename="mainwindow.cpp" line="731" />
         <source>Could not copy %1 to %2</source>
         <translation>%1 को %2 में कॉपी नहीं किया जा सका</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="517" />
+        <location filename="mainwindow.cpp" line="756" />
         <source>Invalid PNG</source>
         <translation>अमान्य PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="518" />
+        <location filename="mainwindow.cpp" line="757" />
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -399,42 +429,42 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 पृष्ठभूमि और OS आइकन असली PNG छवियाँ होनी चाहिए (केवल .png एक्सटेंशन वाली फ़ाइलें नहीं)।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="629" />
+        <location filename="mainwindow.cpp" line="883" />
         <source>Check For Update</source>
         <translation>अपडेट जाँचें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="632" />
+        <location filename="mainwindow.cpp" line="886" />
         <source>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;मूल GUI निर्माता: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;परीक्षण और गुणवत्ता जाँच के लिए Deck Wizard का विशेष धन्यवाद&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Deck Wizard डुअल बूट ट्यूटोरियल&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="657" />
+        <location filename="mainwindow.cpp" line="933" />
         <source>&lt;p align='center'&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;अपडेट जाँच विफल रही। कृपया अपना इंटरनेट कनेक्शन जाँचें और फिर से प्रयास करें।&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="660" />
+        <location filename="mainwindow.cpp" line="936" />
         <source>&lt;p align='center'&gt;An update is available &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;अपडेट &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;यहाँ&lt;/a&gt; उपलब्ध है&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="664" />
+        <location filename="mainwindow.cpp" line="940" />
         <source>&lt;p align='center'&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align='center'&gt;कोई अपडेट नहीं मिला। आप नवीनतम संस्करण उपयोग कर रहे हैं।&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="674" />
+        <location filename="mainwindow.cpp" line="950" />
         <source>Background Randomizer</source>
         <translation>यादृच्छिक पृष्ठभूमि</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="675" />
+        <location filename="mainwindow.cpp" line="951" />
         <source>Failed to launch the randomizer setup.</source>
         <translation>यादृच्छिक पृष्ठभूमि सेटअप शुरू नहीं हो सका।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="692" />
+        <location filename="mainwindow.cpp" line="968" />
         <source>Failed to open %1 in the file manager.</source>
         <translation>फ़ाइल प्रबंधक में %1 खोला नहीं जा सका।</translation>
     </message>
@@ -453,9 +483,32 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
     </message>
 </context>
 <context>
+    <name>PreviewDialog</name>
+    <message>
+        <location filename="previewdialog.cpp" line="34" />
+        <source>No boot options selected.</source>
+        <translation>कोई बूट विकल्प चयनित नहीं है।</translation>
+    </message>
+    <message>
+        <location filename="previewdialog.cpp" line="89" />
+        <source>Preview</source>
+        <translation>पूर्वावलोकन</translation>
+    </message>
+    <message>
+        <location filename="previewdialog.cpp" line="101" />
+        <source>Approximate preview — rEFInd's real rendering also depends on the firmware resolution and theme.</source>
+        <translation>अनुमानित पूर्वावलोकन — rEFInd का वास्तविक प्रदर्शन फ़र्मवेयर रिज़ॉल्यूशन और थीम पर भी निर्भर करता है।</translation>
+    </message>
+    <message>
+        <location filename="previewdialog.cpp" line="107" />
+        <source>Boot screen</source>
+        <translation>बूट स्क्रीन</translation>
+    </message>
+</context>
+<context>
     <name>QGuiApplication</name>
     <message>
-        <location filename="main.cpp" line="47" />
+        <location filename="main.cpp" line="22" />
         <source>QT_LAYOUT_DIRECTION</source>
         <translation>LTR</translation>
     </message>

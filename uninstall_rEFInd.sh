@@ -43,6 +43,16 @@ REAL_HOME="$(getent passwd "$REAL_USER" | cut -d: -f6)"
 
 echo "Removing the Linux-side rEFInd install..."
 
+# Snapshot the current NVRAM boot entries before changing them: a copy on
+# disk makes manual recovery trivial if anything goes sideways.
+NVRAM_BK_DIR="$REAL_HOME/.local/rEFInd_GUI/nvram-backups"
+if mkdir -p "$NVRAM_BK_DIR" 2>/dev/null; then
+	efibootmgr -v > "$NVRAM_BK_DIR/efibootmgr-$(date +%Y%m%d-%H%M%S).txt" 2>/dev/null
+	chown -R "$REAL_USER" "$NVRAM_BK_DIR" 2>/dev/null
+	# Keep the ten most recent snapshots.
+	ls -1t "$NVRAM_BK_DIR"/efibootmgr-*.txt 2>/dev/null | tail -n +11 | xargs -r rm -f
+fi
+
 # Resolve this distro's ESP the same way the install scripts do: the FAT
 # filesystem containing /boot/efi, /efi, or /boot, preferring one that
 # already holds an EFI/refind install.
