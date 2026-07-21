@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.6.2
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,14 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Mon Jul 20 2026 Jon LoBue <jlobue10@gmail.com> [2.7.0-1]
+- Add a Boot Icon Size option (96/128/160/192/256/512 px): non-default
+  sizes emit big_icon_size and a proportionally scaled small_icon_size
+  into the generated refind.conf; the selection persists in the GUI
+  settings.
+- Ship 256 and 512 px Steam and Windows 11 icons so the larger sizes
+  have native-resolution art.
+
 * Sun Jul 19 2026 Jon LoBue <jlobue10@gmail.com> [2.6.2-1]
 - Refuse to run the config-install script when it does not match the copy
   shipped with this build (SHA-256 tamper check): the GUI now hashes
