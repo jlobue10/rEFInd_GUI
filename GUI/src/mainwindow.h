@@ -82,6 +82,7 @@ private:
     void setScanningUi(bool scanning);
     void applyDynamicTexts();
     void populateLanguageCombo();
+    void equalizeActionButtonWidths();
     void appendLog(const QString &event, const QString &details = QString());
     static QString entryKey(const BootEntry &entry);
     void setComboByKeyOrText(QComboBox *combo, const QString &key, const QString &text);

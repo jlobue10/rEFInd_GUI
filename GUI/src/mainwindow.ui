@@ -45,7 +45,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>95</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
        </property>
@@ -77,9 +77,12 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>134</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
        </property>
        <property name="toolTip">
         <string>Default Boot Selection</string>
@@ -138,9 +141,12 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>134</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
        </property>
        <property name="toolTip">
         <string>Boot Option #1 Selection</string>
@@ -211,7 +217,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>95</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
        </property>
@@ -243,26 +249,31 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>134</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
        </property>
        <property name="toolTip">
         <string>Boot Option #2 Selection</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="5">
+     <item row="4" column="5" colspan="2">
+      <layout class="QHBoxLayout" name="Rand_BG_hboxLayout">
+       <item>
       <widget class="QPushButton" name="Rand_BG_On_pushButton">
        <property name="minimumSize">
         <size>
-         <width>90</width>
+         <width>95</width>
          <height>32</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>90</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
        </property>
@@ -273,8 +284,8 @@
         <string>Rand BG On</string>
        </property>
       </widget>
-     </item>
-     <item row="4" column="6">
+       </item>
+       <item>
       <widget class="QPushButton" name="Rand_BG_Off_pushButton">
        <property name="minimumSize">
         <size>
@@ -284,7 +295,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>95</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
        </property>
@@ -295,6 +306,8 @@
         <string>Rand BG Off</string>
        </property>
       </widget>
+       </item>
+      </layout>
      </item>
      <item row="5" column="0" colspan="2">
       <widget class="QLabel" name="Boot_Option_02_Icon_label">
@@ -319,7 +332,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>95</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
        </property>
@@ -351,9 +364,12 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>134</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
        </property>
        <property name="toolTip">
         <string>Boot Option #3 Selection (optional)</string>
@@ -383,7 +399,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>95</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
        </property>
@@ -415,16 +431,19 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>134</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
        </property>
        <property name="toolTip">
         <string>Boot Option #4 Selection (optional)</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="5" colspan="2" alignment="Qt::AlignmentFlag::AlignRight">
+     <item row="6" column="6">
       <widget class="QPushButton" name="Open_Folder_pushButton">
        <property name="minimumSize">
         <size>
@@ -434,7 +453,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>95</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
        </property>
@@ -456,7 +475,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>95</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
        </property>
@@ -491,7 +510,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>95</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
        </property>
@@ -523,9 +542,12 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>134</width>
+         <width>16777215</width>
          <height>32</height>
         </size>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
        </property>
        <property name="toolTip">
         <string>Size of the OS icons on the rEFInd boot screen</string>
@@ -645,8 +667,21 @@
       </layout>
      </item>
      <item row="11" column="4" colspan="3">
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
+      <layout class="QHBoxLayout" name="rescanRowLayout">
+       <item>
+        <spacer name="rescanRowSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QPushButton" name="Rescan_pushButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -662,7 +697,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>140</width>
+           <width>16777215</width>
            <height>32</height>
           </size>
          </property>
@@ -674,7 +709,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item>
         <widget class="QPushButton" name="Deep_Scan_pushButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -690,7 +725,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>140</width>
+           <width>16777215</width>
            <height>32</height>
           </size>
          </property>
@@ -704,72 +739,9 @@
        </item>
       </layout>
      </item>
-     <item row="12" column="0" colspan="7">
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="3" alignment="Qt::AlignmentFlag::AlignRight">
-        <widget class="QPushButton" name="Install_Config">
-         <property name="minimumSize">
-          <size>
-           <width>140</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>140</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Install config and copy PNGs</string>
-         </property>
-         <property name="text">
-          <string>Install Config</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2" alignment="Qt::AlignmentFlag::AlignRight">
-        <widget class="QPushButton" name="Create_Config">
-         <property name="minimumSize">
-          <size>
-           <width>140</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>140</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Create config and ready PNGs</string>
-         </property>
-         <property name="text">
-          <string>Create Config</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1" alignment="Qt::AlignmentFlag::AlignRight">
-        <widget class="QPushButton" name="Install_rEFInd">
-         <property name="minimumSize">
-          <size>
-           <width>140</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>140</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Install rEFInd</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" alignment="Qt::AlignmentFlag::AlignLeft">
+          <item row="12" column="0" colspan="7">
+      <layout class="QHBoxLayout" name="installRowLayout">
+       <item>
         <widget class="QComboBox" name="Install_Source_comboBox">
          <property name="minimumSize">
           <size>
@@ -779,9 +751,12 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>155</width>
+           <width>16777215</width>
            <height>32</height>
           </size>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContents</enum>
          </property>
          <property name="toolTip">
           <string>rEFInd Installation method</string>
@@ -796,6 +771,82 @@
            <string notr="true">Sourceforge</string>
           </property>
          </item>
+        </widget>
+       </item>
+       <item>
+        <spacer name="installRowSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Install_rEFInd">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Install rEFInd</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Create_Config">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Create config and ready PNGs</string>
+         </property>
+         <property name="text">
+          <string>Create Config</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Install_Config">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Install config and copy PNGs</string>
+         </property>
+         <property name="text">
+          <string>Install Config</string>
+         </property>
         </widget>
        </item>
       </layout>
@@ -817,6 +868,9 @@
            <height>32</height>
           </size>
          </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContents</enum>
+         </property>
          <property name="toolTip">
           <string>User interface language</string>
          </property>
@@ -825,7 +879,7 @@
        <item>
         <widget class="QCheckBox" name="Extras_checkBox">
          <property name="toolTip">
-          <string>Also write boot stanzas for detected bootloaders that are not in one of the four slots</string>
+          <string>Also write boot stanzas for detected bootloaders that are not in one of the four slots. Only relevant when more than four OSes are detected.</string>
          </property>
          <property name="text">
           <string>Include all OSes</string>
@@ -855,7 +909,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>140</width>
+           <width>16777215</width>
            <height>32</height>
           </size>
          </property>
