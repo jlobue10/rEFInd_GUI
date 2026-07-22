@@ -1,5 +1,6 @@
 #include "platform.h"
 
+#include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QDir>
 #include <QFile>
@@ -56,7 +57,8 @@ int installConfig(QString *output)
                 QDir::toNativeSeparators(dataDir() + "/windows/install_config_from_GUI.ps1")});
     if (!proc.waitForStarted()) {
         if (output)
-            *output = QStringLiteral("powershell.exe could not be started.");
+            *output = QCoreApplication::translate("Platform",
+                                                  "powershell.exe could not be started.");
         return -1;
     }
     proc.waitForFinished(-1);
@@ -134,7 +136,8 @@ int installConfig(QString *output)
                 QStringLiteral("/etc/rEFInd/install_config_from_GUI.sh")});
     if (!proc.waitForStarted()) {
         if (output)
-            *output = QStringLiteral("sudo could not be started.");
+            *output = QCoreApplication::translate("Platform",
+                                                  "sudo could not be started.");
         return -1;
     }
     proc.waitForFinished(-1);

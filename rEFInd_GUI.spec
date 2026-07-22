@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        2.7.0
+Version:        3.0.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,21 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Tue Jul 21 2026 Jon LoBue <jlobue10@gmail.com> [3.0.0-1]
+- Multi-language UI: 19 translations alongside English, embedded in the
+  binary, selected from the system locale, with a runtime Language combo.
+- Right-to-left support: Arabic, Persian, and Urdu mirror the layout.
+- OS detection runs on a worker thread (no more launch freeze).
+- New Preview dialog: mock boot screen plus the generated config text.
+- New "Include all OSes" option appends stanzas for detected-but-unslotted
+  OSes after the chosen slots.
+- Boot selections persist by stable key; diagnostics log under GUI/logs/.
+- Config installs keep a refind.conf.prev rollback copy on the ESP;
+  installers snapshot NVRAM and verify downloaded EFI drivers (MZ check).
+- Fix settings clobber when closing mid-scan; fix language-switch race.
+- Re-run install-rEFInd-GUI.sh so the updated config-install script
+  matches the GUI's tamper hash.
+
 * Mon Jul 20 2026 Jon LoBue <jlobue10@gmail.com> [2.7.0-1]
 - Add a Boot Icon Size option (96/128/160/192/256/512 px): non-default
   sizes emit big_icon_size and a proportionally scaled small_icon_size

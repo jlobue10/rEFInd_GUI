@@ -1,24 +1,26 @@
 #include "mainwindow.h"
+#include "uitranslation.h"
 
 #include <QApplication>
 #include <QIcon>
-#include <QLocale>
-#include <QTranslator>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    // The name doubles as the translation-catalog prefix (see uitranslation.cpp).
+    a.setApplicationName(QStringLiteral("rEFInd_GUI"));
     a.setWindowIcon(QIcon(QStringLiteral(":/UEFI_icon.png")));
 
-    QTranslator translator;
-    const QStringList uiLanguages = QLocale::system().uiLanguages();
-    for (const QString &locale : uiLanguages) {
-        const QString baseName = "rEFInd_GUI_" + QLocale(locale).name();
-        if (translator.load(":/i18n/" + baseName)) {
-            a.installTranslator(&translator);
-            break;
-        }
-    }
+    // Saved override from the INI, or the system locale. Translator loading,
+    // fallback order, and the qtbase catalogs all live in UiTranslation.
+    UiTranslation::apply(UiTranslation::saved());
+
+    // Qt queries this key from the installed translators to decide whether to
+    // mirror the whole widget layout; the RTL language files (ar, fa, ur)
+    // translate it to "RTL". The call itself is only an lupdate anchor so the
+    // key survives .ts regeneration.
+    (void)QCoreApplication::translate("QGuiApplication", "QT_LAYOUT_DIRECTION");
+
     MainWindow w;
     w.show();
     return a.exec();

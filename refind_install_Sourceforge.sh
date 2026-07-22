@@ -80,7 +80,10 @@ sudo cp -rf "$REFIND_BIN/refind/tools_x64/" "$ESP_MP/EFI/refind"
 XBOX360_DRV_URL="https://github.com/jlobue10/UsbXbox360Dxe/releases/latest/download/UsbXbox360Dxe.efi"
 echo "Downloading UsbXbox360Dxe.efi controller driver..."
 sudo mkdir -p "$ESP_MP/EFI/refind/drivers_x64"
-if wget -q -O "$DOWNLOAD_DIR/UsbXbox360Dxe.efi" "$XBOX360_DRV_URL"; then
+# A truncated or HTML error-page download must not reach the ESP:
+# require a non-empty file with the PE "MZ" signature before copying.
+if wget -q -O "$DOWNLOAD_DIR/UsbXbox360Dxe.efi" "$XBOX360_DRV_URL" \
+	&& [ -s "$DOWNLOAD_DIR/UsbXbox360Dxe.efi" ] && [ "$(head -c2 "$DOWNLOAD_DIR/UsbXbox360Dxe.efi")" = "MZ" ]; then
 	sudo cp -f "$DOWNLOAD_DIR/UsbXbox360Dxe.efi" "$ESP_MP/EFI/refind/drivers_x64/UsbXbox360Dxe.efi"
 	rm -f "$DOWNLOAD_DIR/UsbXbox360Dxe.efi"
 else
@@ -103,7 +106,10 @@ esac
 if [ -n "$TOUCH_DEVICE" ]; then
 	TOUCH_DRV_URL="https://github.com/jlobue10/TouchI2cDxe/releases/latest/download/TouchI2cDxe.efi"
 	echo "Downloading TouchI2cDxe.efi touchscreen driver..."
-	if wget -q -O "$DOWNLOAD_DIR/TouchI2cDxe.efi" "$TOUCH_DRV_URL"; then
+	# A truncated or HTML error-page download must not reach the ESP:
+	# require a non-empty file with the PE "MZ" signature before copying.
+	if wget -q -O "$DOWNLOAD_DIR/TouchI2cDxe.efi" "$TOUCH_DRV_URL" \
+		&& [ -s "$DOWNLOAD_DIR/TouchI2cDxe.efi" ] && [ "$(head -c2 "$DOWNLOAD_DIR/TouchI2cDxe.efi")" = "MZ" ]; then
 		sudo cp -f "$DOWNLOAD_DIR/TouchI2cDxe.efi" "$ESP_MP/EFI/refind/drivers_x64/TouchI2cDxe.efi"
 		rm -f "$DOWNLOAD_DIR/TouchI2cDxe.efi"
 		# TouchI2cDxe supersedes AllyTouchI2cDxe; leaving both would load
@@ -122,6 +128,14 @@ sudo cp -rf "$HOME/.local/rEFInd_GUI/backgrounds/" "$ESP_MP/EFI/refind"
 sudo cp -rf "$HOME/.local/rEFInd_GUI/icons/" "$ESP_MP/EFI/refind"
 
 echo "Updating EFI boot entries..."
+# Snapshot the current NVRAM boot entries before changing them: a copy on
+# disk makes manual recovery trivial if anything goes sideways.
+NVRAM_BK_DIR="$HOME/.local/rEFInd_GUI/nvram-backups"
+if mkdir -p "$NVRAM_BK_DIR" 2>/dev/null; then
+	efibootmgr -v > "$NVRAM_BK_DIR/efibootmgr-$(date +%Y%m%d-%H%M%S).txt" 2>/dev/null
+	# Keep the ten most recent snapshots.
+	ls -1t "$NVRAM_BK_DIR"/efibootmgr-*.txt 2>/dev/null | tail -n +11 | xargs -r rm -f
+fi
 # Resolve the ESP's parent disk and partition number for efibootmgr.
 # `lsblk -no PKNAME` has been observed returning empty here (util-linux
 # 2.42), which produced `efibootmgr -c -d /dev/ ...` -- a failed create --

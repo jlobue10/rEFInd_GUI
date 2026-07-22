@@ -122,6 +122,11 @@ if ! mkdir -p "$DEST" 2>/dev/null; then
 	exit 4
 fi
 
+# Keep one rollback copy of the live config before overwriting it.
+if [ -f "$DEST/refind.conf" ]; then
+	cp -f "$DEST/refind.conf" "$DEST/refind.conf.prev" 2>/dev/null
+fi
+
 COPIED=0
 for f in refind.conf background.png os_icon1.png os_icon2.png os_icon3.png os_icon4.png; do
 	if [ -f "$SRC/$f" ]; then
