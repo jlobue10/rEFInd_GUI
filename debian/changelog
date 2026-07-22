@@ -1,7 +1,7 @@
 refind-gui (3.0.0) unstable; urgency=medium
 
-  * Multi-language UI: 19 translations alongside English (de, es, fr, it,
-    scn, pt, ru, uk, tr, ja, ko, zh_CN, vi, id, hi, bn, ar, fa, ur),
+  * Multi-language UI: 20 translations alongside English (de, nl, es, fr,
+    it, scn, pt, ru, uk, tr, ja, ko, zh_CN, vi, id, hi, bn, ar, fa, ur),
     embedded in the binary and selected from the system locale, plus a
     Language combo for switching at runtime without a restart.
   * Right-to-left support: Arabic, Persian, and Urdu mirror the whole

@@ -50,7 +50,7 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 
 %changelog
 * Tue Jul 21 2026 Jon LoBue <jlobue10@gmail.com> [3.0.0-1]
-- Multi-language UI: 19 translations alongside English, embedded in the
+- Multi-language UI: 20 translations alongside English, embedded in the
   binary, selected from the system locale, with a runtime Language combo.
 - Right-to-left support: Arabic, Persian, and Urdu mirror the layout.
 - OS detection runs on a worker thread (no more launch freeze).
