@@ -10,18 +10,6 @@
     <height>558</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>613</width>
-    <height>558</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>613</width>
-    <height>558</height>
-   </size>
-  </property>
   <property name="windowTitle">
    <string>rEFInd Setup</string>
   </property>
@@ -30,16 +18,7 @@
     <normaloff>:/UEFI_icon.png</normaloff>:/UEFI_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>9</x>
-      <y>9</y>
-      <width>597</width>
-      <height>534</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_3">
+   <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="0">
       <widget class="QLabel" name="Background_label">
        <property name="minimumSize">
@@ -449,13 +428,13 @@
       <widget class="QPushButton" name="Open_Folder_pushButton">
        <property name="minimumSize">
         <size>
-         <width>90</width>
+         <width>95</width>
          <height>32</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>90</width>
+         <width>95</width>
          <height>32</height>
         </size>
        </property>
@@ -959,7 +938,6 @@
       </widget>
      </item>
     </layout>
-   </widget>
   </widget>
  </widget>
  <resources/>
