@@ -445,7 +445,7 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="5">
+     <item row="6" column="5" colspan="2" alignment="Qt::AlignmentFlag::AlignRight">
       <widget class="QPushButton" name="Open_Folder_pushButton">
        <property name="minimumSize">
         <size>
@@ -644,7 +644,7 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="5" colspan="2" alignment="Qt::AlignmentFlag::AlignRight">
+     <item row="8" column="4" colspan="2" alignment="Qt::AlignmentFlag::AlignRight">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item alignment="Qt::AlignmentFlag::AlignRight">
         <widget class="QLabel" name="Enable_Mouse_label">
