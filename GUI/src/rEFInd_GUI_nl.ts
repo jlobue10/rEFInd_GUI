@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="bn" sourcelanguage="en_US">
+<TS version="2.1" language="nl">
 <context>
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="14" />
         <source>rEFInd Setup</source>
-        <translation>rEFInd সেটআপ</translation>
+        <translation>rEFInd-configuratie</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="31" />
         <source>Background</source>
-        <translation>পটভূমি</translation>
+        <translation>Achtergrond</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="53" />
@@ -20,194 +20,216 @@
         <location filename="mainwindow.ui" line="407" />
         <location filename="mainwindow.ui" line="518" />
         <source>Browse</source>
-        <translation>ব্রাউজ করুন</translation>
+        <translation>Bladeren</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="66" />
         <source>Default Boot Option</source>
-        <translation>ডিফল্ট বুট বিকল্প</translation>
+        <translation>Standaard opstartoptie</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="88" />
         <source>Default Boot Selection</source>
-        <translation>ডিফল্ট বুট নির্বাচন</translation>
+        <translation>Standaard opstartkeuze</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="101" />
         <source>Boot last booted OS</source>
-        <translation>সর্বশেষ বুট করা OS বুট করুন</translation>
+        <translation>Laatst opgestarte OS starten</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="130" />
         <source>Boot Option #1</source>
-        <translation>বুট বিকল্প #1</translation>
+        <translation>Opstartoptie #1</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="152" />
         <source>Boot Option #1 Selection</source>
-        <translation>বুট বিকল্প #1 নির্বাচন</translation>
+        <translation>Keuze opstartoptie #1</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="168" />
         <location filename="mainwindow.ui" line="187" />
         <source>SteamOS only option</source>
-        <translation>শুধুমাত্র SteamOS-এর বিকল্প</translation>
+        <translation>Optie alleen voor SteamOS</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="171" />
         <source>Use Firmware_bootnum</source>
-        <translation>Firmware_bootnum ব্যবহার করুন</translation>
+        <translation>Firmware_bootnum gebruiken</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="206" />
         <source>Boot Option #1 Icon</source>
-        <translation>বুট বিকল্প #1 আইকন</translation>
+        <translation>Pictogram opstartoptie #1</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="238" />
         <source>Boot Option #2</source>
-        <translation>বুট বিকল্প #2</translation>
+        <translation>Opstartoptie #2</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="260" />
         <source>Boot Option #2 Selection</source>
-        <translation>বুট বিকল্প #2 নির্বাচন</translation>
+        <translation>Keuze opstartoptie #2</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="281" />
         <source>Turn on Background randomizer</source>
-        <translation>এলোমেলো পটভূমি চালু করুন</translation>
+        <translation>Achtergrondrandomizer inschakelen</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="284" />
         <source>Rand BG On</source>
-        <translation>এলোমেলো BG চালু</translation>
+        <translation>Wissel-AG aan</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="303" />
         <source>Turn off Background randomizer</source>
-        <translation>এলোমেলো পটভূমি বন্ধ করুন</translation>
+        <translation>Achtergrondrandomizer uitschakelen</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="306" />
         <source>Rand BG Off</source>
-        <translation>এলোমেলো BG বন্ধ</translation>
+        <translation>Wissel-AG uit</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="321" />
         <source>Boot Option #2 Icon</source>
-        <translation>বুট বিকল্প #2 আইকন</translation>
+        <translation>Pictogram opstartoptie #2</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="353" />
         <source>Boot Option #3</source>
-        <translation>বুট বিকল্প #3</translation>
+        <translation>Opstartoptie #3</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="375" />
         <source>Boot Option #3 Selection (optional)</source>
-        <translation>বুট বিকল্প #3 নির্বাচন (ঐচ্ছিক)</translation>
+        <translation>Keuze opstartoptie #3 (optioneel)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="388" />
         <source>Boot Option #3 Icon</source>
-        <translation>বুট বিকল্প #3 আইকন</translation>
+        <translation>Pictogram opstartoptie #3</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="420" />
         <source>Boot Option #4</source>
-        <translation>বুট বিকল্প #4</translation>
+        <translation>Opstartoptie #4</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="442" />
         <source>Boot Option #4 Selection (optional)</source>
-        <translation>বুট বিকল্প #4 নির্বাচন (ঐচ্ছিক)</translation>
+        <translation>Keuze opstartoptie #4 (optioneel)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="461" />
         <source>Open the folder holding refind.conf and the background/icon PNGs</source>
-        <translation>refind.conf ও পটভূমি/আইকন PNG থাকা ফোল্ডার খুলুন</translation>
+        <translation>Open de map met refind.conf en de PNG's voor achtergrond en pictogrammen</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="464" />
         <location filename="mainwindow.cpp" line="1059" />
         <source>Open Folder</source>
-        <translation>ফোল্ডার খুলুন</translation>
+        <translation>Map openen</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="483" />
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exit GUI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GUI থেকে প্রস্থান&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GUI afsluiten&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="486" />
         <source>Exit</source>
-        <translation>প্রস্থান</translation>
+        <translation>Afsluiten</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="499" />
         <source>Boot Option #4 Icon</source>
-        <translation>বুট বিকল্প #4 আইকন</translation>
+        <translation>Pictogram opstartoptie #4</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="531" />
         <source>Boot Icon Size</source>
-        <translation>বুট আইকনের আকার</translation>
+        <translation>Grootte opstartpictogrammen</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="553" />
         <source>Size of the OS icons on the rEFInd boot screen</source>
-        <translation>rEFInd বুট স্ক্রিনে OS আইকনের আকার</translation>
+        <translation>Grootte van de OS-pictogrammen op het rEFInd-opstartscherm</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="572" />
         <source>About</source>
-        <translation>পরিচিতি</translation>
+        <translation>Over</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="588" />
         <source>Timeout</source>
-        <translation>সময়সীমা</translation>
+        <translation>Time-out</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="622" />
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Timeout in seconds&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;সেকেন্ডে সময়সীমা&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time-out in seconden&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="641" />
         <source>Seconds</source>
-        <translation>সেকেন্ড</translation>
+        <translation>Seconden</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="653" />
         <source>Enable Mouse</source>
-        <translation>মাউস সক্রিয় করুন</translation>
+        <translation>Muis inschakelen</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="705" />
         <source>Rescan for installed OSes and bootloaders</source>
-        <translation>ইনস্টল করা OS ও বুটলোডার আবার খুঁজুন</translation>
+        <translation>Opnieuw scannen naar geïnstalleerde besturingssystemen en bootloaders</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="708" />
         <source>Rescan OSes</source>
-        <translation>আবার স্ক্যান</translation>
+        <translation>Opnieuw scannen</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="733" />
         <source>Scan the EFI System Partition with elevated rights (asks for your sudo password). Only needed for a bootloader that has no EFI boot entry.</source>
-        <translation>উচ্চতর অনুমতি নিয়ে EFI সিস্টেম পার্টিশন স্ক্যান করুন (sudo পাসওয়ার্ড চাওয়া হবে)। শুধুমাত্র সেই বুটলোডারের জন্য দরকার যার কোনো EFI বুট এন্ট্রি নেই।</translation>
+        <translation>Scan de EFI-systeempartitie met verhoogde rechten (vraagt om je sudo-wachtwoord). Alleen nodig voor een bootloader zonder EFI-opstartvermelding.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="736" />
         <source>Deep Scan</source>
-        <translation>গভীর স্ক্যান</translation>
+        <translation>Diepe scan</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="762" />
+        <source>rEFInd Installation method</source>
+        <translation>rEFInd-installatiemethode</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="804" />
+        <location filename="mainwindow.cpp" line="510" />
+        <source>Install rEFInd</source>
+        <translation>rEFInd installeren</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="823" />
+        <source>Create config and ready PNGs</source>
+        <translation>Config aanmaken en PNG's gereedmaken</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="826" />
+        <location filename="mainwindow.cpp" line="683" />
+        <source>Create Config</source>
+        <translation>Config aanmaken</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="845" />
         <source>Install config and copy PNGs</source>
-        <translation>কনফিগারেশন ইনস্টল করুন ও PNG কপি করুন</translation>
+        <translation>Config installeren en PNG's kopiëren</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="848" />
@@ -215,98 +237,72 @@
         <location filename="mainwindow.cpp" line="797" />
         <location filename="mainwindow.cpp" line="802" />
         <source>Install Config</source>
-        <translation>কনফিগ ইনস্টল</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="882" />
-        <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots. Only relevant when more than four OSes are detected.</source>
-        <translation>চারটি স্লটের কোনোটিতে নেই এমন শনাক্ত বুটলোডারের জন্যও বুট এন্ট্রি লেখে। শুধুমাত্র তখনই প্রাসঙ্গিক যখন চারটির বেশি OS শনাক্ত হয়।</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="823" />
-        <source>Create config and ready PNGs</source>
-        <translation>কনফিগারেশন তৈরি করুন ও PNG প্রস্তুত করুন</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="826" />
-        <location filename="mainwindow.cpp" line="683" />
-        <source>Create Config</source>
-        <translation>কনফিগ তৈরি</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="804" />
-        <location filename="mainwindow.cpp" line="510" />
-        <source>Install rEFInd</source>
-        <translation>rEFInd ইনস্টল করুন</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="762" />
-        <source>rEFInd Installation method</source>
-        <translation>rEFInd ইনস্টলের পদ্ধতি</translation>
+        <translation>Config installeren</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="859" />
         <source>Language</source>
-        <translation>ভাষা</translation>
+        <translation>Taal</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="875" />
         <source>User interface language</source>
-        <translation>ইন্টারফেসের ভাষা</translation>
+        <translation>Taal van de gebruikersinterface</translation>
     </message>
     <message>
-        <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots</source>
-        <translation type="vanished">চারটি স্লটের কোনোটিতে নেই এমন শনাক্ত বুটলোডারের জন্যও বুট এন্ট্রি লেখে</translation>
+        <location filename="mainwindow.ui" line="882" />
+        <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots. Only relevant when more than four OSes are detected.</source>
+        <translation>Schrijf ook opstartvermeldingen voor gedetecteerde bootloaders die niet in een van de vier posities staan. Alleen relevant wanneer er meer dan vier besturingssystemen zijn gedetecteerd.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="885" />
         <source>Include all OSes</source>
-        <translation>সব OS অন্তর্ভুক্ত করুন</translation>
+        <translation>Alle systemen opnemen</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="917" />
         <source>Preview the rEFInd boot screen and the generated refind.conf</source>
-        <translation>rEFInd বুট স্ক্রিন ও তৈরি হওয়া refind.conf-এর প্রিভিউ দেখুন</translation>
+        <translation>Bekijk een voorbeeld van het rEFInd-opstartscherm en de gegenereerde refind.conf</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="920" />
         <source>Preview</source>
-        <translation>প্রিভিউ</translation>
+        <translation>Voorbeeld</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="961" />
         <source>rEFInd Background selection</source>
-        <translation>rEFInd পটভূমি নির্বাচন</translation>
+        <translation>rEFInd-achtergrondkeuze</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="42" />
         <source>None</source>
-        <translation>কোনোটি নয়</translation>
+        <translation>Geen</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="112" />
         <source>Small (96)</source>
-        <translation>ছোট (96)</translation>
+        <translation>Klein (96)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="113" />
         <source>Default (128)</source>
-        <translation>ডিফল্ট (128)</translation>
+        <translation>Standaard (128)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="114" />
         <source>Medium (160)</source>
-        <translation>মাঝারি (160)</translation>
+        <translation>Middelgroot (160)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="115" />
         <source>Large (192)</source>
-        <translation>বড় (192)</translation>
+        <translation>Groot (192)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="116" />
         <source>Extra Large (256)</source>
-        <translation>অনেক বড় (256)</translation>
+        <translation>Extra groot (256)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="117" />
@@ -316,62 +312,62 @@
     <message>
         <location filename="mainwindow.cpp" line="119" />
         <source>Requires efibootmgr (Linux only)</source>
-        <translation>efibootmgr প্রয়োজন (শুধুমাত্র Linux)</translation>
+        <translation>Vereist efibootmgr (alleen Linux)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="123" />
         <source>Not needed: no unreadable EFI System Partition was found</source>
-        <translation>প্রয়োজন নেই: পড়া যায় না এমন কোনো EFI সিস্টেম পার্টিশন পাওয়া যায়নি</translation>
+        <translation>Niet nodig: er is geen onleesbare EFI-systeempartitie gevonden</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="154" />
         <source>System default</source>
-        <translation>সিস্টেম ডিফল্ট</translation>
+        <translation>Systeemstandaard</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="267" />
         <source>Scanning…</source>
-        <translation>স্ক্যান চলছে…</translation>
+        <translation>Scannen…</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="468" />
         <source>Image (*.png)</source>
-        <translation>ছবি (*.png)</translation>
+        <translation>Afbeelding (*.png)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="484" />
         <source>Select Background PNG</source>
-        <translation>পটভূমির PNG নির্বাচন করুন</translation>
+        <translation>Achtergrond-PNG selecteren</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="489" />
         <source>Select OS Icon 1 PNG</source>
-        <translation>OS আইকন 1-এর PNG নির্বাচন করুন</translation>
+        <translation>PNG voor OS-pictogram 1 selecteren</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="494" />
         <source>Select OS Icon 2 PNG</source>
-        <translation>OS আইকন 2-এর PNG নির্বাচন করুন</translation>
+        <translation>PNG voor OS-pictogram 2 selecteren</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="499" />
         <source>Select OS Icon 3 PNG</source>
-        <translation>OS আইকন 3-এর PNG নির্বাচন করুন</translation>
+        <translation>PNG voor OS-pictogram 3 selecteren</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="504" />
         <source>Select OS Icon 4 PNG</source>
-        <translation>OS আইকন 4-এর PNG নির্বাচন করুন</translation>
+        <translation>PNG voor OS-pictogram 4 selecteren</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="511" />
         <source>Failed to launch the installation script.</source>
-        <translation>ইনস্টলেশন স্ক্রিপ্ট চালু করা যায়নি।</translation>
+        <translation>Kon het installatiescript niet starten.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="684" />
         <source>Could not write %1</source>
-        <translation>%1 লেখা যায়নি</translation>
+        <translation>Kon %1 niet schrijven</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="782" />
@@ -382,105 +378,105 @@
 It does not match the copy shipped with this version of the app. Because it runs with root privileges, it is only ever run when it is byte-for-byte the shipped version — a mismatch means it was modified (possibly tampered with) or belongs to a different version.
 
 Reinstall the GUI to restore the original script, then try again.</source>
-        <translation>কনফিগারেশন-ইনস্টল স্ক্রিপ্টটি চালানো হয়নি:
+        <translation>Het config-installatiescript is NIET uitgevoerd:
 
 %1
 
-এটি অ্যাপের এই সংস্করণের সাথে দেওয়া কপির সাথে মেলে না। যেহেতু এটি root অনুমতি নিয়ে চলে, তাই এটি কেবল তখনই চালানো হয় যখন এটি দেওয়া সংস্করণের সাথে বাইটে-বাইটে একই হয় — অমিল মানে এটি পরিবর্তিত হয়েছে (সম্ভবত টেম্পার করা) বা অন্য সংস্করণের।
+Het komt niet overeen met de kopie die met deze versie van de app is meegeleverd. Omdat het met rootrechten draait, wordt het alleen uitgevoerd wanneer het byte voor byte de meegeleverde versie is — een verschil betekent dat het is gewijzigd (mogelijk gemanipuleerd) of bij een andere versie hoort.
 
-মূল স্ক্রিপ্ট ফিরিয়ে আনতে GUI আবার ইনস্টল করুন, তারপর আবার চেষ্টা করুন।</translation>
+Installeer de GUI opnieuw om het originele script te herstellen en probeer het daarna nogmaals.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="799" />
         <source>The config was installed successfully.</source>
-        <translation>কনফিগারেশন সফলভাবে ইনস্টল হয়েছে।</translation>
+        <translation>De config is met succes geïnstalleerd.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="800" />
         <source>The config was installed successfully.
 
 %1</source>
-        <translation>কনফিগারেশন সফলভাবে ইনস্টল হয়েছে।
+        <translation>De config is met succes geïnstalleerd.
 
 %1</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="804" />
         <source>Installing the config failed (code %1).</source>
-        <translation>কনফিগারেশন ইনস্টল ব্যর্থ হয়েছে (কোড %1)।</translation>
+        <translation>Het installeren van de config is mislukt (code %1).</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="805" />
         <source>Installing the config failed (code %1).
 
 %2</source>
-        <translation>কনফিগারেশন ইনস্টল ব্যর্থ হয়েছে (কোড %1)।
+        <translation>Het installeren van de config is mislukt (code %1).
 
 %2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="819" />
         <source>Copy PNG</source>
-        <translation>PNG কপি করুন</translation>
+        <translation>PNG kopiëren</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="820" />
         <source>Could not copy %1 to %2</source>
-        <translation>%1-কে %2-এ কপি করা যায়নি</translation>
+        <translation>Kon %1 niet naar %2 kopiëren</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="845" />
         <source>Invalid PNG</source>
-        <translation>অবৈধ PNG</translation>
+        <translation>Ongeldige PNG</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="846" />
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
-        <translation>%1 একটি বৈধ PNG ফাইল নয়।
+        <translation>%1 is geen geldig PNG-bestand.
 
-পটভূমি ও OS আইকন অবশ্যই আসল PNG ছবি হতে হবে (শুধু .png এক্সটেনশনের ফাইল নয়)।</translation>
+Achtergronden en OS-pictogrammen moeten echte PNG-afbeeldingen zijn (niet slechts bestanden met de extensie .png).</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="975" />
         <source>Check For Update</source>
-        <translation>আপডেট পরীক্ষা করুন</translation>
+        <translation>Controleren op updates</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="978" />
         <source>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
-        <translation>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;মূল GUI নির্মাতা: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;পরীক্ষা ও মান নিশ্চিতকরণের জন্য Deck Wizard-কে বিশেষ ধন্যবাদ&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Deck Wizard ডুয়াল বুট টিউটোরিয়াল&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Oorspronkelijke maker van de GUI: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Met speciale dank aan Deck Wizard voor het testen en de kwaliteitscontrole&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Dual-boot-tutorial van Deck Wizard&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1025" />
         <source>&lt;p align='center'&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
-        <translation>&lt;p align='center'&gt;আপডেট পরীক্ষা ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p align='center'&gt;De updatecontrole is mislukt. Controleer je internetverbinding en probeer het opnieuw.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1028" />
         <source>&lt;p align='center'&gt;An update is available &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
-        <translation>&lt;p align='center'&gt;একটি আপডেট &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;এখানে&lt;/a&gt; পাওয়া যাচ্ছে&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p align='center'&gt;Er is een update beschikbaar &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;hier&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1032" />
         <source>&lt;p align='center'&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
-        <translation>&lt;p align='center'&gt;কোনো আপডেট পাওয়া যায়নি। আপনি সর্বশেষ সংস্করণ ব্যবহার করছেন।&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p align='center'&gt;Geen update gevonden. Je gebruikt de nieuwste versie.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1042" />
         <source>Background Randomizer</source>
-        <translation>এলোমেলো পটভূমি</translation>
+        <translation>Achtergrondrandomizer</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1043" />
         <source>Failed to launch the randomizer setup.</source>
-        <translation>এলোমেলো পটভূমি সেটআপ চালু করা যায়নি।</translation>
+        <translation>Kon de randomizer-instelling niet starten.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1060" />
         <source>Failed to open %1 in the file manager.</source>
-        <translation>ফাইল ব্যবস্থাপকে %1 খোলা যায়নি।</translation>
+        <translation>Kon %1 niet openen in de bestandsbeheerder.</translation>
     </message>
 </context>
 <context>
@@ -488,12 +484,12 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
     <message>
         <location filename="platform.cpp" line="60" />
         <source>powershell.exe could not be started.</source>
-        <translation>powershell.exe চালু করা যায়নি।</translation>
+        <translation>powershell.exe kon niet worden gestart.</translation>
     </message>
     <message>
         <location filename="platform.cpp" line="139" />
         <source>sudo could not be started.</source>
-        <translation>sudo চালু করা যায়নি।</translation>
+        <translation>sudo kon niet worden gestart.</translation>
     </message>
 </context>
 <context>
@@ -501,22 +497,22 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
     <message>
         <location filename="previewdialog.cpp" line="34" />
         <source>No boot options selected.</source>
-        <translation>কোনো বুট বিকল্প নির্বাচিত নেই।</translation>
+        <translation>Geen opstartopties geselecteerd.</translation>
     </message>
     <message>
         <location filename="previewdialog.cpp" line="89" />
         <source>Preview</source>
-        <translation>প্রিভিউ</translation>
+        <translation>Voorbeeld</translation>
     </message>
     <message>
         <location filename="previewdialog.cpp" line="101" />
         <source>Approximate preview — rEFInd's real rendering also depends on the firmware resolution and theme.</source>
-        <translation>আনুমানিক প্রিভিউ — rEFInd-এর প্রকৃত প্রদর্শন ফার্মওয়্যার রেজোলিউশন ও থিমের উপরও নির্ভর করে।</translation>
+        <translation>Benaderend voorbeeld — de werkelijke weergave van rEFInd hangt ook af van de firmwareresolutie en het thema.</translation>
     </message>
     <message>
         <location filename="previewdialog.cpp" line="107" />
         <source>Boot screen</source>
-        <translation>বুট স্ক্রিন</translation>
+        <translation>Opstartscherm</translation>
     </message>
 </context>
 <context>
