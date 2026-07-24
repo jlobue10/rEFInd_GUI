@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.0.0
+Version:        3.0.1
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,10 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Fri Jul 24 2026 Jon LoBue <jlobue10@gmail.com> [3.0.1-1]
+- Security hardening: Program Files install for privileged helpers, direct
+  UEFI variable discovery, legacy per-user install cleanup, pinned CI.
+
 * Tue Jul 21 2026 Jon LoBue <jlobue10@gmail.com> [3.0.0-1]
 - Multi-language UI: 20 translations alongside English, embedded in the
   binary, selected from the system locale, with a runtime Language combo.

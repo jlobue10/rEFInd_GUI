@@ -1,3 +1,12 @@
+refind-gui (3.0.1) unstable; urgency=medium
+
+  * Security hardening: privileged Windows helpers move to Program Files;
+    locale-independent UEFI boot-entry discovery replaces bcdedit parsing;
+    legacy per-user install cleanup; CI actions and containers pinned with
+    narrowed release permissions.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Fri, 24 Jul 2026 05:00:00 -0700
+
 refind-gui (3.0.0) unstable; urgency=medium
 
   * Multi-language UI: 20 translations alongside English (de, nl, es, fr,
