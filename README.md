@@ -30,7 +30,7 @@ rEFInd_GUI also builds and runs on Windows (Qt 6), so you can configure and inst
 
 ### Installing (recommended)
 
-Download **`rEFInd_GUI-<version>-setup.exe`** from the [Releases](https://github.com/jlobue10/rEFInd_GUI/releases) page and run it. It's a per-user install (no admin prompt to install; the app itself requests Administrator when you launch it), and it creates Start Menu and optional Desktop shortcuts. A portable ZIP is also attached to each release if you prefer not to install.
+Download **`rEFInd_GUI-<version>-setup.exe`** from the [Releases](https://github.com/jlobue10/rEFInd_GUI/releases) page and run it. The installer requests Administrator access so executable code and privileged PowerShell helpers can be protected under Program Files; mutable configuration stays in `%LOCALAPPDATA%\rEFInd_GUI`. It creates Start Menu and optional Desktop shortcuts.
 
 ### Building from source
 
@@ -43,7 +43,7 @@ cmake --build build-win
 bash windows/assemble-deploy.sh build-win/rEFInd_GUI.exe deploy   # gathers the exe + all runtime DLLs + data into deploy/
 ```
 
-To produce the installer, compile `windows/rEFInd_GUI.iss` with [Inno Setup](https://jrsoftware.org/isinfo.php) (`ISCC.exe windows\rEFInd_GUI.iss`) — the output lands in `windows/Output/`. Pushing a `v*` tag builds the installer and portable ZIP automatically via GitHub Actions and attaches them to the release.
+To produce the installer, compile `windows/rEFInd_GUI.iss` with [Inno Setup](https://jrsoftware.org/isinfo.php) (`ISCC.exe windows\rEFInd_GUI.iss`) — the output lands in `windows/Output/`. Pushing a `v*` tag builds the installer automatically via GitHub Actions and attaches it to the release. A portable elevated build is intentionally not published because its executable and helpers could be modified by an unprivileged user.
 
 Release builds are Authenticode-signed (executable, installer, and PowerShell scripts) through [SignPath Foundation](https://signpath.org/)'s free OSS code-signing program; see [windows/SIGNING.md](windows/SIGNING.md) for the one-time setup. Until that's configured, CI still produces working but unsigned artifacts, and Windows will show an "unknown publisher" prompt.
 
@@ -51,7 +51,7 @@ Windows notes:
 
 - The app requests **Administrator** rights at launch — everything it does (mounting the EFI System Partition, writing firmware boot variables) needs them.
 - **Install rEFInd** (v2.3.0+) downloads rEFInd from SourceForge and creates a dedicated `rEFInd` firmware boot entry — the exact equivalent of `efibootmgr -c` on Linux — first in the boot order. **Windows Boot Manager is left untouched** (rEFInd chainloads it); versions before 2.3.0 repointed `{bootmgr}` instead, which made the entry carry Windows' optional-data blob (the "long hex after refind_x64.efi" in `efibootmgr -v`) — installing 2.3.0+ over an old version restores `{bootmgr}` automatically. Previous boot settings are saved to `%LOCALAPPDATA%\rEFInd_GUI\bootmgr-backup.txt`. The installer also fetches the [Xbox 360 controller driver](#controller-support-in-the-boot-menu) into `EFI\refind\drivers_x64` — and, on the ROG Xbox Ally / Ally X and Steam Decks, the [touchscreen driver](#touchscreen-support-in-the-boot-menu) too.
-- **Uninstalling** "rEFInd GUI" from Settings > Apps asks whether to also remove rEFInd itself; choosing Yes deletes the rEFInd boot entry, removes `EFI\refind` and `EFI\Xbox360` from the ESP, restores direct Windows boot, unregisters the background randomizer task, and scrubs `%LOCALAPPDATA%\rEFInd_GUI`. A rEFInd installed from the Linux side (on another ESP) is detected and left alone. The same cleanup can be run standalone as Administrator: `powershell -ExecutionPolicy Bypass -File "%LOCALAPPDATA%\rEFInd_GUI\windows\uninstall_rEFInd.ps1"` (add `-KeepEspFiles` to keep rEFInd's files).
+- **Uninstalling** "rEFInd GUI" from Settings > Apps asks whether to also remove rEFInd itself; choosing Yes deletes the rEFInd boot entry, removes `EFI\refind` and `EFI\Xbox360` from the ESP, restores direct Windows boot, unregisters the background randomizer task, and scrubs `%LOCALAPPDATA%\rEFInd_GUI`. A rEFInd installed from the Linux side (on another ESP) is detected and left alone. The same cleanup can be run standalone as Administrator: `powershell -ExecutionPolicy Bypass -File "%ProgramFiles%\rEFInd_GUI\windows\uninstall_rEFInd.ps1"` (add `-KeepEspFiles` to keep rEFInd's files).
 - The background randomizer runs as a Scheduled Task at logon instead of a systemd service.
 - The SteamOS `firmware_bootnum` option is Linux-only (Windows has no `efibootmgr` equivalent).
 
