@@ -12,6 +12,10 @@ namespace Platform {
 // App data root: ~/.local/rEFInd_GUI on Linux, %LOCALAPPDATA%\rEFInd_GUI on Windows.
 QString dataDir();
 
+// Populate a new per-user data directory from the immutable files shipped next
+// to the executable. Existing user files are never overwritten.
+void prepareDataDir();
+
 // Launches the rEFInd installer for the chosen source in a new terminal
 // window. Returns false if the launch itself failed.
 bool runInstallerScript(const QString &installSource);
@@ -25,9 +29,8 @@ int installConfig(QString *output = nullptr);
 // the copy this build shipped, so it is safe to run with root privileges. On
 // mismatch (tampered, missing, or from another version) returns false and
 // puts the offending file's path in *detail — the caller must refuse to run
-// it and suggest reinstalling. Always true on Windows: the .ps1 scripts are
-// Authenticode-signed instead, and signing rewrites the file so a build-time
-// hash could never match.
+// it and suggest reinstalling. On Windows, privileged scripts must resolve
+// beneath the Program Files installation directory.
 bool installConfigScriptTrusted(QString *detail = nullptr);
 
 // Runs the elevated ESP scan (scan_esp.sh), caching the EFI/ tree for
