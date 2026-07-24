@@ -2,10 +2,8 @@
 ;
 ; Packages the deploy\ staging folder (assembled by the build — see
 ; .github/workflows/windows-release.yml or the README "Windows" section) into
-; a per-user installer. It installs to %LOCALAPPDATA%\rEFInd_GUI, which is
-; exactly the directory the app reads/writes at runtime (Platform::dataDir()),
-; so no files are duplicated and no admin rights are needed to install. The
-; app itself requests Administrator at launch via its embedded manifest.
+; a machine-wide installer. Privileged executable code lives under Program
+; Files; mutable user configuration remains under %LOCALAPPDATA%\rEFInd_GUI.
 
 #define AppName "rEFInd GUI"
 #define AppVersion "3.0.0"
@@ -17,11 +15,11 @@ AppName={#AppName}
 AppVersion={#AppVersion}
 AppPublisher=jlobue10
 AppPublisherURL=https://github.com/jlobue10/rEFInd_GUI
-DefaultDirName={localappdata}\rEFInd_GUI
+DefaultDirName={autopf}\rEFInd_GUI
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 DisableDirPage=yes
-PrivilegesRequired=lowest
+PrivilegesRequired=admin
 OutputBaseFilename=rEFInd_GUI-{#AppVersion}-setup
 Compression=lzma2
 SolidCompression=yes
@@ -59,22 +57,24 @@ Name: "{group}\Uninstall {#AppName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"; Tasks: desktopicon
 ; Shortcut inside GUI\ (the folder the app's Open Folder button shows) to the
 ; backgrounds folder the randomizer picks from.
-Name: "{app}\GUI\backgrounds"; Filename: "{app}\backgrounds"
+Name: "{localappdata}\rEFInd_GUI\GUI\backgrounds"; Filename: "{localappdata}\rEFInd_GUI\backgrounds"
 
 [Run]
+; Preserve an enabled legacy task while moving its elevated action out of the
+; user-writable data directory.
+Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\windows\rEFInd_bg_randomizer_task.ps1"" -Migrate"; Flags: runhidden waituntilterminated
 ; unchecked: don't launch the GUI by default when the installer finishes.
 Filename: "{app}\{#AppExe}"; Description: "Launch {#AppName}"; Flags: nowait postinstall skipifsilent runascurrentuser unchecked
 
 [UninstallRun]
 ; Undo the rEFInd boot entry and ESP files before the app files disappear.
-; The per-user uninstaller is unelevated, so the script elevates via UAC.
-Filename: "powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\windows\uninstall_rEFInd.ps1"""; Flags: shellexec waituntilterminated; Verb: runas; RunOnceId: "UninstallRefind"; Check: ShouldRemoveRefind
+Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\windows\uninstall_rEFInd.ps1"""; Flags: shellexec waituntilterminated; Verb: runas; RunOnceId: "UninstallRefind"; Check: ShouldRemoveRefind
 
 [UninstallDelete]
 ; The app generates data the uninstaller's manifest doesn't cover (the
 ; GUI-generated refind.conf and PNGs, settings ini, logs, boot-entry backup);
-; scrub the whole per-user app dir so nothing lingers in %LOCALAPPDATA%.
-Type: filesandordirs; Name: "{app}"
+; scrub the per-user data dir separately from the Program Files installation.
+Type: filesandordirs; Name: "{localappdata}\rEFInd_GUI"
 
 [Code]
 var

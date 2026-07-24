@@ -1,7 +1,8 @@
+#Requires -RunAsAdministrator
 # Windows setup script for the rEFInd Customization GUI.
-# Copies the app data and scripts to %LOCALAPPDATA%\rEFInd_GUI and creates
-# Start Menu / Desktop shortcuts. Run from a checkout of the repository after
-# building the exe (see README "Windows" section).
+# Installs executable code under Program Files and creates Start Menu / Desktop
+# shortcuts. Mutable configuration is initialized under %LOCALAPPDATA% by the
+# app on first launch.
 param(
     [string]$ExePath = ''
 )
@@ -15,7 +16,7 @@ if (-not $ExePath) {
     }
 }
 
-$dest = Join-Path $env:LOCALAPPDATA 'rEFInd_GUI'
+$dest = Join-Path ([Environment]::GetFolderPath('ProgramFiles')) 'rEFInd_GUI'
 New-Item -ItemType Directory -Force $dest | Out-Null
 
 foreach ($d in 'GUI','icons','backgrounds') {
@@ -24,14 +25,7 @@ foreach ($d in 'GUI','icons','backgrounds') {
 New-Item -ItemType Directory -Force (Join-Path $dest 'windows') | Out-Null
 Copy-Item -Force (Join-Path $repo 'windows\*.ps1') (Join-Path $dest 'windows')
 Copy-Item -Force (Join-Path $repo 'refind-GUI.conf') (Join-Path $dest 'GUI\refind.conf')
-
-$ws = New-Object -ComObject WScript.Shell
-# Shortcut inside GUI\ (the folder the app's Open Folder button shows) to the
-# backgrounds folder the randomizer picks from.
-$bgLnk = $ws.CreateShortcut((Join-Path $dest 'GUI\backgrounds.lnk'))
-$bgLnk.TargetPath = Join-Path $dest 'backgrounds'
-$bgLnk.Description = 'Backgrounds used by the rEFInd background randomizer'
-$bgLnk.Save()
+& (Join-Path $dest 'windows\rEFInd_bg_randomizer_task.ps1') -Migrate
 
 if ($ExePath -and (Test-Path $ExePath)) {
     $exeDir = Split-Path -Parent $ExePath
@@ -44,11 +38,12 @@ if ($ExePath -and (Test-Path $ExePath)) {
         if (Test-Path $p) { Copy-Item -Recurse -Force $p $dest }
     }
 } else {
-    Write-Warning 'No built rEFInd_GUI.exe found; data files installed, but you must build the exe (see README) and re-run this script.'
+    Write-Warning 'No built rEFInd_GUI.exe found; support files were staged, but you must build the exe (see README) and re-run this script.'
 }
 
 $exeTarget = Join-Path $dest 'rEFInd_GUI.exe'
 if (Test-Path $exeTarget) {
+    $ws = New-Object -ComObject WScript.Shell
     $startMenu = Join-Path ([Environment]::GetFolderPath('StartMenu')) 'Programs'
     foreach ($lnkDir in ([Environment]::GetFolderPath('Desktop')), $startMenu) {
         if (-not (Test-Path $lnkDir)) { continue }
@@ -59,6 +54,6 @@ if (Test-Path $exeTarget) {
         $lnk.Description = 'rEFInd Customization GUI'
         $lnk.Save()
     }
-    Write-Host "Installed to $dest with Desktop and Start Menu shortcuts."
+    Write-Host "Installed protected application files to $dest with Desktop and Start Menu shortcuts."
     Write-Host 'Note: the app requests Administrator rights on launch (needed for EFI partition access).'
 }
