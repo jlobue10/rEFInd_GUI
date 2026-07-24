@@ -80,7 +80,13 @@ function Get-RefindBootOrderIds {
 
 function Get-RefindBootPartitionGuid {
     Enable-RefindFirmwarePrivilege
-    foreach ($id in (Get-RefindBootOrderIds)) {
+    # BootOrder first (firmware priority decides among several matches), then
+    # the conventional Boot0000-Boot00FF range so an entry dropped from
+    # BootOrder is still found. Same candidate order as install_rEFInd.ps1
+    # and uninstall_rEFInd.ps1; absent variables cost one fast failed read.
+    $candidateIds = @((Get-RefindBootOrderIds) +
+        @(0..255 | ForEach-Object { '{0:X4}' -f $_ }) | Select-Object -Unique)
+    foreach ($id in $candidateIds) {
         $bytes = Get-RefindFirmwareVariable "Boot$id"
         if (-not $bytes -or $bytes.Length -lt 10) { continue }
 
