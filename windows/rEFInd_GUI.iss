@@ -51,6 +51,33 @@ Name: "desktopicon"; Description: "Create a &desktop shortcut"; GroupDescription
 ; plus windows\*.ps1, icons\, backgrounds\, and GUI\refind.conf (seed config).
 Source: "..\deploy\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
 
+[InstallDelete]
+; Pre-3.x installed the app itself into %LOCALAPPDATA%\rEFInd_GUI (per-user).
+; Its self-elevating exe and privileged helper scripts must not stay runnable
+; from the user-writable data directory, so remove the legacy program files —
+; keeping the user's GUI\, icons\ and backgrounds\ data — along with the old
+; per-user shortcuts that point at the removed exe.
+Type: filesandordirs; Name: "{localappdata}\rEFInd_GUI\windows"
+Type: files; Name: "{localappdata}\rEFInd_GUI\{#AppExe}"
+Type: files; Name: "{localappdata}\rEFInd_GUI\*.dll"
+Type: files; Name: "{localappdata}\rEFInd_GUI\unins*"
+Type: filesandordirs; Name: "{localappdata}\rEFInd_GUI\platforms"
+Type: filesandordirs; Name: "{localappdata}\rEFInd_GUI\styles"
+Type: filesandordirs; Name: "{localappdata}\rEFInd_GUI\imageformats"
+Type: filesandordirs; Name: "{localappdata}\rEFInd_GUI\iconengines"
+Type: filesandordirs; Name: "{localappdata}\rEFInd_GUI\tls"
+Type: filesandordirs; Name: "{localappdata}\rEFInd_GUI\networkinformation"
+Type: filesandordirs; Name: "{localappdata}\rEFInd_GUI\generic"
+Type: filesandordirs; Name: "{localappdata}\rEFInd_GUI\translations"
+Type: files; Name: "{userdesktop}\{#AppName}.lnk"
+Type: filesandordirs; Name: "{userprograms}\{#AppName}"
+
+[Registry]
+; Drop the legacy per-user (HKCU) uninstall registration so Settings > Apps
+; doesn't list a duplicate whose uninstaller binaries were removed above. The
+; machine-wide registration under HKLM supersedes it.
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Uninstall\{{6F9C2E7A-1B4D-4E8F-9C3A-7D5E2F1A0B8C}_is1"; ValueType: none; Flags: deletekey dontcreatekey
+
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"
 Name: "{group}\Uninstall {#AppName}"; Filename: "{uninstallexe}"
