@@ -1,3 +1,15 @@
+refind-gui (3.1.1) unstable; urgency=medium
+
+  * Fix settings (most visibly the Timeout box) not showing their saved
+    values until the first detection scan finished, changes made during that
+    window being silently reverted, and all changes since launch being lost
+    when the app was force-terminated (Xbox overlay / task switcher /
+    suspend on handhelds). Everything except the scan-dependent boot-option
+    selections now restores before the window shows, and every change is
+    written to the INI the moment it is made.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sat, 25 Jul 2026 16:30:00 -0700
+
 refind-gui (3.1.0) unstable; urgency=medium
 
   * Resolution override: optional width/height boxes force a resolution line

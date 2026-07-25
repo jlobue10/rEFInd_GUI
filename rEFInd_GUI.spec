@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.1.0
+Version:        3.1.1
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,15 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sat Jul 25 2026 Jon LoBue <jlobue10@gmail.com> [3.1.1-1]
+- Fix settings (most visibly the Timeout box) not showing their saved values
+  until the first detection scan finished, changes made during that window
+  being silently reverted, and all changes since launch being lost when the
+  app was force-terminated (Xbox overlay / task switcher / suspend on
+  handhelds). Everything except the scan-dependent boot-option selections now
+  restores before the window shows, and every change is written to the INI
+  the moment it is made.
+
 * Fri Jul 25 2026 Jon LoBue <jlobue10@gmail.com> [3.1.0-1]
 - Resolution override: optional width/height boxes force a resolution line
   in the generated config, beating the device-quirk/EDID automatic choice.
