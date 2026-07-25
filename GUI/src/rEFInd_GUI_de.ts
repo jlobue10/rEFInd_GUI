@@ -4,253 +4,273 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="mainwindow.ui" line="14" />
+        <location filename="mainwindow.ui" line="14"/>
         <source>rEFInd Setup</source>
         <translation>rEFInd-Einrichtung</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="31" />
+        <location filename="mainwindow.ui" line="31"/>
         <source>Background</source>
         <translation>Hintergrund</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="53" />
-        <location filename="mainwindow.ui" line="225" />
-        <location filename="mainwindow.ui" line="340" />
-        <location filename="mainwindow.ui" line="407" />
-        <location filename="mainwindow.ui" line="518" />
+        <location filename="mainwindow.ui" line="53"/>
+        <location filename="mainwindow.ui" line="225"/>
+        <location filename="mainwindow.ui" line="340"/>
+        <location filename="mainwindow.ui" line="407"/>
+        <location filename="mainwindow.ui" line="518"/>
         <source>Browse</source>
         <translation>Durchsuchen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="66" />
+        <location filename="mainwindow.ui" line="66"/>
         <source>Default Boot Option</source>
         <translation>Standard-Boot-Option</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="88" />
+        <location filename="mainwindow.ui" line="88"/>
         <source>Default Boot Selection</source>
         <translation>Standard-Boot-Auswahl</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="101" />
+        <location filename="mainwindow.ui" line="101"/>
         <source>Boot last booted OS</source>
         <translation>Zuletzt gestartetes System booten</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="130" />
+        <location filename="mainwindow.ui" line="130"/>
         <source>Boot Option #1</source>
         <translation>Boot-Option #1</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="152" />
+        <location filename="mainwindow.ui" line="152"/>
         <source>Boot Option #1 Selection</source>
         <translation>Auswahl für Boot-Option #1</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="168" />
-        <location filename="mainwindow.ui" line="187" />
+        <location filename="mainwindow.ui" line="168"/>
+        <location filename="mainwindow.ui" line="187"/>
         <source>SteamOS only option</source>
         <translation>Nur für SteamOS</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="171" />
+        <location filename="mainwindow.ui" line="171"/>
         <source>Use Firmware_bootnum</source>
         <translation>Firmware_bootnum verwenden</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="206" />
+        <location filename="mainwindow.ui" line="206"/>
         <source>Boot Option #1 Icon</source>
         <translation>Symbol für Boot-Option #1</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="238" />
+        <location filename="mainwindow.ui" line="238"/>
         <source>Boot Option #2</source>
         <translation>Boot-Option #2</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="260" />
+        <location filename="mainwindow.ui" line="260"/>
         <source>Boot Option #2 Selection</source>
         <translation>Auswahl für Boot-Option #2</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="281" />
+        <location filename="mainwindow.ui" line="281"/>
         <source>Turn on Background randomizer</source>
         <translation>Hintergrund-Zufallswechsel aktivieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="284" />
+        <location filename="mainwindow.ui" line="284"/>
         <source>Rand BG On</source>
         <translation>Zufalls-BG an</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="303" />
+        <location filename="mainwindow.ui" line="303"/>
         <source>Turn off Background randomizer</source>
         <translation>Hintergrund-Zufallswechsel deaktivieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="306" />
+        <location filename="mainwindow.ui" line="306"/>
         <source>Rand BG Off</source>
         <translation>Zufalls-BG aus</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="321" />
+        <location filename="mainwindow.ui" line="321"/>
         <source>Boot Option #2 Icon</source>
         <translation>Symbol für Boot-Option #2</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="353" />
+        <location filename="mainwindow.ui" line="353"/>
         <source>Boot Option #3</source>
         <translation>Boot-Option #3</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="375" />
+        <location filename="mainwindow.ui" line="375"/>
         <source>Boot Option #3 Selection (optional)</source>
         <translation>Auswahl für Boot-Option #3 (optional)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="388" />
+        <location filename="mainwindow.ui" line="388"/>
         <source>Boot Option #3 Icon</source>
         <translation>Symbol für Boot-Option #3</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="420" />
+        <location filename="mainwindow.ui" line="420"/>
         <source>Boot Option #4</source>
         <translation>Boot-Option #4</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="442" />
+        <location filename="mainwindow.ui" line="442"/>
         <source>Boot Option #4 Selection (optional)</source>
         <translation>Auswahl für Boot-Option #4 (optional)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="461" />
+        <location filename="mainwindow.ui" line="461"/>
         <source>Open the folder holding refind.conf and the background/icon PNGs</source>
         <translation>Ordner mit refind.conf und den Hintergrund-/Symbol-PNGs öffnen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="464" />
-        <location filename="mainwindow.cpp" line="1059" />
+        <location filename="mainwindow.ui" line="464"/>
+        <location filename="mainwindow.cpp" line="1120"/>
         <source>Open Folder</source>
         <translation>Ordner öffnen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="483" />
+        <location filename="mainwindow.ui" line="483"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exit GUI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GUI beenden&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="486" />
+        <location filename="mainwindow.ui" line="486"/>
         <source>Exit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="499" />
+        <location filename="mainwindow.ui" line="499"/>
         <source>Boot Option #4 Icon</source>
         <translation>Symbol für Boot-Option #4</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="531" />
+        <location filename="mainwindow.ui" line="531"/>
         <source>Boot Icon Size</source>
         <translation>Boot-Symbolgröße</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="553" />
+        <location filename="mainwindow.ui" line="553"/>
         <source>Size of the OS icons on the rEFInd boot screen</source>
         <translation>Größe der OS-Symbole im rEFInd-Bootmenü</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="572" />
+        <location filename="mainwindow.ui" line="562"/>
+        <source>Res Override</source>
+        <translation>Auflösung überschreiben</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="569"/>
+        <source>Write this width and height to the config instead of the automatically detected resolution. Leave unchecked to use the recommended automatic value.</source>
+        <translation>Diese Breite und Höhe anstelle der automatisch erkannten Auflösung in die Konfiguration schreiben. Nicht ankreuzen, um den empfohlenen automatischen Wert zu verwenden.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="594"/>
+        <source>Width in pixels</source>
+        <translation>Breite in Pixeln</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="629"/>
+        <source>Height in pixels</source>
+        <translation>Höhe in Pixeln</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="656"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="588" />
+        <location filename="mainwindow.ui" line="672"/>
         <source>Timeout</source>
         <translation>Timeout</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="622" />
+        <location filename="mainwindow.ui" line="706"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Timeout in seconds&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Timeout in Sekunden&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="641" />
+        <location filename="mainwindow.ui" line="725"/>
         <source>Seconds</source>
         <translation>Sekunden</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="653" />
+        <location filename="mainwindow.ui" line="737"/>
         <source>Enable Mouse</source>
         <translation>Maus aktivieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="705" />
+        <location filename="mainwindow.ui" line="789"/>
         <source>Rescan for installed OSes and bootloaders</source>
         <translation>Erneut nach installierten Betriebssystemen und Bootloadern suchen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="708" />
+        <location filename="mainwindow.ui" line="792"/>
         <source>Rescan OSes</source>
         <translation>Neu scannen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="733" />
+        <location filename="mainwindow.ui" line="817"/>
         <source>Scan the EFI System Partition with elevated rights (asks for your sudo password). Only needed for a bootloader that has no EFI boot entry.</source>
         <translation>Die EFI-Systempartition mit erhöhten Rechten scannen (fragt nach dem sudo-Passwort). Nur nötig für einen Bootloader ohne EFI-Booteintrag.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="736" />
+        <location filename="mainwindow.ui" line="820"/>
         <source>Deep Scan</source>
         <translation>Tiefenscan</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="845" />
+        <location filename="mainwindow.ui" line="929"/>
         <source>Install config and copy PNGs</source>
         <translation>Konfiguration installieren und PNGs kopieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="848" />
-        <location filename="mainwindow.cpp" line="781" />
-        <location filename="mainwindow.cpp" line="797" />
-        <location filename="mainwindow.cpp" line="802" />
+        <location filename="mainwindow.ui" line="932"/>
+        <location filename="mainwindow.cpp" line="820"/>
+        <location filename="mainwindow.cpp" line="836"/>
+        <location filename="mainwindow.cpp" line="841"/>
         <source>Install Config</source>
         <translation>Konfig installieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="882" />
+        <location filename="mainwindow.ui" line="966"/>
         <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots. Only relevant when more than four OSes are detected.</source>
         <translation>Schreibt zusätzlich Boot-Stanzas für erkannte Bootloader, die keinem der vier Slots zugewiesen sind. Nur relevant, wenn mehr als vier Betriebssysteme erkannt wurden.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="823" />
+        <location filename="mainwindow.ui" line="907"/>
         <source>Create config and ready PNGs</source>
         <translation>Konfiguration erstellen und PNGs bereitstellen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="826" />
-        <location filename="mainwindow.cpp" line="683" />
+        <location filename="mainwindow.ui" line="910"/>
+        <location filename="mainwindow.cpp" line="722"/>
         <source>Create Config</source>
         <translation>Konfig erstellen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="804" />
-        <location filename="mainwindow.cpp" line="510" />
+        <location filename="mainwindow.ui" line="888"/>
+        <location filename="mainwindow.cpp" line="523"/>
         <source>Install rEFInd</source>
         <translation>rEFInd installieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="762" />
+        <location filename="mainwindow.ui" line="846"/>
         <source>rEFInd Installation method</source>
         <translation>rEFInd-Installationsmethode</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="859" />
+        <location filename="mainwindow.ui" line="943"/>
         <source>Language</source>
         <translation>Sprache</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="875" />
+        <location filename="mainwindow.ui" line="959"/>
         <source>User interface language</source>
         <translation>Sprache der Benutzeroberfläche</translation>
     </message>
@@ -259,122 +279,122 @@
         <translation type="vanished">Schreibt zusätzlich Boot-Stanzas für erkannte Bootloader, die keinem der vier Slots zugewiesen sind</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="885" />
+        <location filename="mainwindow.ui" line="969"/>
         <source>Include all OSes</source>
         <translation>Alle Systeme aufnehmen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="917" />
+        <location filename="mainwindow.ui" line="1001"/>
         <source>Preview the rEFInd boot screen and the generated refind.conf</source>
         <translation>Vorschau des rEFInd-Bootbildschirms und der erzeugten refind.conf</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="920" />
+        <location filename="mainwindow.ui" line="1004"/>
         <source>Preview</source>
         <translation>Vorschau</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="961" />
+        <location filename="mainwindow.ui" line="1045"/>
         <source>rEFInd Background selection</source>
         <translation>rEFInd-Hintergrundauswahl</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="42" />
+        <location filename="mainwindow.cpp" line="42"/>
         <source>None</source>
         <translation>Keine</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="112" />
+        <location filename="mainwindow.cpp" line="120"/>
         <source>Small (96)</source>
         <translation>Klein (96)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="113" />
+        <location filename="mainwindow.cpp" line="121"/>
         <source>Default (128)</source>
         <translation>Standard (128)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="114" />
+        <location filename="mainwindow.cpp" line="122"/>
         <source>Medium (160)</source>
         <translation>Mittel (160)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="115" />
+        <location filename="mainwindow.cpp" line="123"/>
         <source>Large (192)</source>
         <translation>Groß (192)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="116" />
+        <location filename="mainwindow.cpp" line="124"/>
         <source>Extra Large (256)</source>
         <translation>Sehr groß (256)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="117" />
+        <location filename="mainwindow.cpp" line="125"/>
         <source>XXL (512)</source>
         <translation>XXL (512)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="119" />
+        <location filename="mainwindow.cpp" line="127"/>
         <source>Requires efibootmgr (Linux only)</source>
         <translation>Benötigt efibootmgr (nur Linux)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="123" />
+        <location filename="mainwindow.cpp" line="131"/>
         <source>Not needed: no unreadable EFI System Partition was found</source>
         <translation>Nicht nötig: keine unlesbare EFI-Systempartition gefunden</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="154" />
+        <location filename="mainwindow.cpp" line="162"/>
         <source>System default</source>
         <translation>Systemstandard</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="267" />
+        <location filename="mainwindow.cpp" line="280"/>
         <source>Scanning…</source>
         <translation>Suche läuft…</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="468" />
+        <location filename="mainwindow.cpp" line="481"/>
         <source>Image (*.png)</source>
         <translation>Bild (*.png)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="484" />
+        <location filename="mainwindow.cpp" line="497"/>
         <source>Select Background PNG</source>
         <translation>Hintergrund-PNG auswählen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="489" />
+        <location filename="mainwindow.cpp" line="502"/>
         <source>Select OS Icon 1 PNG</source>
         <translation>PNG für OS-Symbol 1 auswählen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="494" />
+        <location filename="mainwindow.cpp" line="507"/>
         <source>Select OS Icon 2 PNG</source>
         <translation>PNG für OS-Symbol 2 auswählen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="499" />
+        <location filename="mainwindow.cpp" line="512"/>
         <source>Select OS Icon 3 PNG</source>
         <translation>PNG für OS-Symbol 3 auswählen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="504" />
+        <location filename="mainwindow.cpp" line="517"/>
         <source>Select OS Icon 4 PNG</source>
         <translation>PNG für OS-Symbol 4 auswählen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="511" />
+        <location filename="mainwindow.cpp" line="524"/>
         <source>Failed to launch the installation script.</source>
         <translation>Das Installationsskript konnte nicht gestartet werden.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="684" />
+        <location filename="mainwindow.cpp" line="723"/>
         <source>Could not write %1</source>
         <translation>%1 konnte nicht geschrieben werden</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="782" />
+        <location filename="mainwindow.cpp" line="821"/>
         <source>The config-install script was NOT run:
 
 %1
@@ -391,12 +411,12 @@ Es stimmt nicht mit der Kopie überein, die mit dieser Version der App ausgelief
 Installieren Sie die GUI neu, um das Originalskript wiederherzustellen, und versuchen Sie es erneut.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="799" />
+        <location filename="mainwindow.cpp" line="838"/>
         <source>The config was installed successfully.</source>
         <translation>Die Konfiguration wurde erfolgreich installiert.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="800" />
+        <location filename="mainwindow.cpp" line="839"/>
         <source>The config was installed successfully.
 
 %1</source>
@@ -405,12 +425,12 @@ Installieren Sie die GUI neu, um das Originalskript wiederherzustellen, und vers
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="804" />
+        <location filename="mainwindow.cpp" line="843"/>
         <source>Installing the config failed (code %1).</source>
         <translation>Die Installation der Konfiguration ist fehlgeschlagen (Code %1).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="805" />
+        <location filename="mainwindow.cpp" line="844"/>
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -419,22 +439,22 @@ Installieren Sie die GUI neu, um das Originalskript wiederherzustellen, und vers
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="819" />
+        <location filename="mainwindow.cpp" line="858"/>
         <source>Copy PNG</source>
         <translation>PNG kopieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="820" />
+        <location filename="mainwindow.cpp" line="859"/>
         <source>Could not copy %1 to %2</source>
         <translation>%1 konnte nicht nach %2 kopiert werden</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="845" />
+        <location filename="mainwindow.cpp" line="884"/>
         <source>Invalid PNG</source>
         <translation>Ungültiges PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="846" />
+        <location filename="mainwindow.cpp" line="885"/>
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -443,42 +463,42 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 Hintergründe und OS-Symbole müssen echte PNG-Bilder sein (nicht nur Dateien mit der Endung .png).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="975" />
+        <location filename="mainwindow.cpp" line="1036"/>
         <source>Check For Update</source>
         <translation>Auf Updates prüfen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="978" />
-        <source>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
-        <translation>&lt;p align='center'&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Ursprünglicher GUI-Entwickler: &lt;a href='https://github.com/jlobue10'&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Besonderer Dank an Deck Wizard für Tests und QA&lt;br&gt;&lt;br&gt;&lt;a href='https://www.youtube.com/watch?v=ubWPIf2DbvE'&gt;Dual-Boot-Tutorial von Deck Wizard&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
+        <location filename="mainwindow.cpp" line="1039"/>
+        <source>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
+        <translation>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Ursprünglicher GUI-Entwickler: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Besonderer Dank an Deck Wizard für Tests und QA&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Dual-Boot-Tutorial von Deck Wizard&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1025" />
-        <source>&lt;p align='center'&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
-        <translation>&lt;p align='center'&gt;Update-Prüfung fehlgeschlagen. Bitte prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
+        <location filename="mainwindow.cpp" line="1086"/>
+        <source>&lt;p align=&apos;center&apos;&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
+        <translation>&lt;p align=&apos;center&apos;&gt;Update-Prüfung fehlgeschlagen. Bitte prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1028" />
-        <source>&lt;p align='center'&gt;An update is available &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
-        <translation>&lt;p align='center'&gt;Ein Update ist &lt;a href='https://github.com/jlobue10/rEFInd_GUI/releases'&gt;hier&lt;/a&gt; verfügbar&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
+        <location filename="mainwindow.cpp" line="1089"/>
+        <source>&lt;p align=&apos;center&apos;&gt;An update is available &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
+        <translation>&lt;p align=&apos;center&apos;&gt;Ein Update ist &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;hier&lt;/a&gt; verfügbar&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1032" />
-        <source>&lt;p align='center'&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
-        <translation>&lt;p align='center'&gt;Kein Update gefunden. Sie verwenden die neueste Version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
+        <location filename="mainwindow.cpp" line="1093"/>
+        <source>&lt;p align=&apos;center&apos;&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
+        <translation>&lt;p align=&apos;center&apos;&gt;Kein Update gefunden. Sie verwenden die neueste Version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1042" />
+        <location filename="mainwindow.cpp" line="1103"/>
         <source>Background Randomizer</source>
         <translation>Hintergrund-Zufallswechsel</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1043" />
+        <location filename="mainwindow.cpp" line="1104"/>
         <source>Failed to launch the randomizer setup.</source>
         <translation>Die Einrichtung des Zufallswechsels konnte nicht gestartet werden.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1060" />
+        <location filename="mainwindow.cpp" line="1121"/>
         <source>Failed to open %1 in the file manager.</source>
         <translation>%1 konnte nicht im Dateimanager geöffnet werden.</translation>
     </message>
@@ -486,12 +506,17 @@ Hintergründe und OS-Symbole müssen echte PNG-Bilder sein (nicht nur Dateien mi
 <context>
     <name>Platform</name>
     <message>
-        <location filename="platform.cpp" line="60" />
+        <location filename="platform.cpp" line="155"/>
+        <source>The privileged helper is not installed under Program Files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="platform.cpp" line="165"/>
         <source>powershell.exe could not be started.</source>
         <translation>powershell.exe konnte nicht gestartet werden.</translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="139" />
+        <location filename="platform.cpp" line="249"/>
         <source>sudo could not be started.</source>
         <translation>sudo konnte nicht gestartet werden.</translation>
     </message>
@@ -499,22 +524,22 @@ Hintergründe und OS-Symbole müssen echte PNG-Bilder sein (nicht nur Dateien mi
 <context>
     <name>PreviewDialog</name>
     <message>
-        <location filename="previewdialog.cpp" line="34" />
+        <location filename="previewdialog.cpp" line="34"/>
         <source>No boot options selected.</source>
         <translation>Keine Boot-Optionen ausgewählt.</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="89" />
+        <location filename="previewdialog.cpp" line="89"/>
         <source>Preview</source>
         <translation>Vorschau</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="101" />
-        <source>Approximate preview — rEFInd's real rendering also depends on the firmware resolution and theme.</source>
+        <location filename="previewdialog.cpp" line="101"/>
+        <source>Approximate preview — rEFInd&apos;s real rendering also depends on the firmware resolution and theme.</source>
         <translation>Ungefähre Vorschau — die tatsächliche Darstellung von rEFInd hängt auch von der Firmware-Auflösung und dem Theme ab.</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="107" />
+        <location filename="previewdialog.cpp" line="107"/>
         <source>Boot screen</source>
         <translation>Bootbildschirm</translation>
     </message>
@@ -522,7 +547,7 @@ Hintergründe und OS-Symbole müssen echte PNG-Bilder sein (nicht nur Dateien mi
 <context>
     <name>QGuiApplication</name>
     <message>
-        <location filename="main.cpp" line="22" />
+        <location filename="main.cpp" line="24"/>
         <source>QT_LAYOUT_DIRECTION</source>
         <translation>LTR</translation>
     </message>

@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.0.1
+Version:        3.1.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,12 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Fri Jul 25 2026 Jon LoBue <jlobue10@gmail.com> [3.1.0-1]
+- Resolution override: optional width/height boxes force a resolution line
+  in the generated config, beating the device-quirk/EDID automatic choice.
+  Off by default; values persist in the INI and are seeded from the panel's
+  detected resolution. Translated into all 20 languages.
+
 * Fri Jul 24 2026 Jon LoBue <jlobue10@gmail.com> [3.0.1-1]
 - Security hardening: Program Files install for privileged helpers, direct
   UEFI variable discovery, legacy per-user install cleanup, pinned CI.

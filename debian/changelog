@@ -1,3 +1,12 @@
+refind-gui (3.1.0) unstable; urgency=medium
+
+  * Resolution override: optional width/height boxes force a resolution line
+    in the generated config, beating the device-quirk/EDID automatic choice.
+    Off by default; values persist in the INI and are seeded from the panel's
+    detected resolution. Translated into all 20 languages.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Fri, 25 Jul 2026 05:00:00 -0700
+
 refind-gui (3.0.1) unstable; urgency=medium
 
   * Security hardening: privileged Windows helpers move to Program Files;
