@@ -7,6 +7,20 @@
 # dialog, so keep the output short and human-readable.
 SRC="HOME/.local/rEFInd_GUI/GUI"
 
+# The source files live in a user-writable directory but this script is
+# reachable as root without a password, so every read of $SRC is done with the
+# invoking user's privileges (see the copy loop below). sudo sets SUDO_USER;
+# fall back to the owner of $SRC when the script is run as root directly.
+RUN_USER="${SUDO_USER:-}"
+if [ -z "$RUN_USER" ] || [ "$RUN_USER" = root ]; then
+	RUN_USER="$(stat -c %U "$SRC" 2>/dev/null)"
+fi
+if [ -z "$RUN_USER" ] || [ "$RUN_USER" = root ]; then
+	echo "Could not determine the unprivileged user that owns $SRC."
+	echo "Launch Install Config from the rEFInd_GUI app."
+	exit 2
+fi
+
 ESP_TYPE_GUID=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 
 # Temp mounts are recorded in a file, not a shell array: the resolver helpers
@@ -52,7 +66,11 @@ esp_root_for_dev() {
 	mp="$(findmnt -no TARGET "$dev" 2>/dev/null | head -n1)"
 	if [ -z "$mp" ]; then
 		mp="$(mktemp -d /tmp/refind-esp.XXXXXX)" || return 1
-		if mount "$dev" "$mp" 2>/dev/null; then
+		# Read-only for the probe: this loop mounts EVERY ESP-typed partition
+		# just to test whether rEFInd is on it, including attacker-supplied
+		# removable media, and it runs as root. Only the ESP actually chosen as
+		# the target is remounted writable (esp_make_writable below).
+		if mount -o ro,nosuid,nodev,noexec "$dev" "$mp" 2>/dev/null; then
 			printf '%s\n' "$mp" >> "$CLEANUP_MOUNT_LIST"
 		else
 			rmdir "$mp" 2>/dev/null
@@ -60,6 +78,25 @@ esp_root_for_dev() {
 		fi
 	fi
 	printf '%s\n' "$mp"
+}
+
+# Make the ESP behind $1 (a mount point or any path under one) writable, but
+# only if it is one of our own read-only probe mounts. ESPs the system already
+# had mounted are left exactly as they were.
+esp_make_writable() {
+	local path="$1" m
+	[ -n "$path" ] || return 0
+	[ -f "$CLEANUP_MOUNT_LIST" ] || return 0
+	while read -r m; do
+		[ -n "$m" ] || continue
+		case "$path" in
+			"$m" | "$m"/*)
+				mount -o remount,rw "$m" 2>/dev/null
+				return 0
+				;;
+		esac
+	done < "$CLEANUP_MOUNT_LIST"
+	return 0
 }
 
 esp_root_for_partuuid() {
@@ -117,6 +154,8 @@ fi
 
 DEST="$ESP/EFI/refind"
 
+esp_make_writable "$ESP"
+
 if ! mkdir -p "$DEST" 2>/dev/null; then
 	echo "Could not create $DEST -- the EFI System Partition may be mounted read-only."
 	exit 4
@@ -129,13 +168,19 @@ fi
 
 COPIED=0
 for f in refind.conf background.png os_icon1.png os_icon2.png os_icon3.png os_icon4.png; do
-	if [ -f "$SRC/$f" ]; then
-		if ! cp -f "$SRC/$f" "$DEST/$f" 2>/dev/null; then
-			echo "Failed while copying $f to $DEST -- the ESP may be full or read-only."
-			exit 5
-		fi
-		COPIED=$((COPIED + 1))
+	# The existence test AND the content read both run as the invoking user,
+	# never as root: $SRC is user-writable and this script needs no password,
+	# so a root-privileged `cp` would follow a symlink or hardlink planted
+	# under ~/.local and copy any root-readable file (/etc/shadow) onto the
+	# ESP, which is world-readable once mounted. runuser can only read what
+	# the user can.
+	runuser -u "$RUN_USER" -- test -f "$SRC/$f" 2>/dev/null || continue
+	if ! runuser -u "$RUN_USER" -- cat -- "$SRC/$f" > "$DEST/$f" 2>/dev/null; then
+		rm -f "$DEST/$f" 2>/dev/null
+		echo "Failed while copying $f to $DEST -- the ESP may be full or read-only."
+		exit 5
 	fi
+	COPIED=$((COPIED + 1))
 done
 
 if [ "$COPIED" -eq 0 ]; then

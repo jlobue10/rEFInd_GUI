@@ -44,7 +44,11 @@ esp_root_for_dev() {
 	mp="$(findmnt -no TARGET "$dev" 2>/dev/null | head -n1)"
 	if [ -z "$mp" ]; then
 		mp="$(mktemp -d /tmp/refind-esp.XXXXXX)" || return 1
-		if mount "$dev" "$mp" 2>/dev/null; then
+		# Read-only for the probe: this service runs as root at every boot and
+		# mounts EVERY ESP-typed partition just to test whether rEFInd is on it,
+		# including whatever removable media happens to be attached. Only the
+		# ESP actually chosen as the target is remounted writable.
+		if mount -o ro,nosuid,nodev,noexec "$dev" "$mp" 2>/dev/null; then
 			printf '%s\n' "$mp" >> "$CLEANUP_MOUNT_LIST"
 		else
 			rmdir "$mp" 2>/dev/null
@@ -52,6 +56,25 @@ esp_root_for_dev() {
 		fi
 	fi
 	printf '%s\n' "$mp"
+}
+
+# Make the ESP behind $1 (a mount point or any path under one) writable, but
+# only if it is one of our own read-only probe mounts. ESPs the system already
+# had mounted are left exactly as they were.
+esp_make_writable() {
+	local path="$1" m
+	[ -n "$path" ] || return 0
+	[ -f "$CLEANUP_MOUNT_LIST" ] || return 0
+	while read -r m; do
+		[ -n "$m" ] || continue
+		case "$path" in
+			"$m" | "$m"/*)
+				mount -o remount,rw "$m" 2>/dev/null
+				return 0
+				;;
+		esac
+	done < "$CLEANUP_MOUNT_LIST"
+	return 0
 }
 
 esp_root_for_partuuid() {
@@ -100,6 +123,7 @@ fi
 
 RAND_BG="$(find "$BG_DIR" -maxdepth 1 -type f -name '*.png' | shuf -n1)"
 if [ -n "$RAND_BG" ] && [ -d "$ESP/EFI/refind" ]; then
+	esp_make_writable "$ESP"
 	cp -f "$RAND_BG" "$ESP/EFI/refind/background.png"
 	# Flush before any temporary mount is torn down by the trap.
 	sync

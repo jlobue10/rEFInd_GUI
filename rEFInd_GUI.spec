@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.1.1
+Version:        3.1.2
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,38 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sun Jul 26 2026 Jon LoBue <jlobue10@gmail.com> [3.1.2-1]
+- Security: the root-privileged config installer now reads the staged config
+  and PNGs as the invoking user instead of as root, so a symlink planted in
+  the user's data directory can no longer make root copy an arbitrary
+  system file onto the EFI System Partition.
+- Security: ESP probing now mounts candidate partitions read-only
+  (nosuid,nodev,noexec) and remounts only the chosen target writable, so
+  attacker-supplied removable media is no longer mounted read-write just to
+  test whether rEFInd is on it.
+- Fix detection finding no operating systems at all on localized Windows:
+  PowerShell output was decoded as UTF-8 while Windows PowerShell writes the
+  OEM codepage, so a single accented volume label discarded the whole
+  partition list.
+- Fix the Windows uninstaller deleting the firmware BootOrder variable
+  outright when every entry in it was a rEFInd entry being removed.
+- Generated boot stanzas now quote loader/icon/volume paths and strip quotes
+  and braces from menu titles, so a vendor directory with a space in its name
+  produces a bootable entry and a crafted systemd-boot title cannot inject an
+  extra boot stanza.
+- Create Config now reports a failed or short write instead of silently
+  shipping a truncated refind.conf; the timeout and resolution-override
+  values are re-validated so a corrupt INI cannot emit a config that never
+  auto-boots.
+- Choosing a new background or icon no longer destroys the previously staged
+  image when the source file is unreachable.
+- The Windows SD/USB entries are offered only when that medium is present;
+  previously they generated a stanza with no volume line that silently booted
+  the internal Windows install.
+- The installer no longer deletes an existing ~/rEFInd_GUI development
+  checkout, backs up ~/.Xresources before replacing it, and stages scripts
+  from the release tag so Install Config is not blocked as "modified".
+
 * Sat Jul 25 2026 Jon LoBue <jlobue10@gmail.com> [3.1.1-1]
 - Fix settings (most visibly the Timeout box) not showing their saved values
   until the first detection scan finished, changes made during that window

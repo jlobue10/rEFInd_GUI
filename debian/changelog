@@ -1,3 +1,34 @@
+refind-gui (3.1.2) unstable; urgency=medium
+
+  * Security: the root-privileged config installer now reads the staged
+    config and PNGs as the invoking user instead of as root, so a symlink
+    planted in the user's data directory can no longer make root copy an
+    arbitrary system file onto the EFI System Partition.
+  * Security: ESP probing now mounts candidate partitions read-only
+    (nosuid,nodev,noexec) and remounts only the chosen target writable.
+  * Fix detection finding no operating systems at all on localized Windows:
+    PowerShell output was decoded as UTF-8 while Windows PowerShell writes
+    the OEM codepage, so one accented volume label discarded the whole
+    partition list.
+  * Fix the Windows uninstaller deleting the firmware BootOrder variable
+    outright when every entry in it was a rEFInd entry being removed.
+  * Generated boot stanzas now quote loader/icon/volume paths and strip
+    quotes and braces from menu titles, so a vendor directory with a space
+    in its name produces a bootable entry and a crafted systemd-boot title
+    cannot inject an extra boot stanza.
+  * Create Config reports a failed or short write instead of silently
+    shipping a truncated refind.conf; timeout and resolution-override values
+    are re-validated so a corrupt INI cannot emit a config that never
+    auto-boots.
+  * Choosing a new background or icon no longer destroys the previously
+    staged image when the source file is unreachable.
+  * The Windows SD/USB entries are offered only when that medium is present.
+  * The installer no longer deletes an existing ~/rEFInd_GUI development
+    checkout, backs up ~/.Xresources before replacing it, and stages scripts
+    from the release tag.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sun, 26 Jul 2026 09:00:00 -0700
+
 refind-gui (3.1.1) unstable; urgency=medium
 
   * Fix settings (most visibly the Timeout box) not showing their saved

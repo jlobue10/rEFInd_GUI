@@ -3,13 +3,50 @@
 
 echo -e "Installing rEFInd Customization GUI...\n"
 cd "$HOME" || exit 1
-rm -rf "$HOME/rEFInd_GUI"
+# Never blow away an existing $HOME/rEFInd_GUI: on a contributor's machine that
+# is a development checkout with uncommitted work. Refuse anything that isn't
+# this project's own clone, and only ever reset a directory we recognize.
+if [ -e "$HOME/rEFInd_GUI" ]; then
+	if [ -d "$HOME/rEFInd_GUI/.git" ] &&
+		git -C "$HOME/rEFInd_GUI" remote get-url origin 2>/dev/null | grep -qi 'rEFInd_GUI'; then
+		if [ -n "$(git -C "$HOME/rEFInd_GUI" status --porcelain 2>/dev/null)" ]; then
+			echo "Error: $HOME/rEFInd_GUI has uncommitted changes. Aborting." >&2
+			echo "Move or commit that checkout, then re-run this installer." >&2
+			exit 1
+		fi
+		rm -rf "$HOME/rEFInd_GUI"
+	else
+		echo "Error: $HOME/rEFInd_GUI exists and is not a clean rEFInd_GUI clone." >&2
+		echo "Move it aside, then re-run this installer." >&2
+		exit 1
+	fi
+fi
 if ! git clone --depth 1 https://github.com/jlobue10/rEFInd_GUI; then
 	echo "Error: failed to clone the rEFInd_GUI repository. Aborting." >&2
 	exit 1
 fi
 cd rEFInd_GUI || exit 1
 CURRENT_WD="$(pwd)"
+
+# Check out the tag matching the release package this script installs below.
+# The GUI refuses to run /etc/rEFInd/install_config_from_GUI.sh unless it
+# hash-matches the copy embedded in the released binary, so staging the
+# main-branch script next to a release binary makes Install Config fail as
+# "possibly tampered with" for everyone the moment that script changes after a
+# release -- and reinstalling (which re-clones main) cannot fix it.
+LATEST_TAG="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest |
+	grep -m1 '"tag_name"' | cut -d'"' -f4)"
+if [ -n "$LATEST_TAG" ]; then
+	if git fetch --depth 1 origin "refs/tags/$LATEST_TAG:refs/tags/$LATEST_TAG" >/dev/null 2>&1 &&
+		git checkout -q "$LATEST_TAG" >/dev/null 2>&1; then
+		printf 'Staging scripts from tag %s.\n' "$LATEST_TAG"
+	else
+		echo "Warning: could not check out $LATEST_TAG; staging main-branch scripts instead." >&2
+		echo "If Install Config later reports the script as modified, that is why." >&2
+	fi
+else
+	echo "Warning: could not determine the latest release tag; staging main-branch scripts." >&2
+fi
 
 command -v dnf >/dev/null 2>&1
 FEDORA_BASE=$?
@@ -201,7 +238,14 @@ fi
 if [ "$BAZZITE" = 0 ]; then
 	sudo cp -f "$CURRENT_WD/rEFInd_GUI.desktop" /etc/rEFInd/rEFInd_GUI.desktop
 	sudo chmod +x /etc/rEFInd/rEFInd_GUI.desktop
+	# ~/.Xresources configures every X client, not just the xterm this app
+	# uses, so back up whatever the user already had before replacing it.
 	if [ -f "$CURRENT_WD/.Xresources" ]; then
+		if [ -f "$HOME/.Xresources" ] &&
+			! cmp -s "$CURRENT_WD/.Xresources" "$HOME/.Xresources"; then
+			cp -f "$HOME/.Xresources" "$HOME/.Xresources.bak"
+			echo "Saved your previous ~/.Xresources as ~/.Xresources.bak."
+		fi
 		cp "$CURRENT_WD/.Xresources" "$HOME/.Xresources"
 		xrdb "$HOME/.Xresources"
 	fi
