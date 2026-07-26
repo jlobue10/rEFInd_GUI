@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.1.2
+Version:        3.1.3
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -49,6 +49,14 @@ install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sun Jul 26 2026 Jon LoBue <jlobue10@gmail.com> [3.1.3-1]
+- Urgent fix: v3.1.2 wrapped the generated icon and loader path lines in
+  double quotes, which rEFInd does not strip from path tokens, making every
+  generated manual boot stanza unbootable. Path lines are emitted unquoted
+  again; the v3.1.2 sanitization (stripping quotes, braces, and newlines to
+  block stanza injection) is retained, and menu titles and volume labels
+  remain quoted as before.
+
 * Sun Jul 26 2026 Jon LoBue <jlobue10@gmail.com> [3.1.2-1]
 - Security: the root-privileged config installer now reads the staged config
   and PNGs as the invoking user instead of as root, so a symlink planted in
