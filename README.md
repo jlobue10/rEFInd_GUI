@@ -1,6 +1,8 @@
 # rEFInd_GUI
 A graphical setup and customization utility to use alongside rEFInd (work in progress)
 
+![rEFInd_GUI main window with auto-detected boot options](images/rEFInd_GUI_screenshot.png)
+
 ## Installation on Linux
 
 Supported distros: **Fedora / Nobara / Bazzite** (RPM), **CachyOS / Arch** (pacman), and **Debian / Ubuntu** (deb).
