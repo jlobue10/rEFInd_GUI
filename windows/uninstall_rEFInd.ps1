@@ -7,7 +7,7 @@
 #     are reported and left alone) and drops them from BootOrder
 #   - removes EFI\refind and EFI\Xbox360 from the system ESP
 #     (pass -KeepEspFiles to keep the files and only undo the boot entries)
-#   - unregisters the rEFInd_bg_randomizer scheduled task
+#   - unregisters the background and theme randomizer scheduled tasks
 # Run standalone as Administrator, or automatically via the app's uninstaller.
 param([switch]$KeepEspFiles)
 $ErrorActionPreference = 'Stop'
@@ -253,8 +253,8 @@ if ($esp -and $esp.Part) {
     }
 }
 
-# 4. Remove the background randomizer scheduled task, if enabled.
-foreach ($taskName in 'rEFInd_GUI_bg_randomizer','rEFInd_bg_randomizer') {
+# 4. Remove the background and theme randomizer scheduled tasks, if enabled.
+foreach ($taskName in 'rEFInd_GUI_bg_randomizer','rEFInd_bg_randomizer','rEFInd_GUI_theme_randomizer') {
     if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
         Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
         Write-Host "Removed the $taskName scheduled task."

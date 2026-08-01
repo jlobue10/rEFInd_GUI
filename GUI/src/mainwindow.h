@@ -44,6 +44,9 @@ private slots:
     void on_updateButton_Clicked();
     void on_Rand_BG_On_pushButton_clicked();
     void on_Rand_BG_Off_pushButton_clicked();
+    void on_Rand_Theme_On_pushButton_clicked();
+    void on_Rand_Theme_Off_pushButton_clicked();
+    void on_Install_Themes_pushButton_clicked();
     void on_Open_Folder_pushButton_clicked();
     void on_Preview_pushButton_clicked();
     void on_Language_comboBox_currentIndexChanged(int index);
@@ -79,6 +82,11 @@ private:
     static QString stockIconFor(const BootEntry &entry);
     QString steamFirmwareBootNum();
     void toggleBackgroundRandomizer(bool enable);
+    void toggleThemeRandomizer(bool enable);
+    QStringList availableThemes() const;
+    void populateThemeCombo();
+    bool stageActiveThemeConf();
+    bool copyFileStaged(const QString &sourcePath, const QString &destPath);
     QList<Selection> currentSelections();
     QString generateConfigText(const QList<Selection> &selections);
     QSize resolutionOverride() const;

@@ -39,6 +39,16 @@ int installConfig(QString *output = nullptr);
 // beneath the Program Files installation directory.
 bool installConfigScriptTrusted(QString *detail = nullptr);
 
+// Installs the data-dir themes/ tree onto the ESP under EFI/refind/themes
+// (blocking, no visible window), like installConfig. Returns the process
+// exit code (0 = success) and captures the script's combined output.
+int installThemes(QString *output = nullptr);
+
+// Trust gate for the theme-install script, with exactly the semantics of
+// installConfigScriptTrusted (SHA-256 against the embedded copy on Linux,
+// Program Files location on Windows).
+bool installThemesScriptTrusted(QString *detail = nullptr);
+
 // Runs the elevated ESP scan (scan_esp.sh), caching the EFI/ tree for
 // detection to read. Blocks while the script prompts for a password and shows
 // its own result dialogs. Returns 0 on success. Linux only: the Windows build
@@ -52,6 +62,10 @@ bool espDeepScanUseful();
 // Enables/disables the boot-background randomizer (systemd unit / scheduled
 // task) in a visible terminal window. Returns false if the launch failed.
 bool setBackgroundRandomizer(bool enable);
+
+// Same for the per-boot theme randomizer, which swaps the ESP's
+// themes/active_theme.conf for a random installed theme.
+bool setThemeRandomizer(bool enable);
 
 // SteamOS firmware_bootnum lookup needs efibootmgr (Linux only).
 bool firmwareBootnumSupported();

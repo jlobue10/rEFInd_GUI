@@ -140,13 +140,15 @@ if [ "$KEEP_ESP_FILES" -eq 0 ] && [ -n "$ESP_MP" ]; then
 	fi
 fi
 
-# 4. Disable the background randomizer service, if enabled.
-if systemctl list-unit-files rEFInd_bg_randomizer.service >/dev/null 2>&1; then
-	if systemctl is-enabled rEFInd_bg_randomizer.service >/dev/null 2>&1; then
-		systemctl disable --now rEFInd_bg_randomizer.service >/dev/null 2>&1
-		echo "Disabled the rEFInd_bg_randomizer service."
+# 4. Disable the background and theme randomizer services, if enabled.
+for _svc in rEFInd_bg_randomizer rEFInd_theme_randomizer; do
+	if systemctl list-unit-files "$_svc.service" >/dev/null 2>&1; then
+		if systemctl is-enabled "$_svc.service" >/dev/null 2>&1; then
+			systemctl disable --now "$_svc.service" >/dev/null 2>&1
+			echo "Disabled the $_svc service."
+		fi
 	fi
-fi
+done
 
 # 5. Optionally remove the GUI app itself (the Linux analog of uninstalling
 # "rEFInd GUI" from Windows Settings > Apps).

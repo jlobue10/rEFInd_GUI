@@ -10,8 +10,10 @@ license=('GPL3')
 options=('!debug')
 depends=('mokutil' 'qt6-base' 'sbsigntools' 'xterm' 'zenity')
 makedepends=('cmake' 'gcc' 'qt6-base' 'qt6-tools' 'git')
-source=("rEFInd_bg_randomizer.service")
-md5sums=('SKIP')  # Replace with real checksum for AUR
+source=("rEFInd_bg_randomizer.service"
+        "rEFInd_theme_randomizer.service")
+md5sums=('SKIP'
+         'SKIP')  # Replace with real checksums for AUR
 
 prepare() {
   cd "$srcdir"
@@ -35,4 +37,5 @@ package() {
 
   install -d "$pkgdir/etc/systemd/system"
   install -m644 "$srcdir/rEFInd_bg_randomizer.service" "$pkgdir/etc/systemd/system"
+  install -m644 "$srcdir/rEFInd_theme_randomizer.service" "$pkgdir/etc/systemd/system"
 }

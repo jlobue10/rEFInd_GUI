@@ -119,6 +119,9 @@ try {
         Get-ChildItem -LiteralPath $dest -Filter ".$f.new.*" -File -ErrorAction SilentlyContinue |
             Remove-Item -Force -ErrorAction SilentlyContinue
     }
+    Get-ChildItem -LiteralPath (Join-Path $dest 'themes') -Filter '.active_theme.conf.new.*' `
+            -File -ErrorAction SilentlyContinue |
+        Remove-Item -Force -ErrorAction SilentlyContinue
 
     $sourceConf = Join-Path $src 'refind.conf'
     if (-not (Test-Path -LiteralPath $sourceConf -PathType Leaf) -or
@@ -142,6 +145,22 @@ try {
         throw 'refind.conf disappeared while it was being staged; the live config was not changed.'
     }
 
+    # The theme include target is an optional member of the set: staged like
+    # the images, published below before refind.conf (which stays last). It
+    # lives in the themes subdirectory because the config's include line --
+    # and every theme.conf's own asset paths -- reference themes\... relative
+    # to the rEFInd directory. An absent staged file must not fail the
+    # install: a config created with Theme = None simply has none.
+    $themeSource = Join-Path $src 'active_theme.conf'
+    $themeStage = $null
+    if (Test-Path -LiteralPath $themeSource -PathType Leaf) {
+        $destThemes = Join-Path $dest 'themes'
+        New-Item -ItemType Directory -Force $destThemes | Out-Null
+        $themeStage = Join-Path $destThemes ('.active_theme.conf.new.' + [guid]::NewGuid().ToString('N'))
+        $stagePaths += $themeStage
+        Copy-Item -LiteralPath $themeSource -Destination $themeStage
+    }
+
     # Keep one rollback copy of the live config. Publish the backup from a
     # same-directory staging file so a failed copy cannot truncate .prev.
     $liveConf = Join-Path $dest 'refind.conf'
@@ -160,6 +179,11 @@ try {
         if (-not $staged.ContainsKey($f)) { continue }
         Move-Item -Force -LiteralPath $staged[$f] -Destination (Join-Path $dest $f)
         Write-Host "Installed $f"
+    }
+    if ($themeStage) {
+        Move-Item -Force -LiteralPath $themeStage `
+            -Destination (Join-Path $dest 'themes\active_theme.conf')
+        Write-Host 'Installed themes\active_theme.conf'
     }
     Move-Item -Force -LiteralPath $staged['refind.conf'] -Destination $liveConf
     Write-Host 'Installed refind.conf'

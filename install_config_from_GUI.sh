@@ -175,6 +175,9 @@ for f in refind.conf background.png os_icon1.png os_icon2.png os_icon3.png os_ic
 		[ -f "$stale" ] && rm -f -- "$stale" 2>/dev/null
 	done
 done
+for stale in "$DEST/themes/.active_theme.conf.new."*; do
+	[ -f "$stale" ] && rm -f -- "$stale" 2>/dev/null
+done
 
 # A config is mandatory. Images are optional, but images alone must never make
 # the helper report success while leaving an absent or empty live config.
@@ -212,6 +215,30 @@ for f in refind.conf background.png os_icon1.png os_icon2.png os_icon3.png os_ic
 	COPIED=$((COPIED + 1))
 done
 
+# The theme include target is an optional member of the set: staged like the
+# images, published below before refind.conf (which stays last). It lives in
+# the themes subdirectory because the config's include line -- and every
+# theme.conf's own asset paths -- reference themes/... relative to the rEFInd
+# directory. An absent staged file must not fail the install: a config
+# created with Theme = None simply has none.
+THEME_STAGE=""
+if runuser -u "$RUN_USER" -- test -f "$SRC/active_theme.conf" 2>/dev/null; then
+	if ! mkdir -p "$DEST/themes" 2>/dev/null; then
+		echo "Could not create $DEST/themes -- the ESP may be full or read-only."
+		exit 5
+	fi
+	THEME_STAGE="$(mktemp "$DEST/themes/.active_theme.conf.new.XXXXXX")" || {
+		echo "Could not create a staging file in $DEST/themes -- the ESP may be full or read-only."
+		exit 5
+	}
+	STAGED_FILES+=("$THEME_STAGE")
+	if ! runuser -u "$RUN_USER" -- cat -- "$SRC/active_theme.conf" > "$THEME_STAGE" 2>/dev/null; then
+		echo "Failed while copying active_theme.conf to $DEST/themes -- the ESP may be full or read-only."
+		exit 5
+	fi
+	COPIED=$((COPIED + 1))
+fi
+
 if [ -z "${STAGED[refind.conf]:-}" ]; then
 	echo "refind.conf disappeared while it was being staged; the live config was not changed."
 	exit 6
@@ -242,6 +269,12 @@ for f in background.png os_icon1.png os_icon2.png os_icon3.png os_icon4.png; do
 		exit 5
 	fi
 done
+if [ -n "$THEME_STAGE" ]; then
+	if ! mv -f -- "$THEME_STAGE" "$DEST/themes/active_theme.conf" 2>/dev/null; then
+		echo "Failed while publishing active_theme.conf; the live config was not changed."
+		exit 5
+	fi
+fi
 if ! mv -f -- "${STAGED[refind.conf]}" "$DEST/refind.conf" 2>/dev/null; then
 	echo "Failed while publishing refind.conf; the previous config is still active."
 	exit 5

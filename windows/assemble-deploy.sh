@@ -25,6 +25,7 @@ mkdir -p "$DEPLOY/windows" "$DEPLOY/GUI"
 cp "$REPO"/windows/*.ps1 "$DEPLOY/windows/"
 cp -r "$REPO/icons" "$DEPLOY/"
 cp -r "$REPO/backgrounds" "$DEPLOY/"
+cp -r "$REPO/themes" "$DEPLOY/"
 cp "$REPO/refind-GUI.conf" "$DEPLOY/GUI/refind.conf"
 
 echo "deploy assembled at $DEPLOY"

@@ -421,6 +421,16 @@ try {
             Copy-Item -Recurse -Force -LiteralPath $p -Destination $dest
         }
     }
+    # Bundled themes: best-effort -- a failed copy must never fail the rEFInd
+    # install itself (the GUI's Install Themes button can redo it later).
+    $themesSrc = Join-Path $env:LOCALAPPDATA 'rEFInd_GUI\themes'
+    if (Test-Path -LiteralPath $themesSrc -PathType Container) {
+        try {
+            Copy-Item -Recurse -Force -LiteralPath $themesSrc -Destination $dest
+        } catch {
+            Write-Warning "Could not copy the themes to the ESP; use Install Themes in the GUI. $_"
+        }
+    }
     Publish-FileAtomically $sourceConf $conf
 
     # Record what actually landed on the ESP while it is still mounted; the

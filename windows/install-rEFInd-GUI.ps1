@@ -19,7 +19,7 @@ if (-not $ExePath) {
 $dest = Join-Path ([Environment]::GetFolderPath('ProgramFiles')) 'rEFInd_GUI'
 New-Item -ItemType Directory -Force $dest | Out-Null
 
-foreach ($d in 'GUI','icons','backgrounds') {
+foreach ($d in 'GUI','icons','backgrounds','themes') {
     Copy-Item -Recurse -Force (Join-Path $repo $d) $dest
 }
 New-Item -ItemType Directory -Force (Join-Path $dest 'windows') | Out-Null
