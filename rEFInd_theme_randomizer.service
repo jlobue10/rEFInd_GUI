@@ -1,0 +1,10 @@
+[Unit]
+Description=Randomize Theme on each rEFInd boot
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c '/etc/rEFInd/rEFInd_theme_randomizer.sh'
+
+[Install]
+WantedBy=multi-user.target

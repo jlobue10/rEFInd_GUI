@@ -1,11 +1,14 @@
 #!/bin/bash
-# Installs the GUI-generated refind.conf and PNGs onto the EFI system
-# partition that firmware actually launches rEFInd from. Runs as root via a
-# sudoers rule; the home directory below is filled in at install time.
+# Installs the GUI data-dir themes tree onto the EFI system partition that
+# firmware actually launches rEFInd from: <data dir>/themes/<name>/ is copied
+# to EFI/refind/themes/<name>/, where the include line the GUI appends to
+# refind.conf (and every theme.conf's own asset paths) expect it. Runs as
+# root via a sudoers rule; the home directory below is filled in at install
+# time.
 #
 # Everything printed here is captured by the GUI and shown in its result
 # dialog, so keep the output short and human-readable.
-SRC="HOME/.local/rEFInd_GUI/GUI"
+SRC="HOME/.local/rEFInd_GUI/themes"
 
 # The source files live in a user-writable directory but this script is
 # reachable as root without a password, so every read of $SRC is done with the
@@ -17,7 +20,7 @@ if [ -z "$RUN_USER" ] || [ "$RUN_USER" = root ]; then
 fi
 if [ -z "$RUN_USER" ] || [ "$RUN_USER" = root ]; then
 	echo "Could not determine the unprivileged user that owns $SRC."
-	echo "Launch Install Config from the rEFInd_GUI app."
+	echo "Launch Install Themes from the rEFInd_GUI app."
 	exit 2
 fi
 
@@ -28,11 +31,11 @@ ESP_TYPE_GUID=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 # the parent and the EXIT trap would unmount nothing, leaving removable ESPs
 # mounted read-write.
 CLEANUP_MOUNT_LIST="$(mktemp)"
-STAGED_FILES=()
+STAGED_DIRS=()
 cleanup() {
 	local m staged
-	for staged in "${STAGED_FILES[@]}"; do
-		[ -n "$staged" ] && rm -f -- "$staged" 2>/dev/null
+	for staged in "${STAGED_DIRS[@]}"; do
+		[ -n "$staged" ] && rm -rf -- "$staged" 2>/dev/null
 	done
 	if [ -n "${CLEANUP_MOUNT_LIST:-}" ] && [ -f "$CLEANUP_MOUNT_LIST" ]; then
 		while read -r m; do
@@ -156,7 +159,7 @@ if [ -z "$ESP" ]; then
 	HOW="the running system's ESP"
 fi
 
-DEST="$ESP/EFI/refind"
+DEST="$ESP/EFI/refind/themes"
 
 esp_make_writable "$ESP"
 
@@ -165,123 +168,109 @@ if ! mkdir -p "$DEST" 2>/dev/null; then
 	exit 4
 fi
 
-# Best-effort sweep of staging files left behind by an earlier interrupted run
-# (the EXIT trap cannot run across SIGKILL or power loss, and every run mints
-# new random staging names, so leftovers would otherwise accumulate on the
-# small ESP). Only the exact ".<name>.new.<suffix>" shapes created below are
-# matched, so no live file can be touched.
-for f in refind.conf background.png os_icon1.png os_icon2.png os_icon3.png os_icon4.png refind.conf.prev; do
-	for stale in "$DEST/.$f.new."*; do
-		[ -f "$stale" ] && rm -f -- "$stale" 2>/dev/null
-	done
-done
-for stale in "$DEST/themes/.active_theme.conf.new."*; do
-	[ -f "$stale" ] && rm -f -- "$stale" 2>/dev/null
+# Best-effort sweep of staging/backup directories left behind by an earlier
+# interrupted run (the EXIT trap cannot run across SIGKILL or power loss, and
+# every run mints new random staging names, so leftovers would otherwise
+# accumulate on the small ESP). Only the exact ".<name>.new.<suffix>" /
+# ".<name>.old.<suffix>" shapes created below are matched, so no live theme
+# can be touched.
+for stale in "$DEST"/.*.new.* "$DEST"/.*.old.*; do
+	[ -e "$stale" ] && rm -rf -- "$stale" 2>/dev/null
 done
 
-# A config is mandatory. Images are optional, but images alone must never make
-# the helper report success while leaving an absent or empty live config.
-if ! runuser -u "$RUN_USER" -- test -f "$SRC/refind.conf" 2>/dev/null \
-	|| ! runuser -u "$RUN_USER" -- test -s "$SRC/refind.conf" 2>/dev/null; then
-	echo "No non-empty refind.conf was found in $SRC."
-	echo "Use Create Config in the GUI first."
-	exit 6
+# The themes each user can install: every $SRC/<name>/theme.conf that exists
+# non-empty -- the same validity rule the GUI's Theme box applies. All reads
+# run as the invoking user (see the copy loop for why).
+THEMES=()
+while IFS= read -r -d '' dir; do
+	name="$(basename "$dir")"
+	# Names starting with a dot would collide with this script's staging
+	# pattern (and are junk on an ESP anyway).
+	case "$name" in .*) continue ;; esac
+	runuser -u "$RUN_USER" -- test -s "$SRC/$name/theme.conf" 2>/dev/null || continue
+	THEMES+=("$name")
+done < <(runuser -u "$RUN_USER" -- find "$SRC" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+
+if [ "${#THEMES[@]}" -eq 0 ]; then
+	echo "No themes were found in $SRC."
+	echo "Each theme must be a folder containing a non-empty theme.conf."
+	exit 3
 fi
 
-COPIED=0
-declare -A STAGED
-for f in refind.conf background.png os_icon1.png os_icon2.png os_icon3.png os_icon4.png; do
-	# The existence test AND the content read both run as the invoking user,
-	# never as root: $SRC is user-writable and this script needs no password,
-	# so a root-privileged `cp` would follow a symlink or hardlink planted
-	# under ~/.local and copy any root-readable file (/etc/shadow) onto the
-	# ESP, which is world-readable once mounted. runuser can only read what
-	# the user can.
-	runuser -u "$RUN_USER" -- test -f "$SRC/$f" 2>/dev/null || continue
-	stage="$(mktemp "$DEST/.${f}.new.XXXXXX")" || {
-		echo "Could not create a staging file in $DEST -- the ESP may be full or read-only."
-		exit 5
-	}
-	STAGED["$f"]="$stage"
-	STAGED_FILES+=("$stage")
-	if ! runuser -u "$RUN_USER" -- cat -- "$SRC/$f" > "$stage" 2>/dev/null; then
-		echo "Failed while copying $f to $DEST -- the ESP may be full or read-only."
+# Free-space check before anything is copied: the bundled set is ~12 MB and a
+# replace briefly keeps old and new copies of one theme side by side, so
+# require the full new size plus 4 MB of headroom. df -P for portable output.
+NEED_KB="$(runuser -u "$RUN_USER" -- du -sk "$SRC" 2>/dev/null | cut -f1)"
+NEED_KB=$((${NEED_KB:-0} + 4096))
+FREE_KB="$(df -Pk "$DEST" 2>/dev/null | awk 'NR==2 {print $4}')"
+if [ -n "$FREE_KB" ] && [ "$FREE_KB" -lt "$NEED_KB" ]; then
+	echo "Not enough free space on the EFI System Partition: ${NEED_KB} KB needed, ${FREE_KB} KB free."
+	echo "Nothing was copied."
+	exit 7
+fi
+
+# Per-theme staged replace: each theme directory is fully copied to a hidden
+# staging directory on the ESP first, then swapped in (live -> .old, staged ->
+# live, delete .old). Directory renames stay on the ESP, so a failure at any
+# point leaves the theme either fully old (rolled back below) or fully new --
+# never a half-copied mix that a theme.conf could reference. Publishing
+# per-theme (rather than one giant swap) keeps the peak space cost at one
+# extra theme instead of the whole tree.
+INSTALLED=0
+for name in "${THEMES[@]}"; do
+	stage="$DEST/.$name.new.$$"
+	rm -rf -- "$stage" 2>/dev/null
+	STAGED_DIRS+=("$stage")
+	if ! mkdir -p "$stage" 2>/dev/null; then
+		echo "Could not create a staging directory in $DEST -- the ESP may be full or read-only."
 		exit 5
 	fi
-	if [ "$f" = refind.conf ] && [ ! -s "$stage" ]; then
-		echo "The staged refind.conf is empty; the live config was not changed."
+	# Every file is read as the invoking user, never as root: $SRC is
+	# user-writable and this script needs no password, so a root-privileged
+	# recursive copy would follow a symlink or hardlink planted under
+	# ~/.local and copy any root-readable file (/etc/shadow) onto the ESP,
+	# which is world-readable once mounted. runuser + cat can only read what
+	# the user can, and writing through cat creates plain files on the FAT
+	# target no matter what the source was.
+	COPY_FAILED=0
+	while IFS= read -r -d '' file; do
+		rel="${file#"$SRC/$name/"}"
+		case "$rel" in */*) mkdir -p "$stage/$(dirname "$rel")" 2>/dev/null ;; esac
+		if ! runuser -u "$RUN_USER" -- cat -- "$file" > "$stage/$rel" 2>/dev/null; then
+			COPY_FAILED=1
+			break
+		fi
+	done < <(runuser -u "$RUN_USER" -- find "$SRC/$name" -type f -print0 2>/dev/null)
+	if [ "$COPY_FAILED" -ne 0 ]; then
+		echo "Failed while staging theme '$name' -- the ESP may be full."
+		echo "The previously installed themes were not changed."
 		exit 5
 	fi
-	COPIED=$((COPIED + 1))
+	if ! runuser -u "$RUN_USER" -- test -s "$SRC/$name/theme.conf" 2>/dev/null \
+		|| [ ! -s "$stage/theme.conf" ]; then
+		echo "Theme '$name' lost its theme.conf while being staged; nothing was changed."
+		exit 5
+	fi
+	# Swap: keep the old copy until the new one is in place, then drop it.
+	old="$DEST/.$name.old.$$"
+	if [ -d "$DEST/$name" ]; then
+		if ! mv -f -- "$DEST/$name" "$old" 2>/dev/null; then
+			echo "Could not move the old copy of theme '$name' aside; it was left as it was."
+			exit 5
+		fi
+	fi
+	if ! mv -f -- "$stage" "$DEST/$name" 2>/dev/null; then
+		# Restore the old copy so the theme is never left missing.
+		[ -d "$old" ] && mv -f -- "$old" "$DEST/$name" 2>/dev/null
+		echo "Failed while publishing theme '$name'; its previous version was kept."
+		exit 5
+	fi
+	rm -rf -- "$old" 2>/dev/null
+	INSTALLED=$((INSTALLED + 1))
 done
-
-# The theme include target is an optional member of the set: staged like the
-# images, published below before refind.conf (which stays last). It lives in
-# the themes subdirectory because the config's include line -- and every
-# theme.conf's own asset paths -- reference themes/... relative to the rEFInd
-# directory. An absent staged file must not fail the install: a config
-# created with Theme = None simply has none.
-THEME_STAGE=""
-if runuser -u "$RUN_USER" -- test -f "$SRC/active_theme.conf" 2>/dev/null; then
-	if ! mkdir -p "$DEST/themes" 2>/dev/null; then
-		echo "Could not create $DEST/themes -- the ESP may be full or read-only."
-		exit 5
-	fi
-	THEME_STAGE="$(mktemp "$DEST/themes/.active_theme.conf.new.XXXXXX")" || {
-		echo "Could not create a staging file in $DEST/themes -- the ESP may be full or read-only."
-		exit 5
-	}
-	STAGED_FILES+=("$THEME_STAGE")
-	if ! runuser -u "$RUN_USER" -- cat -- "$SRC/active_theme.conf" > "$THEME_STAGE" 2>/dev/null; then
-		echo "Failed while copying active_theme.conf to $DEST/themes -- the ESP may be full or read-only."
-		exit 5
-	fi
-	COPIED=$((COPIED + 1))
-fi
-
-if [ -z "${STAGED[refind.conf]:-}" ]; then
-	echo "refind.conf disappeared while it was being staged; the live config was not changed."
-	exit 6
-fi
-
-# Keep one rollback copy of the live config. Build it under a temporary name
-# and rename it into place so a short backup write cannot corrupt .prev.
-if [ -f "$DEST/refind.conf" ]; then
-	backup_stage="$(mktemp "$DEST/.refind.conf.prev.new.XXXXXX")" || {
-		echo "Could not stage the rollback copy in $DEST."
-		exit 5
-	}
-	STAGED_FILES+=("$backup_stage")
-	if ! cp -- "$DEST/refind.conf" "$backup_stage" 2>/dev/null \
-		|| ! mv -f -- "$backup_stage" "$DEST/refind.conf.prev" 2>/dev/null; then
-		echo "Could not preserve the previous refind.conf; the live config was not changed."
-		exit 5
-	fi
-fi
-
-# Staged, publish-last: assets first and the config last. Each rename stays on
-# the ESP, so a failed staging copy never truncates an existing live file and a
-# failed asset update cannot leave a new config referring to an incomplete set.
-for f in background.png os_icon1.png os_icon2.png os_icon3.png os_icon4.png; do
-	[ -n "${STAGED[$f]:-}" ] || continue
-	if ! mv -f -- "${STAGED[$f]}" "$DEST/$f" 2>/dev/null; then
-		echo "Failed while publishing $f; the live config was not changed."
-		exit 5
-	fi
-done
-if [ -n "$THEME_STAGE" ]; then
-	if ! mv -f -- "$THEME_STAGE" "$DEST/themes/active_theme.conf" 2>/dev/null; then
-		echo "Failed while publishing active_theme.conf; the live config was not changed."
-		exit 5
-	fi
-fi
-if ! mv -f -- "${STAGED[refind.conf]}" "$DEST/refind.conf" 2>/dev/null; then
-	echo "Failed while publishing refind.conf; the previous config is still active."
-	exit 5
-fi
 
 # Flush to the ESP before any temporary mount goes away.
 sync
-echo "Installed $COPIED file(s) to $DEST"
+echo "Installed $INSTALLED theme(s) to $DEST"
 [ -n "$HOW" ] && echo "(chosen as $HOW)"
 exit 0

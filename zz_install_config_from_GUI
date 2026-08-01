@@ -11,5 +11,6 @@
 # overridden and the password prompt comes back. zz_ sorts after everything
 # a distro plausibly ships.
 #
-# The trailing "" forbids passing any arguments to the whitelisted script.
+# The trailing "" forbids passing any arguments to the whitelisted scripts.
 USER ALL = NOPASSWD: /etc/rEFInd/install_config_from_GUI.sh ""
+USER ALL = NOPASSWD: /etc/rEFInd/install_themes_from_GUI.sh ""
