@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.2.0
+Version:        3.2.1
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -52,6 +52,10 @@ install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sat Aug 01 2026 Jon LoBue <jlobue10@gmail.com> [3.2.1-1]
+- Theme-aware Preview: the mock boot screen now renders the selected theme's
+  banner, big_icon_size, and selection_big, resolves Random to a concrete
+  pick, and hides entry labels when the theme's hideui asks.
 * Sat Aug 01 2026 Jon LoBue <jlobue10@gmail.com> [3.2.0-1]
 - Theme support: seven bundled rEFInd themes (credits in README), GUI theme
   picker with Random option, Install Themes button, and a per-boot theme

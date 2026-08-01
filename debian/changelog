@@ -1,3 +1,12 @@
+refind-gui (3.2.1) unstable; urgency=medium
+
+  * Theme-aware Preview: the mock boot screen now renders the selected
+    theme's banner, icon size, and selection highlight, resolves Random
+    to a concrete pick, and hides entry labels when the theme's hideui
+    asks. New preview strings translated in all 20 languages.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sat, 01 Aug 2026 16:12:15 -0700
+
 refind-gui (3.2.0) unstable; urgency=medium
 
   * Theme support: seven bundled rEFInd themes (all credit to the original
