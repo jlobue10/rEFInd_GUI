@@ -3,11 +3,21 @@
 
 REFIND_VER="0.14.2"
 DOWNLOAD_DIR="$HOME/Downloads"
+TEMP_FILES=()
+
+fail_install() {
+	echo "ERROR: $*" >&2
+	exit 1
+}
 
 # The GUI runs this script in a transient xterm that vanishes the instant the
 # script exits, taking any error output with it. Hold the window open so the
 # final status can actually be read.
 pause_before_exit() {
+	local temp
+	for temp in "${TEMP_FILES[@]}"; do
+		[ -n "$temp" ] && rm -f -- "$temp" 2>/dev/null
+	done
 	if [ -t 0 ]; then
 		echo
 		read -rp "Press Enter to close this window..."
@@ -32,9 +42,18 @@ else
 fi
 
 cd "$DOWNLOAD_DIR" || exit 1
-wget "https://sourceforge.net/projects/refind/files/${REFIND_VER}/refind-bin-gnuefi-${REFIND_VER}.zip"
+ZIP_PATH="$DOWNLOAD_DIR/refind-bin-gnuefi-${REFIND_VER}.zip"
+ZIP_STAGE="${ZIP_PATH}.new.$$"
+TEMP_FILES+=("$ZIP_STAGE")
+if ! wget -O "$ZIP_STAGE" \
+	"https://sourceforge.net/projects/refind/files/${REFIND_VER}/refind-bin-gnuefi-${REFIND_VER}.zip"; then
+	fail_install "The rEFInd archive download failed."
+fi
+mv -f "$ZIP_STAGE" "$ZIP_PATH" \
+	|| fail_install "The downloaded rEFInd archive could not be published."
 echo "Unzipping rEFInd zip..."
-unzip -o "refind-bin-gnuefi-${REFIND_VER}.zip"
+unzip -o "$ZIP_PATH" \
+	|| fail_install "The downloaded rEFInd archive is invalid or could not be extracted."
 
 # Resolve the real ESP mountpoint. The ESP may be mounted at /boot/efi,
 # /efi, or directly at /boot (CachyOS/systemd-boot single-partition layout).
@@ -63,13 +82,17 @@ done
 
 REFIND_BIN="$DOWNLOAD_DIR/refind-bin-${REFIND_VER}"
 if [ ! -x "$REFIND_BIN/refind-install" ]; then
-	echo "ERROR: rEFInd download or unzip failed ($REFIND_BIN is missing)." >&2
-	exit 1
+	fail_install "rEFInd download or unzip failed ($REFIND_BIN is missing)."
 fi
-sudo mkdir -p "$ESP_MP/EFI/refind"
-sudo cp -f "$REFIND_BIN/refind/refind_x64.efi" "$ESP_MP/EFI/refind/"
-sudo cp -rf "$REFIND_BIN/refind/drivers_x64/" "$ESP_MP/EFI/refind"
-sudo cp -rf "$REFIND_BIN/refind/tools_x64/" "$ESP_MP/EFI/refind"
+DEST="$ESP_MP/EFI/refind"
+[ -s "$REFIND_BIN/refind/refind_x64.efi" ] \
+	|| fail_install "The extracted rEFInd loader is missing or empty."
+sudo mkdir -p "$DEST" \
+	|| fail_install "Could not create $DEST; the ESP may be read-only."
+sudo cp -f "$REFIND_BIN/refind/refind_x64.efi" "$DEST/" \
+	&& sudo cp -rf "$REFIND_BIN/refind/drivers_x64/" "$DEST" \
+	&& sudo cp -rf "$REFIND_BIN/refind/tools_x64/" "$DEST" \
+	|| fail_install "Could not copy the core rEFInd files to the ESP."
 
 # SkorionOS Xbox 360 USB controller UEFI driver: dropping it into rEFInd's
 # drivers_x64 folder makes wired/handheld gamepads (ROG Ally, Legion Go, etc.)
@@ -120,12 +143,45 @@ if [ -n "$TOUCH_DEVICE" ]; then
 	fi
 fi
 echo "Installing rEFInd files..."
-sudo "$REFIND_BIN/refind-install"
-sudo cp -rf "$REFIND_BIN/refind/icons/" "$ESP_MP/EFI/refind"
-sudo cp -rf "$REFIND_BIN/fonts/" "$ESP_MP/EFI/refind"
-sudo cp -f "$HOME/.local/rEFInd_GUI/GUI/refind.conf" "$ESP_MP/EFI/refind/refind.conf"
-sudo cp -rf "$HOME/.local/rEFInd_GUI/backgrounds/" "$ESP_MP/EFI/refind"
-sudo cp -rf "$HOME/.local/rEFInd_GUI/icons/" "$ESP_MP/EFI/refind"
+sudo "$REFIND_BIN/refind-install" \
+	|| fail_install "refind-install failed; Windows was not changed."
+sudo cp -rf "$REFIND_BIN/refind/icons/" "$DEST" \
+	&& sudo cp -rf "$REFIND_BIN/fonts/" "$DEST" \
+	&& sudo cp -rf "$HOME/.local/rEFInd_GUI/backgrounds/" "$DEST" \
+	&& sudo cp -rf "$HOME/.local/rEFInd_GUI/icons/" "$DEST" \
+	|| fail_install "Could not copy the rEFInd assets to the ESP."
+
+GUI_CONF="$HOME/.local/rEFInd_GUI/GUI/refind.conf"
+[ -s "$GUI_CONF" ] \
+	|| fail_install "No non-empty GUI refind.conf exists. Use Create Config first."
+if sudo test -f "$DEST/refind.conf"; then
+	sudo cp -f "$DEST/refind.conf" "$DEST/refind-bkp.conf" \
+		|| fail_install "Could not preserve the previous refind.conf."
+fi
+CONF_STAGE="$DEST/.refind.conf.new.$$"
+if ! sudo cp -f "$GUI_CONF" "$CONF_STAGE" \
+	|| ! sudo test -s "$CONF_STAGE" \
+	|| ! sudo mv -f "$CONF_STAGE" "$DEST/refind.conf"; then
+	sudo rm -f "$CONF_STAGE" 2>/dev/null
+	fail_install "Could not install refind.conf completely; the previous config was preserved."
+fi
+sudo test -s "$DEST/refind_x64.efi" && sudo test -s "$DEST/refind.conf" \
+	|| fail_install "The installed rEFInd loader or config is missing or empty."
+
+# Sign before publishing the new NVRAM entry or changing Windows. With Secure
+# Boot enforcing, an unsigned loader is not a usable replacement.
+if grep -qE '^ID="?cachyos"?$' /etc/os-release 2>/dev/null; then
+	SB_STATE="$(od -An -tu1 -j4 -N1 \
+		/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null \
+		| tr -d '[:space:]')"
+	if [ "$SB_STATE" = "1" ]; then
+		command -v sbctl-batch-sign >/dev/null 2>&1 \
+			|| fail_install "Secure Boot is enabled but sbctl-batch-sign was not found."
+		echo "Secure Boot is enabled: signing EFI binaries with sbctl-batch-sign..."
+		sudo sbctl-batch-sign \
+			|| fail_install "sbctl-batch-sign failed; Windows was left active."
+	fi
+fi
 
 echo "Updating EFI boot entries..."
 # Snapshot the current NVRAM boot entries before changing them: a copy on
@@ -150,28 +206,13 @@ fi
 ESP_DISK="/dev/$ESP_PARENT"
 
 if [ ! -b "$ESP_DISK" ] || [ -z "$ESP_PARTNUM" ]; then
-	echo "ERROR: could not resolve the ESP's disk and partition number" >&2
 	echo "(device: '$ESP_DEV', disk: '$ESP_DISK', partition: '$ESP_PARTNUM')." >&2
-	echo "Existing boot entries were left untouched." >&2
+	fail_install "Could not resolve the ESP's disk and partition number; boot entries were left untouched."
 else
 	NEW_BOOTNUM=""
 	REFIND_READY=0
-	# refind-install just created its own "rEFInd Boot Manager" entry;
-	# remove it up front so the firmware list never carries it alongside
-	# our "rEFInd" entry. Only that exact label is deleted pre-create --
-	# plain "rEFInd" entries from previous installs are kept until the
-	# new entry verifiably exists (see below).
-	# efibootmgr >= 18 appends "\t<device path>" after the label even
-	# without -v, so label matches must allow an optional tab suffix.
-	while read -r _num; do
-		echo "Deleting refind-install's rEFInd Boot Manager entry Boot$_num..."
-		sudo efibootmgr -b "$_num" -B >/dev/null 2>&1 \
-			|| echo "Warning: could not delete Boot$_num." >&2
-	done < <(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd Boot Manager(\t.*)?$/\1/p')
-	# Create the new entry BEFORE deleting old rEFInd entries. The old
-	# delete-then-create order left the machine with no rEFInd entry at
-	# all whenever the create failed, because the entry refind-install
-	# had just made was already gone.
+	# Keep refind-install's fallback entry and every old rEFInd entry until
+	# the replacement has been created and verified end to end.
 	echo "Creating rEFInd boot entry ($ESP_DISK partition $ESP_PARTNUM)..."
 	if CREATE_OUT="$(sudo efibootmgr -c -d "$ESP_DISK" -p "$ESP_PARTNUM" -L "rEFInd" -l '\EFI\refind\refind_x64.efi' 2>&1)"; then
 		# efibootmgr -c puts the new entry first in BootOrder; use that
@@ -193,12 +234,11 @@ else
 					|| echo "Warning: could not delete Boot$_num." >&2
 			done < <(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd.*/\1/p')
 		else
-			echo "Warning: the new rEFInd entry or its installed files could not be verified; skipping cleanup of old entries." >&2
+			fail_install "The new rEFInd entry or its installed files could not be verified; old entries and Windows were left active."
 		fi
 	else
-		echo "ERROR: creating the rEFInd boot entry failed:" >&2
 		printf '%s\n' "$CREATE_OUT" >&2
-		echo "Existing rEFInd entries (if any) were left in place." >&2
+		fail_install "Creating the rEFInd boot entry failed; existing entries and Windows were left active."
 	fi
 
 	WINDOWS_BOOTNUM="$(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +Windows Boot Manager(\t.*)?$/\1/p' | head -1)"
@@ -210,28 +250,12 @@ else
 	fi
 fi
 
-# CachyOS manages Secure Boot with sbctl: when Secure Boot is enabled, the
-# rEFInd binaries just written to the ESP must be signed with the enrolled
-# sbctl keys or the firmware will refuse to load them. The SecureBoot efivar's
-# fifth byte (after the 4-byte attribute header) is 1 when enforcing.
-if grep -qE '^ID="?cachyos"?$' /etc/os-release 2>/dev/null; then
-	SB_STATE="$(od -An -tu1 -j4 -N1 \
-		/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null \
-		| tr -d '[:space:]')"
-	if [ "$SB_STATE" = "1" ]; then
-		if command -v sbctl-batch-sign >/dev/null 2>&1; then
-			echo "Secure Boot is enabled: signing EFI binaries with sbctl-batch-sign..."
-			sudo sbctl-batch-sign \
-				|| echo "Warning: sbctl-batch-sign failed; rEFInd may not load with Secure Boot enabled." >&2
-		else
-			echo "Warning: Secure Boot is enabled but sbctl-batch-sign was not found; EFI binaries were not signed." >&2
-		fi
-	fi
-fi
-
 echo
 echo "==================== Installation summary ===================="
-FINAL_LIST="$(efibootmgr)"
+if ! FINAL_LIST="$(efibootmgr 2>&1)"; then
+	printf '%s\n' "$FINAL_LIST" >&2
+	fail_install "efibootmgr could not read the firmware boot list."
+fi
 printf '%s\n' "$FINAL_LIST"
 echo "---------------------------------------------------------------"
 REFIND_NUMS="$(printf '%s\n' "$FINAL_LIST" | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd.*/\1/p')"
@@ -239,6 +263,7 @@ FIRST_BOOT="$(printf '%s\n' "$FINAL_LIST" | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{
 if [ -z "$REFIND_NUMS" ]; then
 	echo "*** FAILED: no rEFInd entry exists in the firmware boot list. ***"
 	echo "*** rEFInd will NOT be offered at boot -- see errors above.   ***"
+	exit 1
 elif printf '%s\n' "$REFIND_NUMS" | grep -qx "$FIRST_BOOT"; then
 	echo "SUCCESS: rEFInd is installed and first in the boot order."
 else
