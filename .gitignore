@@ -18,3 +18,8 @@ CMakeFiles/
 # OS cruft
 .DS_Store
 Thumbs.db
+
+# Raw upstream theme clones (working material; the normalized copies under
+# themes/<name>/ are the shipped ones)
+themes/*-main/
+themes/*-master/
