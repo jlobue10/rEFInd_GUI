@@ -2,6 +2,13 @@
 # A simple rEFInd automated install script using a distro's native package manager
 # Please make sure that a password exists for the user before running
 (
+	fail_install() {
+		echo "ERROR: $*" >&2
+		echo 100
+		echo "# Installation failed. See the terminal for details."
+		exit 1
+	}
+
 	echo 0
 	echo "# Installation started: Password prompt..."
 	PASSWD="$(zenity --password --title="Enter sudo password" 2>/dev/null)"
@@ -18,17 +25,25 @@
 	echo "# Installing rEFInd package..."
 	if command -v dnf >/dev/null 2>&1; then
 		echo -e '\nFedora based installation starting.\n'
-		sudo dnf install -y refind
+		sudo dnf install -y refind \
+			|| fail_install "The rEFInd package could not be installed with dnf."
 	elif command -v apt-get >/dev/null 2>&1; then
 		echo -e '\nUbuntu based installation starting.\n'
-		sudo apt-get update && sudo apt-get install -y refind
+		sudo apt-get update && sudo apt-get install -y refind \
+			|| fail_install "The rEFInd package could not be installed with apt."
 	elif command -v pacman >/dev/null 2>&1; then
 		echo -e '\nArch based installation starting.\n'
-		sudo pacman-key --init
-		sudo pacman-key --populate archlinux
-		sudo pacman -Sy --noconfirm --needed refind
+		sudo pacman-key --init \
+			&& sudo pacman-key --populate archlinux \
+			&& sudo pacman -Sy --noconfirm --needed refind \
+			|| fail_install "The rEFInd package could not be installed with pacman."
+	else
+		fail_install "No supported package manager (dnf, apt, or pacman) was found."
 	fi
-	sudo refind-install
+	command -v refind-install >/dev/null 2>&1 \
+		|| fail_install "refind-install was not found after package installation."
+	sudo refind-install \
+		|| fail_install "refind-install failed; Windows was not changed."
 	echo 50
 	echo "# Installing files to EFI system partition..."
 	# Resolve the real ESP mountpoint. The ESP may be mounted at /boot/efi,
@@ -55,11 +70,27 @@
 		[ -z "$ESP_MP" ] && ESP_MP="$_mp"
 	done
 	[ -z "$ESP_MP" ] && ESP_MP="/boot/efi"
-	if sudo test -f "$ESP_MP/EFI/refind/refind.conf"; then
-		sudo mv "$ESP_MP/EFI/refind/refind.conf" "$ESP_MP/EFI/refind/refind-bkp.conf"
+	DEST="$ESP_MP/EFI/refind"
+	GUI_CONF="$HOME/.local/rEFInd_GUI/GUI/refind.conf"
+	[ -s "$GUI_CONF" ] \
+		|| fail_install "No non-empty GUI refind.conf exists. Use Create Config first."
+	sudo mkdir -p "$DEST" \
+		|| fail_install "Could not create $DEST; the ESP may be read-only."
+	if sudo test -f "$DEST/refind.conf"; then
+		sudo cp -f "$DEST/refind.conf" "$DEST/refind-bkp.conf" \
+			|| fail_install "Could not preserve the previous refind.conf."
 	fi
-	sudo cp -f "$HOME/.local/rEFInd_GUI/GUI/refind.conf" "$ESP_MP/EFI/refind/refind.conf"
-	sudo cp -rf "$HOME/.local/rEFInd_GUI/icons/" "$ESP_MP/EFI/refind"
+	CONF_STAGE="$DEST/.refind.conf.new.$$"
+	if ! sudo cp -f "$GUI_CONF" "$CONF_STAGE" \
+		|| ! sudo test -s "$CONF_STAGE" \
+		|| ! sudo mv -f "$CONF_STAGE" "$DEST/refind.conf"; then
+		sudo rm -f "$CONF_STAGE" 2>/dev/null
+		fail_install "Could not install refind.conf completely; the previous config was preserved."
+	fi
+	sudo cp -rf "$HOME/.local/rEFInd_GUI/icons/" "$DEST" \
+		|| fail_install "Could not copy the rEFInd icon set to the ESP."
+	sudo test -s "$DEST/refind_x64.efi" && sudo test -s "$DEST/refind.conf" \
+		|| fail_install "The installed rEFInd loader or config is missing or empty."
 	echo 90
 	echo "# Installing Xbox 360 controller driver..."
 	# SkorionOS Xbox 360 USB controller UEFI driver: dropping it into rEFInd's
@@ -113,6 +144,22 @@
 		fi
 		rm -f "$TOUCH_DRV_TMP"
 	fi
+	# CachyOS manages Secure Boot with sbctl. Signing is a prerequisite for
+	# publishing the new NVRAM entry or changing any fallback entry: an
+	# unsigned loader is not a usable replacement while Secure Boot enforces.
+	if grep -qE '^ID="?cachyos"?$' /etc/os-release 2>/dev/null; then
+		SB_STATE="$(od -An -tu1 -j4 -N1 \
+			/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null \
+			| tr -d '[:space:]')"
+		if [ "$SB_STATE" = "1" ]; then
+			echo 93
+			echo "# Signing EFI binaries for Secure Boot (sbctl)..."
+			command -v sbctl-batch-sign >/dev/null 2>&1 \
+				|| fail_install "Secure Boot is enabled but sbctl-batch-sign was not found."
+			sudo sbctl-batch-sign >&2 \
+				|| fail_install "sbctl-batch-sign failed; Windows was left active."
+		fi
+	fi
 	echo 95
 	echo "# Updating EFI boot entries..."
 	# Snapshot the current NVRAM boot entries before changing them: a copy on
@@ -137,28 +184,13 @@
 	fi
 	ESP_DISK="/dev/$ESP_PARENT"
 	if [ ! -b "$ESP_DISK" ] || [ -z "$ESP_PARTNUM" ]; then
-		echo "ERROR: could not resolve the ESP's disk and partition number" >&2
 		echo "(device: '$ESP_DEV', disk: '$ESP_DISK', partition: '$ESP_PARTNUM')." >&2
-		echo "Existing boot entries were left untouched." >&2
+		fail_install "Could not resolve the ESP's disk and partition number; boot entries were left untouched."
 	else
 		NEW_BOOTNUM=""
 		REFIND_READY=0
-		# refind-install just created its own "rEFInd Boot Manager" entry;
-		# remove it up front so the firmware list never carries it alongside
-		# our "rEFInd" entry. Only that exact label is deleted pre-create --
-		# plain "rEFInd" entries from previous installs are kept until the
-		# new entry verifiably exists (see below).
-		# efibootmgr >= 18 appends "\t<device path>" after the label even
-		# without -v, so label matches must allow an optional tab suffix.
-		while read -r _num; do
-			echo "Deleting refind-install's rEFInd Boot Manager entry Boot$_num..." >&2
-			sudo efibootmgr -b "$_num" -B >/dev/null 2>&1 \
-				|| echo "Warning: could not delete Boot$_num." >&2
-		done < <(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd Boot Manager(\t.*)?$/\1/p')
-		# Create the new entry BEFORE deleting old rEFInd entries. The old
-		# delete-then-create order left the machine with no rEFInd entry at
-		# all whenever the create failed, because the entry refind-install
-		# had just made was already gone.
+		# Keep refind-install's fallback entry and every old rEFInd entry until
+		# the replacement has been created and verified end to end.
 		if CREATE_OUT="$(sudo efibootmgr -c -d "$ESP_DISK" -p "$ESP_PARTNUM" -L "rEFInd" -l '\EFI\refind\refind_x64.efi' 2>&1)"; then
 			# efibootmgr -c puts the new entry first in BootOrder; use that
 			# to identify it. Verify both the exact label/path and the live
@@ -179,12 +211,11 @@
 						|| echo "Warning: could not delete Boot$_num." >&2
 				done < <(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd.*/\1/p')
 			else
-				echo "Warning: the new rEFInd entry or its installed files could not be verified; skipping cleanup of old entries." >&2
+				fail_install "The new rEFInd entry or its installed files could not be verified; old entries and Windows were left active."
 			fi
 		else
-			echo "ERROR: creating the rEFInd boot entry failed:" >&2
 			printf '%s\n' "$CREATE_OUT" >&2
-			echo "Existing rEFInd entries (if any) were left in place." >&2
+			fail_install "Creating the rEFInd boot entry failed; existing entries and Windows were left active."
 		fi
 		WINDOWS_BOOTNUM="$(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +Windows Boot Manager(\t.*)?$/\1/p' | head -1)"
 		if [ "$REFIND_READY" -eq 1 ] && [ -n "$NEW_BOOTNUM" ] && [ -n "$WINDOWS_BOOTNUM" ]; then
@@ -194,41 +225,36 @@
 			echo "Windows Boot Manager was left active because the replacement rEFInd entry was not fully verified." >&2
 		fi
 	fi
-	# CachyOS manages Secure Boot with sbctl: when Secure Boot is enabled, the
-	# rEFInd binaries just written to the ESP must be signed with the enrolled
-	# sbctl keys or the firmware will refuse to load them. The SecureBoot
-	# efivar's fifth byte (after the 4-byte attribute header) is 1 when
-	# enforcing. sbctl output goes to stderr: stdout is zenity's protocol.
-	if grep -qE '^ID="?cachyos"?$' /etc/os-release 2>/dev/null; then
-		SB_STATE="$(od -An -tu1 -j4 -N1 \
-			/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null \
-			| tr -d '[:space:]')"
-		if [ "$SB_STATE" = "1" ]; then
-			echo 97
-			echo "# Signing EFI binaries for Secure Boot (sbctl)..."
-			if command -v sbctl-batch-sign >/dev/null 2>&1; then
-				sudo sbctl-batch-sign >&2 \
-					|| echo "Warning: sbctl-batch-sign failed; rEFInd may not load with Secure Boot enabled." >&2
-			else
-				echo "Warning: Secure Boot is enabled but sbctl-batch-sign was not found; EFI binaries were not signed." >&2
-			fi
-		fi
-	fi
 	echo 100
 	echo "# Installation finished."
 ) | zenity --title "Installing rEFInd" --progress --no-cancel --width=500 2>/dev/null
+INSTALL_RC=${PIPESTATUS[0]}
 
 # Verify the result from live NVRAM and show it both in the terminal (the GUI
 # runs this in a transient xterm -- keep it open so the status can be read)
 # and as a zenity dialog.
 echo
 echo "==================== Installation summary ===================="
-FINAL_LIST="$(efibootmgr)"
+FINAL_LIST="$(efibootmgr 2>&1)"
+EFIBOOTMGR_RC=$?
 printf '%s\n' "$FINAL_LIST"
 echo "---------------------------------------------------------------"
 REFIND_NUMS="$(printf '%s\n' "$FINAL_LIST" | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd.*/\1/p')"
 FIRST_BOOT="$(printf '%s\n' "$FINAL_LIST" | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{4}).*/\1/p')"
-if [ -z "$REFIND_NUMS" ]; then
+FINAL_RC=0
+if [ "$INSTALL_RC" -ne 0 ]; then
+	FINAL_RC="$INSTALL_RC"
+	echo "*** FAILED: installation stopped after a critical error. ***"
+	echo "*** Windows and unverified fallback entries were left active. ***"
+	zenity --error --title="rEFInd installation failed" --width=450 \
+		--text="Installation stopped after a critical error.\nWindows and unverified fallback entries were left active.\nSee the terminal window for details." 2>/dev/null
+elif [ "$EFIBOOTMGR_RC" -ne 0 ]; then
+	FINAL_RC=1
+	echo "*** FAILED: efibootmgr could not read the firmware boot list. ***"
+	zenity --error --title="rEFInd installation failed" --width=450 \
+		--text="efibootmgr could not read the firmware boot list. See the terminal window for details." 2>/dev/null
+elif [ -z "$REFIND_NUMS" ]; then
+	FINAL_RC=1
 	echo "*** FAILED: no rEFInd entry exists in the firmware boot list. ***"
 	echo "*** rEFInd will NOT be offered at boot -- see errors above.   ***"
 	zenity --error --title="rEFInd installation failed" --width=450 \
@@ -247,3 +273,4 @@ if [ -t 0 ]; then
 	echo
 	read -rp "Press Enter to close this window..."
 fi
+exit "$FINAL_RC"
