@@ -28,8 +28,12 @@ ESP_TYPE_GUID=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
 # the parent and the EXIT trap would unmount nothing, leaving removable ESPs
 # mounted read-write.
 CLEANUP_MOUNT_LIST="$(mktemp)"
+STAGED_FILES=()
 cleanup() {
-	local m
+	local m staged
+	for staged in "${STAGED_FILES[@]}"; do
+		[ -n "$staged" ] && rm -f -- "$staged" 2>/dev/null
+	done
 	if [ -n "${CLEANUP_MOUNT_LIST:-}" ] && [ -f "$CLEANUP_MOUNT_LIST" ]; then
 		while read -r m; do
 			[ -n "$m" ] || continue
@@ -161,12 +165,28 @@ if ! mkdir -p "$DEST" 2>/dev/null; then
 	exit 4
 fi
 
-# Keep one rollback copy of the live config before overwriting it.
-if [ -f "$DEST/refind.conf" ]; then
-	cp -f "$DEST/refind.conf" "$DEST/refind.conf.prev" 2>/dev/null
+# Best-effort sweep of staging files left behind by an earlier interrupted run
+# (the EXIT trap cannot run across SIGKILL or power loss, and every run mints
+# new random staging names, so leftovers would otherwise accumulate on the
+# small ESP). Only the exact ".<name>.new.<suffix>" shapes created below are
+# matched, so no live file can be touched.
+for f in refind.conf background.png os_icon1.png os_icon2.png os_icon3.png os_icon4.png refind.conf.prev; do
+	for stale in "$DEST/.$f.new."*; do
+		[ -f "$stale" ] && rm -f -- "$stale" 2>/dev/null
+	done
+done
+
+# A config is mandatory. Images are optional, but images alone must never make
+# the helper report success while leaving an absent or empty live config.
+if ! runuser -u "$RUN_USER" -- test -f "$SRC/refind.conf" 2>/dev/null \
+	|| ! runuser -u "$RUN_USER" -- test -s "$SRC/refind.conf" 2>/dev/null; then
+	echo "No non-empty refind.conf was found in $SRC."
+	echo "Use Create Config in the GUI first."
+	exit 6
 fi
 
 COPIED=0
+declare -A STAGED
 for f in refind.conf background.png os_icon1.png os_icon2.png os_icon3.png os_icon4.png; do
 	# The existence test AND the content read both run as the invoking user,
 	# never as root: $SRC is user-writable and this script needs no password,
@@ -175,18 +195,56 @@ for f in refind.conf background.png os_icon1.png os_icon2.png os_icon3.png os_ic
 	# ESP, which is world-readable once mounted. runuser can only read what
 	# the user can.
 	runuser -u "$RUN_USER" -- test -f "$SRC/$f" 2>/dev/null || continue
-	if ! runuser -u "$RUN_USER" -- cat -- "$SRC/$f" > "$DEST/$f" 2>/dev/null; then
-		rm -f "$DEST/$f" 2>/dev/null
+	stage="$(mktemp "$DEST/.${f}.new.XXXXXX")" || {
+		echo "Could not create a staging file in $DEST -- the ESP may be full or read-only."
+		exit 5
+	}
+	STAGED["$f"]="$stage"
+	STAGED_FILES+=("$stage")
+	if ! runuser -u "$RUN_USER" -- cat -- "$SRC/$f" > "$stage" 2>/dev/null; then
 		echo "Failed while copying $f to $DEST -- the ESP may be full or read-only."
+		exit 5
+	fi
+	if [ "$f" = refind.conf ] && [ ! -s "$stage" ]; then
+		echo "The staged refind.conf is empty; the live config was not changed."
 		exit 5
 	fi
 	COPIED=$((COPIED + 1))
 done
 
-if [ "$COPIED" -eq 0 ]; then
-	echo "No config files were found in $SRC."
-	echo "Use Create Config in the GUI first."
+if [ -z "${STAGED[refind.conf]:-}" ]; then
+	echo "refind.conf disappeared while it was being staged; the live config was not changed."
 	exit 6
+fi
+
+# Keep one rollback copy of the live config. Build it under a temporary name
+# and rename it into place so a short backup write cannot corrupt .prev.
+if [ -f "$DEST/refind.conf" ]; then
+	backup_stage="$(mktemp "$DEST/.refind.conf.prev.new.XXXXXX")" || {
+		echo "Could not stage the rollback copy in $DEST."
+		exit 5
+	}
+	STAGED_FILES+=("$backup_stage")
+	if ! cp -- "$DEST/refind.conf" "$backup_stage" 2>/dev/null \
+		|| ! mv -f -- "$backup_stage" "$DEST/refind.conf.prev" 2>/dev/null; then
+		echo "Could not preserve the previous refind.conf; the live config was not changed."
+		exit 5
+	fi
+fi
+
+# Staged, publish-last: assets first and the config last. Each rename stays on
+# the ESP, so a failed staging copy never truncates an existing live file and a
+# failed asset update cannot leave a new config referring to an incomplete set.
+for f in background.png os_icon1.png os_icon2.png os_icon3.png os_icon4.png; do
+	[ -n "${STAGED[$f]:-}" ] || continue
+	if ! mv -f -- "${STAGED[$f]}" "$DEST/$f" 2>/dev/null; then
+		echo "Failed while publishing $f; the live config was not changed."
+		exit 5
+	fi
+done
+if ! mv -f -- "${STAGED[refind.conf]}" "$DEST/refind.conf" 2>/dev/null; then
+	echo "Failed while publishing refind.conf; the previous config is still active."
+	exit 5
 fi
 
 # Flush to the ESP before any temporary mount goes away.
