@@ -6,6 +6,11 @@
 		echo "ERROR: $*" >&2
 		echo 100
 		echo "# Installation failed. See the terminal for details."
+		# Exit 2 tells the summary block outside the zenity pipe that boot
+		# state changes had already started; exit 1 means nothing was changed.
+		if [ "${BOOT_CHANGES_STARTED:-0}" -eq 1 ]; then
+			exit 2
+		fi
 		exit 1
 	}
 
@@ -23,25 +28,40 @@
 	echo "# Installation continuing..."
 	echo 25
 	echo "# Installing rEFInd package..."
+	# A failed package-DB refresh (offline reinstall) must not abort when
+	# rEFInd is already installed: warn and reuse the installed copy, and
+	# hard-fail only when rEFInd is absent and cannot be installed.
 	if command -v dnf >/dev/null 2>&1; then
 		echo -e '\nFedora based installation starting.\n'
-		sudo dnf install -y refind \
-			|| fail_install "The rEFInd package could not be installed with dnf."
+		if ! sudo dnf install -y refind; then
+			command -v refind-install >/dev/null 2>&1 \
+				|| fail_install "The rEFInd package could not be installed with dnf."
+			echo "Warning: dnf could not refresh/install refind; using the already-installed copy." >&2
+		fi
 	elif command -v apt-get >/dev/null 2>&1; then
 		echo -e '\nUbuntu based installation starting.\n'
-		sudo apt-get update && sudo apt-get install -y refind \
-			|| fail_install "The rEFInd package could not be installed with apt."
+		if ! { sudo apt-get update && sudo apt-get install -y refind; }; then
+			command -v refind-install >/dev/null 2>&1 \
+				|| fail_install "The rEFInd package could not be installed with apt."
+			echo "Warning: apt could not refresh/install refind; using the already-installed copy." >&2
+		fi
 	elif command -v pacman >/dev/null 2>&1; then
 		echo -e '\nArch based installation starting.\n'
-		sudo pacman-key --init \
+		if ! { sudo pacman-key --init \
 			&& sudo pacman-key --populate archlinux \
-			&& sudo pacman -Sy --noconfirm --needed refind \
-			|| fail_install "The rEFInd package could not be installed with pacman."
+			&& sudo pacman -Sy --noconfirm --needed refind; }; then
+			command -v refind-install >/dev/null 2>&1 \
+				|| fail_install "The rEFInd package could not be installed with pacman."
+			echo "Warning: pacman could not refresh/install refind; using the already-installed copy." >&2
+		fi
 	else
 		fail_install "No supported package manager (dnf, apt, or pacman) was found."
 	fi
 	command -v refind-install >/dev/null 2>&1 \
 		|| fail_install "refind-install was not found after package installation."
+	# refind-install creates a fallback NVRAM boot entry, so boot state
+	# changes start here; failures before this point changed nothing.
+	BOOT_CHANGES_STARTED=1
 	sudo refind-install \
 		|| fail_install "refind-install failed; Windows was not changed."
 	echo 50
@@ -184,11 +204,17 @@
 	fi
 	ESP_DISK="/dev/$ESP_PARENT"
 	if [ ! -b "$ESP_DISK" ] || [ -z "$ESP_PARTNUM" ]; then
-		echo "(device: '$ESP_DEV', disk: '$ESP_DISK', partition: '$ESP_PARTNUM')." >&2
-		fail_install "Could not resolve the ESP's disk and partition number; boot entries were left untouched."
+		fail_install "Could not resolve the ESP's disk and partition number (device: '$ESP_DEV', disk: '$ESP_DISK', partition: '$ESP_PARTNUM'); boot entries were left untouched."
 	else
 		NEW_BOOTNUM=""
 		REFIND_READY=0
+		# Verification below matches the new entry's HD(n,GPT,<PARTUUID>,...)
+		# device path, so it needs a GPT ESP with a PARTUUID. On MBR or other
+		# PARTUUID-less setups, fail before creating anything rather than
+		# create an entry that can never be verified.
+		ESP_PARTUUID="$(lsblk -no PARTUUID "$ESP_DEV" 2>/dev/null | head -1 | tr 'A-F' 'a-f')"
+		[ -n "$ESP_PARTUUID" ] \
+			|| fail_install "The ESP has no GPT PARTUUID (MBR-partitioned disk?). Automatic verification of the new boot entry requires a GPT ESP with a PARTUUID; no new rEFInd entry was created and Windows was left active."
 		# Keep refind-install's fallback entry and every old rEFInd entry until
 		# the replacement has been created and verified end to end.
 		if CREATE_OUT="$(sudo efibootmgr -c -d "$ESP_DISK" -p "$ESP_PARTNUM" -L "rEFInd" -l '\EFI\refind\refind_x64.efi' 2>&1)"; then
@@ -197,8 +223,7 @@
 			# loader/config before disabling any fallback boot entry.
 			CANDIDATE_BOOTNUM="$(efibootmgr | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{4}).*/\1/p')"
 			NVRAM_VERBOSE="$(efibootmgr -v 2>/dev/null)"
-			ESP_PARTUUID="$(lsblk -no PARTUUID "$ESP_DEV" 2>/dev/null | head -1 | tr 'A-F' 'a-f')"
-			if [ -n "$CANDIDATE_BOOTNUM" ] && [ -n "$ESP_PARTUUID" ] \
+			if [ -n "$CANDIDATE_BOOTNUM" ] \
 				&& printf '%s\n' "$NVRAM_VERBOSE" | grep -qiE "^Boot${CANDIDATE_BOOTNUM}\\*?[[:space:]]+rEFInd[[:space:]]+HD\\([0-9]+,GPT,${ESP_PARTUUID},[^)]*\\)/(File\\()?\\\\EFI\\\\refind\\\\refind_x64\\.efi" \
 				&& sudo test -s "$ESP_MP/EFI/refind/refind_x64.efi" \
 				&& sudo test -s "$ESP_MP/EFI/refind/refind.conf"; then
@@ -217,12 +242,12 @@
 			printf '%s\n' "$CREATE_OUT" >&2
 			fail_install "Creating the rEFInd boot entry failed; existing entries and Windows were left active."
 		fi
+		# fail_install exits on any unverified entry, so reaching this point
+		# means the replacement rEFInd entry is verified and ready.
 		WINDOWS_BOOTNUM="$(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +Windows Boot Manager(\t.*)?$/\1/p' | head -1)"
 		if [ "$REFIND_READY" -eq 1 ] && [ -n "$NEW_BOOTNUM" ] && [ -n "$WINDOWS_BOOTNUM" ]; then
 			sudo efibootmgr -b "$WINDOWS_BOOTNUM" -A >/dev/null 2>&1 \
 				|| echo "Warning: could not deactivate the Windows boot entry." >&2
-		elif [ -n "$WINDOWS_BOOTNUM" ]; then
-			echo "Windows Boot Manager was left active because the replacement rEFInd entry was not fully verified." >&2
 		fi
 	fi
 	echo 100
@@ -244,10 +269,19 @@ FIRST_BOOT="$(printf '%s\n' "$FINAL_LIST" | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{
 FINAL_RC=0
 if [ "$INSTALL_RC" -ne 0 ]; then
 	FINAL_RC="$INSTALL_RC"
-	echo "*** FAILED: installation stopped after a critical error. ***"
-	echo "*** Windows and unverified fallback entries were left active. ***"
-	zenity --error --title="rEFInd installation failed" --width=450 \
-		--text="Installation stopped after a critical error.\nWindows and unverified fallback entries were left active.\nSee the terminal window for details." 2>/dev/null
+	# Exit code 2 from the install subshell means boot state changes had
+	# already started when it failed; any other failure changed nothing.
+	if [ "$INSTALL_RC" -eq 2 ]; then
+		echo "*** FAILED: installation stopped after a critical error. ***"
+		echo "*** Windows and unverified fallback entries were left active. ***"
+		zenity --error --title="rEFInd installation failed" --width=450 \
+			--text="Installation stopped after a critical error.\nWindows and unverified fallback entries were left active.\nSee the terminal window for details." 2>/dev/null
+	else
+		echo "*** FAILED: installation stopped before any boot entries were changed. ***"
+		echo "*** Nothing was changed. ***"
+		zenity --error --title="rEFInd installation failed" --width=450 \
+			--text="Installation failed before any boot entries were changed.\nNothing was changed.\nSee the terminal window for details." 2>/dev/null
+	fi
 elif [ "$EFIBOOTMGR_RC" -ne 0 ]; then
 	FINAL_RC=1
 	echo "*** FAILED: efibootmgr could not read the firmware boot list. ***"

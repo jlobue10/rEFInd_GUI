@@ -206,11 +206,17 @@ fi
 ESP_DISK="/dev/$ESP_PARENT"
 
 if [ ! -b "$ESP_DISK" ] || [ -z "$ESP_PARTNUM" ]; then
-	echo "(device: '$ESP_DEV', disk: '$ESP_DISK', partition: '$ESP_PARTNUM')." >&2
-	fail_install "Could not resolve the ESP's disk and partition number; boot entries were left untouched."
+	fail_install "Could not resolve the ESP's disk and partition number (device: '$ESP_DEV', disk: '$ESP_DISK', partition: '$ESP_PARTNUM'); boot entries were left untouched."
 else
 	NEW_BOOTNUM=""
 	REFIND_READY=0
+	# Verification below matches the new entry's HD(n,GPT,<PARTUUID>,...)
+	# device path, so it needs a GPT ESP with a PARTUUID. On MBR or other
+	# PARTUUID-less setups, fail before creating anything rather than
+	# create an entry that can never be verified.
+	ESP_PARTUUID="$(lsblk -no PARTUUID "$ESP_DEV" 2>/dev/null | head -1 | tr 'A-F' 'a-f')"
+	[ -n "$ESP_PARTUUID" ] \
+		|| fail_install "The ESP has no GPT PARTUUID (MBR-partitioned disk?). Automatic verification of the new boot entry requires a GPT ESP with a PARTUUID; no new rEFInd entry was created and Windows was left active."
 	# Keep refind-install's fallback entry and every old rEFInd entry until
 	# the replacement has been created and verified end to end.
 	echo "Creating rEFInd boot entry ($ESP_DISK partition $ESP_PARTNUM)..."
@@ -220,8 +226,7 @@ else
 		# loader/config before disabling any fallback boot entry.
 		CANDIDATE_BOOTNUM="$(efibootmgr | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{4}).*/\1/p')"
 		NVRAM_VERBOSE="$(efibootmgr -v 2>/dev/null)"
-		ESP_PARTUUID="$(lsblk -no PARTUUID "$ESP_DEV" 2>/dev/null | head -1 | tr 'A-F' 'a-f')"
-		if [ -n "$CANDIDATE_BOOTNUM" ] && [ -n "$ESP_PARTUUID" ] \
+		if [ -n "$CANDIDATE_BOOTNUM" ] \
 			&& printf '%s\n' "$NVRAM_VERBOSE" | grep -qiE "^Boot${CANDIDATE_BOOTNUM}\\*?[[:space:]]+rEFInd[[:space:]]+HD\\([0-9]+,GPT,${ESP_PARTUUID},[^)]*\\)/(File\\()?\\\\EFI\\\\refind\\\\refind_x64\\.efi" \
 			&& sudo test -s "$ESP_MP/EFI/refind/refind_x64.efi" \
 			&& sudo test -s "$ESP_MP/EFI/refind/refind.conf"; then
@@ -241,12 +246,12 @@ else
 		fail_install "Creating the rEFInd boot entry failed; existing entries and Windows were left active."
 	fi
 
+	# fail_install exits on any unverified entry, so reaching this point
+	# means the replacement rEFInd entry is verified and ready.
 	WINDOWS_BOOTNUM="$(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +Windows Boot Manager(\t.*)?$/\1/p' | head -1)"
 	if [ "$REFIND_READY" -eq 1 ] && [ -n "$NEW_BOOTNUM" ] && [ -n "$WINDOWS_BOOTNUM" ]; then
 		sudo efibootmgr -b "$WINDOWS_BOOTNUM" -A >/dev/null 2>&1 \
 			|| echo "Warning: could not deactivate the Windows boot entry." >&2
-	elif [ -n "$WINDOWS_BOOTNUM" ]; then
-		echo "Windows Boot Manager was left active because the replacement rEFInd entry was not fully verified." >&2
 	fi
 fi
 
