@@ -1007,6 +1007,112 @@
        </item>
       </layout>
      </item>
+     <item row="14" column="0" colspan="7">
+      <layout class="QHBoxLayout" name="themeRowLayout">
+       <item>
+        <widget class="QLabel" name="Theme_label">
+         <property name="text">
+          <string>Theme</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="Theme_comboBox">
+         <property name="minimumSize">
+          <size>
+           <width>170</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContents</enum>
+         </property>
+         <property name="toolTip">
+          <string>rEFInd theme applied by Create Config: None keeps the plain generated config, Random picks one of the installed themes each time the config is created</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="themeRowSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Rand_Theme_On_pushButton">
+         <property name="minimumSize">
+          <size>
+           <width>95</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Turn on the per-boot theme randomizer (only visible while the installed config was created with a theme selected)</string>
+         </property>
+         <property name="text">
+          <string>Rand Theme On</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Rand_Theme_Off_pushButton">
+         <property name="minimumSize">
+          <size>
+           <width>95</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Turn off the per-boot theme randomizer</string>
+         </property>
+         <property name="text">
+          <string>Rand Theme Off</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Install_Themes_pushButton">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Copy the theme files to EFI/refind/themes on the EFI System Partition</string>
+         </property>
+         <property name="text">
+          <string>Install Themes</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
      <item row="5" column="2" colspan="4">
       <widget class="QLineEdit" name="Boot_Option_02_Icon_lineEdit">
        <property name="minimumSize">

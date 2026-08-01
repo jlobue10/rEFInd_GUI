@@ -72,6 +72,7 @@ void prepareDataDir()
         QFile::copy(seedConfig, userConfig);
     copySeedDir(shipped + "/icons", root + "/icons");
     copySeedDir(shipped + "/backgrounds", root + "/backgrounds");
+    copySeedDir(shipped + "/themes", root + "/themes");
 }
 
 static bool isBelow(const QString &path, const QString &root)
@@ -153,17 +154,17 @@ bool runInstallerScript(const QString &installSource)
     return runScriptInWindow(QStringLiteral("install_rEFInd.ps1"));
 }
 
-int installConfig(QString *output)
+// Synchronous, window-less helper run with the output captured: the scripts'
+// consoles used to flash open and vanish, leaving no trace of whether the
+// install worked. The caller shows the result dialog from *output.
+static int runTrustedScriptCaptured(const QString &scriptName, QString *output)
 {
-    // Synchronous, window-less run with the output captured: the script's
-    // console used to flash open and vanish, leaving no trace of whether the
-    // install worked. The caller shows the result dialog from *output.
     QProcess proc;
     proc.setProcessChannelMode(QProcess::MergedChannels);
     proc.setCreateProcessArgumentsModifier([](QProcess::CreateProcessArguments *args) {
         args->flags |= CREATE_NO_WINDOW;
     });
-    const QString script = trustedScriptPath(QStringLiteral("install_config_from_GUI.ps1"));
+    const QString script = trustedScriptPath(scriptName);
     const QString powershell = windowsSystemExecutable(
         QStringLiteral("WindowsPowerShell/v1.0/powershell.exe"));
     if (script.isEmpty() || powershell.isEmpty()) {
@@ -188,14 +189,34 @@ int installConfig(QString *output)
     return proc.exitStatus() == QProcess::NormalExit ? proc.exitCode() : -1;
 }
 
-bool installConfigScriptTrusted(QString *detail)
+int installConfig(QString *output)
 {
-    const QString script = trustedScriptPath(QStringLiteral("install_config_from_GUI.ps1"));
+    return runTrustedScriptCaptured(QStringLiteral("install_config_from_GUI.ps1"), output);
+}
+
+int installThemes(QString *output)
+{
+    return runTrustedScriptCaptured(QStringLiteral("install_themes_from_GUI.ps1"), output);
+}
+
+static bool windowsScriptTrusted(const QString &scriptName, QString *detail)
+{
+    const QString script = trustedScriptPath(scriptName);
     if (detail)
         *detail = script.isEmpty()
-            ? QCoreApplication::applicationDirPath() + "/windows/install_config_from_GUI.ps1"
+            ? QCoreApplication::applicationDirPath() + "/windows/" + scriptName
             : script;
     return !script.isEmpty();
+}
+
+bool installConfigScriptTrusted(QString *detail)
+{
+    return windowsScriptTrusted(QStringLiteral("install_config_from_GUI.ps1"), detail);
+}
+
+bool installThemesScriptTrusted(QString *detail)
+{
+    return windowsScriptTrusted(QStringLiteral("install_themes_from_GUI.ps1"), detail);
 }
 
 int runEspDeepScan()
@@ -211,6 +232,12 @@ bool espDeepScanUseful()
 bool setBackgroundRandomizer(bool enable)
 {
     return runScriptInWindow(QStringLiteral("rEFInd_bg_randomizer_task.ps1"),
+                             {enable ? QStringLiteral("-Enable") : QStringLiteral("-Disable")});
+}
+
+bool setThemeRandomizer(bool enable)
+{
+    return runScriptInWindow(QStringLiteral("rEFInd_theme_randomizer_task.ps1"),
                              {enable ? QStringLiteral("-Enable") : QStringLiteral("-Disable")});
 }
 
@@ -249,17 +276,15 @@ bool runInstallerScript(const QString &installSource)
     return QProcess::startDetached(QStringLiteral("xterm"), {QStringLiteral("-e"), script});
 }
 
-int installConfig(QString *output)
+// Runs one of the root-owned /etc/rEFInd helpers. Allowed without a password
+// via /etc/sudoers.d/zz_install_config_from_GUI (zz_ so it sorts after any
+// passworded catch-all drop-in -- sudo takes the last lexical match); -n
+// keeps the GUI from hanging on a prompt if that rule is missing.
+static int runRootHelperCaptured(const QString &installedPath, QString *output)
 {
-    // Allowed without a password via /etc/sudoers.d/zz_install_config_from_GUI
-    // (zz_ so it sorts after any passworded catch-all drop-in -- sudo takes
-    // the last lexical match); -n keeps the GUI from hanging on a prompt if
-    // that rule is missing.
     QProcess proc;
     proc.setProcessChannelMode(QProcess::MergedChannels);
-    proc.start(QStringLiteral("sudo"),
-               {QStringLiteral("-n"),
-                QStringLiteral("/etc/rEFInd/install_config_from_GUI.sh")});
+    proc.start(QStringLiteral("sudo"), {QStringLiteral("-n"), installedPath});
     if (!proc.waitForStarted()) {
         if (output)
             *output = QCoreApplication::translate("Platform",
@@ -272,18 +297,30 @@ int installConfig(QString *output)
     return proc.exitStatus() == QProcess::NormalExit ? proc.exitCode() : -1;
 }
 
-bool installConfigScriptTrusted(QString *detail)
+int installConfig(QString *output)
 {
-    // /etc/rEFInd/install_config_from_GUI.sh runs as root via the passwordless
-    // sudoers rule, so refuse to invoke it unless it hashes identically to the
-    // copy this build shipped (embedded as a Qt resource at build time). The
-    // installer seds the literal HOME placeholder to the user's home before
-    // copying the script to /etc; replicate that on the embedded reference so
-    // the hashes are comparable.
-    const QString installedPath = QStringLiteral("/etc/rEFInd/install_config_from_GUI.sh");
+    return runRootHelperCaptured(
+        QStringLiteral("/etc/rEFInd/install_config_from_GUI.sh"), output);
+}
+
+int installThemes(QString *output)
+{
+    return runRootHelperCaptured(
+        QStringLiteral("/etc/rEFInd/install_themes_from_GUI.sh"), output);
+}
+
+// The /etc/rEFInd helpers run as root via the passwordless sudoers rule, so
+// refuse to invoke one unless it hashes identically to the copy this build
+// shipped (embedded as a Qt resource at build time). The installer seds the
+// literal HOME placeholder to the user's home before copying the script to
+// /etc; replicate that on the embedded reference so the hashes are
+// comparable.
+static bool rootHelperTrusted(const QString &resourcePath, const QString &installedPath,
+                              QString *detail)
+{
     if (detail)
         *detail = installedPath;
-    QFile ref(QStringLiteral(":/install_config_from_GUI.sh"));
+    QFile ref(resourcePath);
     if (!ref.open(QIODevice::ReadOnly))
         return false;
     QByteArray expected = ref.readAll();
@@ -293,6 +330,18 @@ bool installConfigScriptTrusted(QString *detail)
         return false;
     return QCryptographicHash::hash(installed.readAll(), QCryptographicHash::Sha256)
         == QCryptographicHash::hash(expected, QCryptographicHash::Sha256);
+}
+
+bool installConfigScriptTrusted(QString *detail)
+{
+    return rootHelperTrusted(QStringLiteral(":/install_config_from_GUI.sh"),
+                             QStringLiteral("/etc/rEFInd/install_config_from_GUI.sh"), detail);
+}
+
+bool installThemesScriptTrusted(QString *detail)
+{
+    return rootHelperTrusted(QStringLiteral(":/install_themes_from_GUI.sh"),
+                             QStringLiteral("/etc/rEFInd/install_themes_from_GUI.sh"), detail);
 }
 
 int runEspDeepScan()
@@ -328,15 +377,25 @@ bool espDeepScanUseful()
     return false;
 }
 
-bool setBackgroundRandomizer(bool enable)
+static bool setRandomizerUnit(const QString &unit, bool enable)
 {
     const QString action = enable ? QStringLiteral("enable") : QStringLiteral("disable");
     const QString command = QStringLiteral(
-        "sudo systemctl %1 --now rEFInd_bg_randomizer.service && "
-        "sudo systemctl status rEFInd_bg_randomizer.service; exec bash").arg(action);
+        "sudo systemctl %1 --now %2 && "
+        "sudo systemctl status %2; exec bash").arg(action, unit);
     return QProcess::startDetached(QStringLiteral("xterm"),
                                    {QStringLiteral("-e"), QStringLiteral("bash"),
                                     QStringLiteral("-c"), command});
+}
+
+bool setBackgroundRandomizer(bool enable)
+{
+    return setRandomizerUnit(QStringLiteral("rEFInd_bg_randomizer.service"), enable);
+}
+
+bool setThemeRandomizer(bool enable)
+{
+    return setRandomizerUnit(QStringLiteral("rEFInd_theme_randomizer.service"), enable);
 }
 
 bool firmwareBootnumSupported()
