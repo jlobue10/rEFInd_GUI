@@ -130,7 +130,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="464"/>
-        <location filename="mainwindow.cpp" line="1537"/>
+        <location filename="mainwindow.cpp" line="1560"/>
         <source>Open Folder</source>
         <translation>打开文件夹</translation>
     </message>
@@ -231,9 +231,9 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="932"/>
-        <location filename="mainwindow.cpp" line="993"/>
-        <location filename="mainwindow.cpp" line="1009"/>
-        <location filename="mainwindow.cpp" line="1014"/>
+        <location filename="mainwindow.cpp" line="1016"/>
+        <location filename="mainwindow.cpp" line="1032"/>
+        <location filename="mainwindow.cpp" line="1037"/>
         <source>Install Config</source>
         <translation>安装配置</translation>
     </message>
@@ -251,7 +251,7 @@
         <location filename="mainwindow.ui" line="910"/>
         <location filename="mainwindow.cpp" line="890"/>
         <location filename="mainwindow.cpp" line="901"/>
-        <location filename="mainwindow.cpp" line="1074"/>
+        <location filename="mainwindow.cpp" line="1097"/>
         <source>Create Config</source>
         <translation>创建配置</translation>
     </message>
@@ -332,9 +332,9 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="1110"/>
-        <location filename="mainwindow.cpp" line="1505"/>
-        <location filename="mainwindow.cpp" line="1521"/>
-        <location filename="mainwindow.cpp" line="1526"/>
+        <location filename="mainwindow.cpp" line="1528"/>
+        <location filename="mainwindow.cpp" line="1544"/>
+        <location filename="mainwindow.cpp" line="1549"/>
         <source>Install Themes</source>
         <translation>安装主题</translation>
     </message>
@@ -450,7 +450,7 @@
         <translation>无法完整写入 %1 — 磁盘可能已满。配置未更新。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="994"/>
+        <location filename="mainwindow.cpp" line="1017"/>
         <source>The config-install script was NOT run:
 
 %1
@@ -467,12 +467,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 请重新安装 GUI 以恢复原始脚本，然后重试。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1011"/>
+        <location filename="mainwindow.cpp" line="1034"/>
         <source>The config was installed successfully.</source>
         <translation>配置安装成功。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1012"/>
+        <location filename="mainwindow.cpp" line="1035"/>
         <source>The config was installed successfully.
 
 %1</source>
@@ -481,12 +481,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1016"/>
+        <location filename="mainwindow.cpp" line="1039"/>
         <source>Installing the config failed (code %1).</source>
         <translation>配置安装失败（代码 %1）。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1017"/>
+        <location filename="mainwindow.cpp" line="1040"/>
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -495,31 +495,31 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1075"/>
+        <location filename="mainwindow.cpp" line="1098"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
         <translation>无法暂存主题文件 %1 — 配置未更新。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1097"/>
-        <location filename="mainwindow.cpp" line="1107"/>
-        <location filename="mainwindow.cpp" line="1114"/>
+        <location filename="mainwindow.cpp" line="1120"/>
+        <location filename="mainwindow.cpp" line="1130"/>
+        <location filename="mainwindow.cpp" line="1137"/>
         <source>Copy PNG</source>
         <translation>复制 PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1098"/>
-        <location filename="mainwindow.cpp" line="1108"/>
-        <location filename="mainwindow.cpp" line="1115"/>
+        <location filename="mainwindow.cpp" line="1121"/>
+        <location filename="mainwindow.cpp" line="1131"/>
+        <location filename="mainwindow.cpp" line="1138"/>
         <source>Could not copy %1 to %2</source>
         <translation>无法将 %1 复制到 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1140"/>
+        <location filename="mainwindow.cpp" line="1163"/>
         <source>Invalid PNG</source>
         <translation>无效的 PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1141"/>
+        <location filename="mainwindow.cpp" line="1164"/>
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -528,48 +528,48 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 背景和系统图标必须是真正的 PNG 图像（而不仅仅是扩展名为 .png 的文件）。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1400"/>
+        <location filename="mainwindow.cpp" line="1423"/>
         <source>Check For Update</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1403"/>
+        <location filename="mainwindow.cpp" line="1426"/>
         <source>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;GUI 原作者： &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;特别感谢 Deck Wizard 的测试与质量保证&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard 双系统教程&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1450"/>
+        <location filename="mainwindow.cpp" line="1473"/>
         <source>&lt;p align=&apos;center&apos;&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;检查更新失败。请检查网络连接后重试。&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1453"/>
+        <location filename="mainwindow.cpp" line="1476"/>
         <source>&lt;p align=&apos;center&apos;&gt;An update is available &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;有可用更新，请&lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;点击此处&lt;/a&gt;获取&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1457"/>
+        <location filename="mainwindow.cpp" line="1480"/>
         <source>&lt;p align=&apos;center&apos;&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;未发现更新。您使用的已是最新版本。&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1467"/>
+        <location filename="mainwindow.cpp" line="1490"/>
         <source>Background Randomizer</source>
         <translation>背景随机更换</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1468"/>
-        <location filename="mainwindow.cpp" line="1485"/>
+        <location filename="mainwindow.cpp" line="1491"/>
+        <location filename="mainwindow.cpp" line="1508"/>
         <source>Failed to launch the randomizer setup.</source>
         <translation>无法启动背景随机更换设置。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1484"/>
+        <location filename="mainwindow.cpp" line="1507"/>
         <source>Theme Randomizer</source>
         <translation>主题随机更换</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1506"/>
+        <location filename="mainwindow.cpp" line="1529"/>
         <source>The theme-install script was NOT run:
 
 %1
@@ -586,12 +586,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 请重新安装 GUI 以恢复原始脚本，然后重试。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1523"/>
+        <location filename="mainwindow.cpp" line="1546"/>
         <source>The themes were installed successfully.</source>
         <translation>主题安装成功。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1524"/>
+        <location filename="mainwindow.cpp" line="1547"/>
         <source>The themes were installed successfully.
 
 %1</source>
@@ -600,12 +600,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1528"/>
+        <location filename="mainwindow.cpp" line="1551"/>
         <source>Installing the themes failed (code %1).</source>
         <translation>主题安装失败（代码 %1）。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1529"/>
+        <location filename="mainwindow.cpp" line="1552"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
@@ -614,7 +614,7 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1538"/>
+        <location filename="mainwindow.cpp" line="1561"/>
         <source>Failed to open %1 in the file manager.</source>
         <translation>无法在文件管理器中打开 %1。</translation>
     </message>
@@ -640,22 +640,32 @@ Reinstall the GUI to restore the original script, then try again.</source>
 <context>
     <name>PreviewDialog</name>
     <message>
-        <location filename="previewdialog.cpp" line="34"/>
+        <location filename="previewdialog.cpp" line="62"/>
         <source>No boot options selected.</source>
         <translation>未选择任何启动选项。</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="89"/>
+        <location filename="previewdialog.cpp" line="166"/>
         <source>Preview</source>
         <translation>预览</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="101"/>
+        <location filename="previewdialog.cpp" line="181"/>
         <source>Approximate preview — rEFInd&apos;s real rendering also depends on the firmware resolution and theme.</source>
         <translation>近似预览 — rEFInd 的实际显示还取决于固件分辨率和主题。</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="107"/>
+        <location filename="previewdialog.cpp" line="184"/>
+        <source>Approximate preview showing the randomly picked &quot;%1&quot; theme — Random picks a theme anew each time the config is created.</source>
+        <translation>近似预览，显示随机选中的主题“%1” — “随机”会在每次创建配置时重新选择一个主题。</translation>
+    </message>
+    <message>
+        <location filename="previewdialog.cpp" line="188"/>
+        <source>Approximate preview with the &quot;%1&quot; theme applied — rEFInd&apos;s real rendering also depends on the firmware resolution and the theme&apos;s other settings.</source>
+        <translation>应用主题“%1”后的近似预览 — rEFInd 的实际显示还取决于固件分辨率和该主题的其他设置。</translation>
+    </message>
+    <message>
+        <location filename="previewdialog.cpp" line="197"/>
         <source>Boot screen</source>
         <translation>启动界面</translation>
     </message>

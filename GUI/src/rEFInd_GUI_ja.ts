@@ -130,7 +130,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="464"/>
-        <location filename="mainwindow.cpp" line="1537"/>
+        <location filename="mainwindow.cpp" line="1560"/>
         <source>Open Folder</source>
         <translation>フォルダーを開く</translation>
     </message>
@@ -231,9 +231,9 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="932"/>
-        <location filename="mainwindow.cpp" line="993"/>
-        <location filename="mainwindow.cpp" line="1009"/>
-        <location filename="mainwindow.cpp" line="1014"/>
+        <location filename="mainwindow.cpp" line="1016"/>
+        <location filename="mainwindow.cpp" line="1032"/>
+        <location filename="mainwindow.cpp" line="1037"/>
         <source>Install Config</source>
         <translation>設定をインストール</translation>
     </message>
@@ -251,7 +251,7 @@
         <location filename="mainwindow.ui" line="910"/>
         <location filename="mainwindow.cpp" line="890"/>
         <location filename="mainwindow.cpp" line="901"/>
-        <location filename="mainwindow.cpp" line="1074"/>
+        <location filename="mainwindow.cpp" line="1097"/>
         <source>Create Config</source>
         <translation>設定を作成</translation>
     </message>
@@ -332,9 +332,9 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="1110"/>
-        <location filename="mainwindow.cpp" line="1505"/>
-        <location filename="mainwindow.cpp" line="1521"/>
-        <location filename="mainwindow.cpp" line="1526"/>
+        <location filename="mainwindow.cpp" line="1528"/>
+        <location filename="mainwindow.cpp" line="1544"/>
+        <location filename="mainwindow.cpp" line="1549"/>
         <source>Install Themes</source>
         <translation>テーマをインストール</translation>
     </message>
@@ -450,7 +450,7 @@
         <translation>%1 を完全に書き込めませんでした — ディスクが満杯の可能性があります。設定は更新されませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="994"/>
+        <location filename="mainwindow.cpp" line="1017"/>
         <source>The config-install script was NOT run:
 
 %1
@@ -467,12 +467,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 GUI を再インストールして元のスクリプトを復元し、もう一度お試しください。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1011"/>
+        <location filename="mainwindow.cpp" line="1034"/>
         <source>The config was installed successfully.</source>
         <translation>設定は正常にインストールされました。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1012"/>
+        <location filename="mainwindow.cpp" line="1035"/>
         <source>The config was installed successfully.
 
 %1</source>
@@ -481,12 +481,12 @@ GUI を再インストールして元のスクリプトを復元し、もう一�
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1016"/>
+        <location filename="mainwindow.cpp" line="1039"/>
         <source>Installing the config failed (code %1).</source>
         <translation>設定のインストールに失敗しました（コード %1）。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1017"/>
+        <location filename="mainwindow.cpp" line="1040"/>
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -495,31 +495,31 @@ GUI を再インストールして元のスクリプトを復元し、もう一�
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1075"/>
+        <location filename="mainwindow.cpp" line="1098"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
         <translation>テーマファイル %1 を準備できませんでした — 設定は更新されませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1097"/>
-        <location filename="mainwindow.cpp" line="1107"/>
-        <location filename="mainwindow.cpp" line="1114"/>
+        <location filename="mainwindow.cpp" line="1120"/>
+        <location filename="mainwindow.cpp" line="1130"/>
+        <location filename="mainwindow.cpp" line="1137"/>
         <source>Copy PNG</source>
         <translation>PNG をコピー</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1098"/>
-        <location filename="mainwindow.cpp" line="1108"/>
-        <location filename="mainwindow.cpp" line="1115"/>
+        <location filename="mainwindow.cpp" line="1121"/>
+        <location filename="mainwindow.cpp" line="1131"/>
+        <location filename="mainwindow.cpp" line="1138"/>
         <source>Could not copy %1 to %2</source>
         <translation>%1 を %2 にコピーできませんでした</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1140"/>
+        <location filename="mainwindow.cpp" line="1163"/>
         <source>Invalid PNG</source>
         <translation>無効な PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1141"/>
+        <location filename="mainwindow.cpp" line="1164"/>
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -528,48 +528,48 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 背景と OS アイコンは、実際の PNG 画像である必要があります（拡張子が .png なだけのファイルは不可）。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1400"/>
+        <location filename="mainwindow.cpp" line="1423"/>
         <source>Check For Update</source>
         <translation>更新を確認</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1403"/>
+        <location filename="mainwindow.cpp" line="1426"/>
         <source>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;オリジナル GUI 作者: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;テストと QA を担当した Deck Wizard に感謝します&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard デュアルブートチュートリアル&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1450"/>
+        <location filename="mainwindow.cpp" line="1473"/>
         <source>&lt;p align=&apos;center&apos;&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;更新の確認に失敗しました。インターネット接続を確認して、もう一度お試しください。&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1453"/>
+        <location filename="mainwindow.cpp" line="1476"/>
         <source>&lt;p align=&apos;center&apos;&gt;An update is available &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;更新があります。&lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;こちら&lt;/a&gt;から入手できます&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1457"/>
+        <location filename="mainwindow.cpp" line="1480"/>
         <source>&lt;p align=&apos;center&apos;&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;更新はありません。最新バージョンを使用しています。&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1467"/>
+        <location filename="mainwindow.cpp" line="1490"/>
         <source>Background Randomizer</source>
         <translation>背景ランダム化</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1468"/>
-        <location filename="mainwindow.cpp" line="1485"/>
+        <location filename="mainwindow.cpp" line="1491"/>
+        <location filename="mainwindow.cpp" line="1508"/>
         <source>Failed to launch the randomizer setup.</source>
         <translation>ランダム化の設定を起動できませんでした。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1484"/>
+        <location filename="mainwindow.cpp" line="1507"/>
         <source>Theme Randomizer</source>
         <translation>テーマランダム化</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1506"/>
+        <location filename="mainwindow.cpp" line="1529"/>
         <source>The theme-install script was NOT run:
 
 %1
@@ -586,12 +586,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 GUI を再インストールして元のスクリプトを復元し、もう一度お試しください。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1523"/>
+        <location filename="mainwindow.cpp" line="1546"/>
         <source>The themes were installed successfully.</source>
         <translation>テーマは正常にインストールされました。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1524"/>
+        <location filename="mainwindow.cpp" line="1547"/>
         <source>The themes were installed successfully.
 
 %1</source>
@@ -600,12 +600,12 @@ GUI を再インストールして元のスクリプトを復元し、もう一�
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1528"/>
+        <location filename="mainwindow.cpp" line="1551"/>
         <source>Installing the themes failed (code %1).</source>
         <translation>テーマのインストールに失敗しました（コード %1）。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1529"/>
+        <location filename="mainwindow.cpp" line="1552"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
@@ -614,7 +614,7 @@ GUI を再インストールして元のスクリプトを復元し、もう一�
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1538"/>
+        <location filename="mainwindow.cpp" line="1561"/>
         <source>Failed to open %1 in the file manager.</source>
         <translation>ファイルマネージャーで %1 を開けませんでした。</translation>
     </message>
@@ -640,22 +640,32 @@ GUI を再インストールして元のスクリプトを復元し、もう一�
 <context>
     <name>PreviewDialog</name>
     <message>
-        <location filename="previewdialog.cpp" line="34"/>
+        <location filename="previewdialog.cpp" line="62"/>
         <source>No boot options selected.</source>
         <translation>起動オプションが選択されていません。</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="89"/>
+        <location filename="previewdialog.cpp" line="166"/>
         <source>Preview</source>
         <translation>プレビュー</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="101"/>
+        <location filename="previewdialog.cpp" line="181"/>
         <source>Approximate preview — rEFInd&apos;s real rendering also depends on the firmware resolution and theme.</source>
         <translation>おおよそのプレビューです — rEFInd の実際の表示はファームウェアの解像度やテーマにも依存します。</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="107"/>
+        <location filename="previewdialog.cpp" line="184"/>
+        <source>Approximate preview showing the randomly picked &quot;%1&quot; theme — Random picks a theme anew each time the config is created.</source>
+        <translation>ランダムに選ばれたテーマ「%1」を表示するおおよそのプレビューです — 「ランダム」は構成を作成するたびに新しいテーマを選びます。</translation>
+    </message>
+    <message>
+        <location filename="previewdialog.cpp" line="188"/>
+        <source>Approximate preview with the &quot;%1&quot; theme applied — rEFInd&apos;s real rendering also depends on the firmware resolution and the theme&apos;s other settings.</source>
+        <translation>テーマ「%1」を適用したおおよそのプレビューです — rEFInd の実際の表示はファームウェアの解像度やテーマのその他の設定にも依存します。</translation>
+    </message>
+    <message>
+        <location filename="previewdialog.cpp" line="197"/>
         <source>Boot screen</source>
         <translation>起動画面</translation>
     </message>
