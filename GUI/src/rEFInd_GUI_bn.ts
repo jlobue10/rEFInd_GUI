@@ -298,37 +298,37 @@
     <message>
         <location filename="mainwindow.ui" line="1015"/>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>থিম</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1031"/>
         <source>rEFInd theme applied by Create Config: None keeps the plain generated config, Random picks one of the installed themes each time the config is created</source>
-        <translation type="unfinished"></translation>
+        <translation>কনফিগ তৈরি যে rEFInd থিম প্রয়োগ করে: কোনোটি নয় সাধারণ তৈরি কনফিগ রাখে, এলোমেলো প্রতিবার কনফিগ তৈরির সময় ইনস্টল করা থিমগুলির একটি বেছে নেয়</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1063"/>
         <source>Turn on the per-boot theme randomizer (only visible while the installed config was created with a theme selected)</source>
-        <translation type="unfinished"></translation>
+        <translation>প্রতি বুটে এলোমেলো থিম চালু করুন (কেবল তখনই দেখা যায় যখন ইনস্টল করা কনফিগ একটি থিম নির্বাচন করে তৈরি হয়েছিল)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1066"/>
         <source>Rand Theme On</source>
-        <translation type="unfinished"></translation>
+        <translation>এলোমেলো থিম চালু</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1085"/>
         <source>Turn off the per-boot theme randomizer</source>
-        <translation type="unfinished"></translation>
+        <translation>প্রতি বুটে এলোমেলো থিম বন্ধ করুন</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1088"/>
         <source>Rand Theme Off</source>
-        <translation type="unfinished"></translation>
+        <translation>এলোমেলো থিম বন্ধ</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1107"/>
         <source>Copy the theme files to EFI/refind/themes on the EFI System Partition</source>
-        <translation type="unfinished"></translation>
+        <translation>থিম ফাইলগুলি EFI সিস্টেম পার্টিশনের EFI/refind/themes-এ কপি করুন</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1110"/>
@@ -336,7 +336,7 @@
         <location filename="mainwindow.cpp" line="1521"/>
         <location filename="mainwindow.cpp" line="1526"/>
         <source>Install Themes</source>
-        <translation type="unfinished"></translation>
+        <translation>থিম ইনস্টল</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1151"/>
@@ -397,7 +397,7 @@
     <message>
         <location filename="mainwindow.cpp" line="227"/>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>এলোমেলো</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="335"/>
@@ -447,7 +447,7 @@
     <message>
         <location filename="mainwindow.cpp" line="902"/>
         <source>Could not write %1 completely — the disk may be full. The config was not updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 সম্পূর্ণ লেখা যায়নি — ডিস্ক পূর্ণ হয়ে থাকতে পারে। কনফিগারেশন আপডেট হয়নি।</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="994"/>
@@ -497,7 +497,7 @@ Reinstall the GUI to restore the original script, then try again.</source>
     <message>
         <location filename="mainwindow.cpp" line="1075"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>থিম ফাইল %1 প্রস্তুত করা যায়নি — কনফিগারেশন আপডেট হয়নি।</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1097"/>
@@ -566,7 +566,7 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
     <message>
         <location filename="mainwindow.cpp" line="1484"/>
         <source>Theme Randomizer</source>
-        <translation type="unfinished"></translation>
+        <translation>এলোমেলো থিম</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1506"/>
@@ -577,31 +577,41 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 It does not match the copy shipped with this version of the app. Because it runs with root privileges, it is only ever run when it is byte-for-byte the shipped version — a mismatch means it was modified (possibly tampered with) or belongs to a different version.
 
 Reinstall the GUI to restore the original script, then try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>থিম-ইনস্টল স্ক্রিপ্টটি চালানো হয়নি:
+
+%1
+
+এটি অ্যাপের এই সংস্করণের সাথে দেওয়া কপির সাথে মেলে না। যেহেতু এটি root অনুমতি নিয়ে চলে, তাই এটি কেবল তখনই চালানো হয় যখন এটি দেওয়া সংস্করণের সাথে বাইটে-বাইটে একই হয় — অমিল মানে এটি পরিবর্তিত হয়েছে (সম্ভবত টেম্পার করা) বা অন্য সংস্করণের।
+
+মূল স্ক্রিপ্ট ফিরিয়ে আনতে GUI আবার ইনস্টল করুন, তারপর আবার চেষ্টা করুন।</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1523"/>
         <source>The themes were installed successfully.</source>
-        <translation type="unfinished"></translation>
+        <translation>থিমগুলি সফলভাবে ইনস্টল হয়েছে।</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1524"/>
         <source>The themes were installed successfully.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>থিমগুলি সফলভাবে ইনস্টল হয়েছে।
+
+%1</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1528"/>
         <source>Installing the themes failed (code %1).</source>
-        <translation type="unfinished"></translation>
+        <translation>থিম ইনস্টল ব্যর্থ হয়েছে (কোড %1)।</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1529"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
-        <translation type="unfinished"></translation>
+        <translation>থিম ইনস্টল ব্যর্থ হয়েছে (কোড %1)।
+
+%2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1538"/>
@@ -614,7 +624,7 @@ Reinstall the GUI to restore the original script, then try again.</source>
     <message>
         <location filename="platform.cpp" line="172"/>
         <source>The privileged helper is not installed under Program Files.</source>
-        <translation type="unfinished"></translation>
+        <translation>বিশেষাধিকারপ্রাপ্ত সহায়কটি Program Files-এর অধীনে ইনস্টল করা নেই।</translation>
     </message>
     <message>
         <location filename="platform.cpp" line="182"/>

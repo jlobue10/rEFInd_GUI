@@ -298,37 +298,37 @@
     <message>
         <location filename="mainwindow.ui" line="1015"/>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1031"/>
         <source>rEFInd theme applied by Create Config: None keeps the plain generated config, Random picks one of the installed themes each time the config is created</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema de rEFInd aplicado por Crear config.: Ninguno mantiene la configuración generada básica, Aleatorio elige uno de los temas instalados cada vez que se crea la configuración</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1063"/>
         <source>Turn on the per-boot theme randomizer (only visible while the installed config was created with a theme selected)</source>
-        <translation type="unfinished"></translation>
+        <translation>Activar el tema aleatorio en cada arranque (solo visible mientras la configuración instalada se creó con un tema seleccionado)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1066"/>
         <source>Rand Theme On</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema aleat. sí</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1085"/>
         <source>Turn off the per-boot theme randomizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Desactivar el tema aleatorio en cada arranque</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1088"/>
         <source>Rand Theme Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema aleat. no</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1107"/>
         <source>Copy the theme files to EFI/refind/themes on the EFI System Partition</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar los archivos del tema a EFI/refind/themes en la partición del sistema EFI</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1110"/>
@@ -336,7 +336,7 @@
         <location filename="mainwindow.cpp" line="1521"/>
         <location filename="mainwindow.cpp" line="1526"/>
         <source>Install Themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalar temas</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1151"/>
@@ -397,7 +397,7 @@
     <message>
         <location filename="mainwindow.cpp" line="227"/>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>Aleatorio</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="335"/>
@@ -447,7 +447,7 @@
     <message>
         <location filename="mainwindow.cpp" line="902"/>
         <source>Could not write %1 completely — the disk may be full. The config was not updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>No se pudo escribir %1 por completo — puede que el disco esté lleno. La configuración no se actualizó.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="994"/>
@@ -497,7 +497,7 @@ Reinstale la GUI para restaurar el script original y vuelva a intentarlo.</trans
     <message>
         <location filename="mainwindow.cpp" line="1075"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>No se pudo preparar el archivo de tema %1 — la configuración no se actualizó.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1097"/>
@@ -566,7 +566,7 @@ Los fondos y los iconos de SO deben ser imágenes PNG reales (no solo archivos c
     <message>
         <location filename="mainwindow.cpp" line="1484"/>
         <source>Theme Randomizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema aleatorio</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1506"/>
@@ -577,31 +577,41 @@ Los fondos y los iconos de SO deben ser imágenes PNG reales (no solo archivos c
 It does not match the copy shipped with this version of the app. Because it runs with root privileges, it is only ever run when it is byte-for-byte the shipped version — a mismatch means it was modified (possibly tampered with) or belongs to a different version.
 
 Reinstall the GUI to restore the original script, then try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>El script de instalación de temas NO se ejecutó:
+
+%1
+
+No coincide con la copia incluida en esta versión de la aplicación. Como se ejecuta con privilegios de root, solo se ejecuta cuando es byte a byte la versión incluida — una discrepancia significa que fue modificado (posiblemente manipulado) o pertenece a otra versión.
+
+Reinstale la GUI para restaurar el script original y vuelva a intentarlo.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1523"/>
         <source>The themes were installed successfully.</source>
-        <translation type="unfinished"></translation>
+        <translation>Los temas se instalaron correctamente.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1524"/>
         <source>The themes were installed successfully.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Los temas se instalaron correctamente.
+
+%1</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1528"/>
         <source>Installing the themes failed (code %1).</source>
-        <translation type="unfinished"></translation>
+        <translation>La instalación de los temas falló (código %1).</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1529"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
-        <translation type="unfinished"></translation>
+        <translation>La instalación de los temas falló (código %1).
+
+%2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1538"/>
@@ -614,7 +624,7 @@ Reinstall the GUI to restore the original script, then try again.</source>
     <message>
         <location filename="platform.cpp" line="172"/>
         <source>The privileged helper is not installed under Program Files.</source>
-        <translation type="unfinished"></translation>
+        <translation>El programa auxiliar con privilegios no está instalado en Program Files.</translation>
     </message>
     <message>
         <location filename="platform.cpp" line="182"/>

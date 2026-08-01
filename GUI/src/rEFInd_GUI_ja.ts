@@ -298,37 +298,37 @@
     <message>
         <location filename="mainwindow.ui" line="1015"/>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマ</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1031"/>
         <source>rEFInd theme applied by Create Config: None keeps the plain generated config, Random picks one of the installed themes each time the config is created</source>
-        <translation type="unfinished"></translation>
+        <translation>「設定を作成」が適用する rEFInd テーマ:「なし」は素の生成設定を保ち、「ランダム」は設定を作成するたびにインストール済みテーマのどれかを選びます</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1063"/>
         <source>Turn on the per-boot theme randomizer (only visible while the installed config was created with a theme selected)</source>
-        <translation type="unfinished"></translation>
+        <translation>起動ごとのテーマランダム化を有効にする（インストール済みの設定がテーマを選択して作成された場合にのみ表示）</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1066"/>
         <source>Rand Theme On</source>
-        <translation type="unfinished"></translation>
+        <translation>ランダムテーマ ON</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1085"/>
         <source>Turn off the per-boot theme randomizer</source>
-        <translation type="unfinished"></translation>
+        <translation>起動ごとのテーマランダム化を無効にする</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1088"/>
         <source>Rand Theme Off</source>
-        <translation type="unfinished"></translation>
+        <translation>ランダムテーマ OFF</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1107"/>
         <source>Copy the theme files to EFI/refind/themes on the EFI System Partition</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマファイルを EFI システムパーティションの EFI/refind/themes にコピーします</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1110"/>
@@ -336,7 +336,7 @@
         <location filename="mainwindow.cpp" line="1521"/>
         <location filename="mainwindow.cpp" line="1526"/>
         <source>Install Themes</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマをインストール</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1151"/>
@@ -397,7 +397,7 @@
     <message>
         <location filename="mainwindow.cpp" line="227"/>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>ランダム</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="335"/>
@@ -447,7 +447,7 @@
     <message>
         <location filename="mainwindow.cpp" line="902"/>
         <source>Could not write %1 completely — the disk may be full. The config was not updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 を完全に書き込めませんでした — ディスクが満杯の可能性があります。設定は更新されませんでした。</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="994"/>
@@ -497,7 +497,7 @@ GUI を再インストールして元のスクリプトを復元し、もう一�
     <message>
         <location filename="mainwindow.cpp" line="1075"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマファイル %1 を準備できませんでした — 設定は更新されませんでした。</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1097"/>
@@ -566,7 +566,7 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
     <message>
         <location filename="mainwindow.cpp" line="1484"/>
         <source>Theme Randomizer</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマランダム化</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1506"/>
@@ -577,31 +577,41 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 It does not match the copy shipped with this version of the app. Because it runs with root privileges, it is only ever run when it is byte-for-byte the shipped version — a mismatch means it was modified (possibly tampered with) or belongs to a different version.
 
 Reinstall the GUI to restore the original script, then try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマインストールスクリプトは実行されませんでした:
+
+%1
+
+このバージョンのアプリに同梱されたコピーと一致しません。このスクリプトは root 権限で実行されるため、同梱バージョンとバイト単位で一致する場合にのみ実行されます — 不一致は、スクリプトが変更された（改ざんの可能性）か、別のバージョンのものであることを意味します。
+
+GUI を再インストールして元のスクリプトを復元し、もう一度お試しください。</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1523"/>
         <source>The themes were installed successfully.</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマは正常にインストールされました。</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1524"/>
         <source>The themes were installed successfully.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマは正常にインストールされました。
+
+%1</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1528"/>
         <source>Installing the themes failed (code %1).</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマのインストールに失敗しました（コード %1）。</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1529"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマのインストールに失敗しました（コード %1）。
+
+%2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1538"/>
@@ -614,7 +624,7 @@ Reinstall the GUI to restore the original script, then try again.</source>
     <message>
         <location filename="platform.cpp" line="172"/>
         <source>The privileged helper is not installed under Program Files.</source>
-        <translation type="unfinished"></translation>
+        <translation>特権ヘルパーが Program Files 配下にインストールされていません。</translation>
     </message>
     <message>
         <location filename="platform.cpp" line="182"/>

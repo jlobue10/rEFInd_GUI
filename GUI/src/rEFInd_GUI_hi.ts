@@ -298,37 +298,37 @@
     <message>
         <location filename="mainwindow.ui" line="1015"/>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>थीम</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1031"/>
         <source>rEFInd theme applied by Create Config: None keeps the plain generated config, Random picks one of the installed themes each time the config is created</source>
-        <translation type="unfinished"></translation>
+        <translation>कॉन्फ़िग बनाएँ द्वारा लागू rEFInd थीम: कोई नहीं सादा बनाया गया कॉन्फ़िग रखता है, यादृच्छिक हर बार कॉन्फ़िग बनाते समय इंस्टॉल की गई थीमों में से एक चुनता है</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1063"/>
         <source>Turn on the per-boot theme randomizer (only visible while the installed config was created with a theme selected)</source>
-        <translation type="unfinished"></translation>
+        <translation>हर बूट पर यादृच्छिक थीम चालू करें (केवल तभी दिखता है जब इंस्टॉल किया गया कॉन्फ़िग किसी चयनित थीम के साथ बनाया गया हो)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1066"/>
         <source>Rand Theme On</source>
-        <translation type="unfinished"></translation>
+        <translation>यादृच्छिक थीम चालू</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1085"/>
         <source>Turn off the per-boot theme randomizer</source>
-        <translation type="unfinished"></translation>
+        <translation>हर बूट पर यादृच्छिक थीम बंद करें</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1088"/>
         <source>Rand Theme Off</source>
-        <translation type="unfinished"></translation>
+        <translation>यादृच्छिक थीम बंद</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1107"/>
         <source>Copy the theme files to EFI/refind/themes on the EFI System Partition</source>
-        <translation type="unfinished"></translation>
+        <translation>थीम फ़ाइलों को EFI सिस्टम पार्टीशन पर EFI/refind/themes में कॉपी करें</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1110"/>
@@ -336,7 +336,7 @@
         <location filename="mainwindow.cpp" line="1521"/>
         <location filename="mainwindow.cpp" line="1526"/>
         <source>Install Themes</source>
-        <translation type="unfinished"></translation>
+        <translation>थीम इंस्टॉल करें</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1151"/>
@@ -397,7 +397,7 @@
     <message>
         <location filename="mainwindow.cpp" line="227"/>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>यादृच्छिक</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="335"/>
@@ -447,7 +447,7 @@
     <message>
         <location filename="mainwindow.cpp" line="902"/>
         <source>Could not write %1 completely — the disk may be full. The config was not updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 पूरी तरह नहीं लिखा जा सका — डिस्क भरी हो सकती है। कॉन्फ़िगरेशन अपडेट नहीं हुआ।</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="994"/>
@@ -497,7 +497,7 @@ Reinstall the GUI to restore the original script, then try again.</source>
     <message>
         <location filename="mainwindow.cpp" line="1075"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>थीम फ़ाइल %1 तैयार नहीं की जा सकी — कॉन्फ़िगरेशन अपडेट नहीं हुआ।</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1097"/>
@@ -566,7 +566,7 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
     <message>
         <location filename="mainwindow.cpp" line="1484"/>
         <source>Theme Randomizer</source>
-        <translation type="unfinished"></translation>
+        <translation>यादृच्छिक थीम</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1506"/>
@@ -577,31 +577,41 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 It does not match the copy shipped with this version of the app. Because it runs with root privileges, it is only ever run when it is byte-for-byte the shipped version — a mismatch means it was modified (possibly tampered with) or belongs to a different version.
 
 Reinstall the GUI to restore the original script, then try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>थीम-इंस्टॉल स्क्रिप्ट नहीं चलाई गई:
+
+%1
+
+यह ऐप के इस संस्करण के साथ दी गई प्रति से मेल नहीं खाती। चूँकि यह root अधिकारों से चलती है, इसे केवल तभी चलाया जाता है जब यह दी गई प्रति से बाइट-दर-बाइट समान हो — असंगति का अर्थ है कि इसे बदला गया है (संभवतः छेड़छाड़) या यह किसी अन्य संस्करण की है।
+
+मूल स्क्रिप्ट बहाल करने के लिए GUI फिर से इंस्टॉल करें, फिर पुनः प्रयास करें।</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1523"/>
         <source>The themes were installed successfully.</source>
-        <translation type="unfinished"></translation>
+        <translation>थीमें सफलतापूर्वक इंस्टॉल हो गईं।</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1524"/>
         <source>The themes were installed successfully.
 
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>थीमें सफलतापूर्वक इंस्टॉल हो गईं।
+
+%1</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1528"/>
         <source>Installing the themes failed (code %1).</source>
-        <translation type="unfinished"></translation>
+        <translation>थीम इंस्टॉल विफल रहा (कोड %1)।</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1529"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
-        <translation type="unfinished"></translation>
+        <translation>थीम इंस्टॉल विफल रहा (कोड %1)।
+
+%2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1538"/>
@@ -614,7 +624,7 @@ Reinstall the GUI to restore the original script, then try again.</source>
     <message>
         <location filename="platform.cpp" line="172"/>
         <source>The privileged helper is not installed under Program Files.</source>
-        <translation type="unfinished"></translation>
+        <translation>विशेषाधिकार प्राप्त सहायक Program Files के अंतर्गत इंस्टॉल नहीं है।</translation>
     </message>
     <message>
         <location filename="platform.cpp" line="182"/>

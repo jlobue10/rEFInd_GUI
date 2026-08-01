@@ -498,6 +498,98 @@ Li sfunni e l'iconi di sistema hannu a èssiri veri immàggini PNG (no simprici 
         <source>Height in pixels</source>
         <translation>Altizza in pixel</translation>
     </message>
+    <message>
+        <source>Theme</source>
+        <translation>Tema</translation>
+    </message>
+    <message>
+        <source>rEFInd theme applied by Create Config: None keeps the plain generated config, Random picks one of the installed themes each time the config is created</source>
+        <translation>Tema di rEFInd applicatu di Crea config: Nuddu manteni la cunfigurazzioni ginirata sìmplici, Casuali scegghi unu di li temi nstallati ogni vota ca si crea la cunfigurazzioni</translation>
+    </message>
+    <message>
+        <source>Turn on the per-boot theme randomizer (only visible while the installed config was created with a theme selected)</source>
+        <translation>Attiva lu tema casuali a ogni avviu (visìbbili sulu si la cunfigurazzioni nstallata fu criata cu un tema sciglutu)</translation>
+    </message>
+    <message>
+        <source>Rand Theme On</source>
+        <translation>Tema cas. on</translation>
+    </message>
+    <message>
+        <source>Turn off the per-boot theme randomizer</source>
+        <translation>Disattiva lu tema casuali a ogni avviu</translation>
+    </message>
+    <message>
+        <source>Rand Theme Off</source>
+        <translation>Tema cas. off</translation>
+    </message>
+    <message>
+        <source>Copy the theme files to EFI/refind/themes on the EFI System Partition</source>
+        <translation>Copia li file di lu tema nta EFI/refind/themes supra la partizzioni di sistema EFI</translation>
+    </message>
+    <message>
+        <source>Install Themes</source>
+        <translation>Nstalla temi</translation>
+    </message>
+    <message>
+        <source>Random</source>
+        <translation>Casuali</translation>
+    </message>
+    <message>
+        <source>Could not write %1 completely — the disk may be full. The config was not updated.</source>
+        <translation>Nun si potti scrìviri %1 cumpletamenti — lu discu putissi èssiri chinu. La cunfigurazzioni nun fu aggiurnata.</translation>
+    </message>
+    <message>
+        <source>Could not stage the theme file %1 — the config was not updated.</source>
+        <translation>Nun si potti priparari lu file di lu tema %1 — la cunfigurazzioni nun fu aggiurnata.</translation>
+    </message>
+    <message>
+        <source>Theme Randomizer</source>
+        <translation>Tema casuali</translation>
+    </message>
+    <message>
+        <source>The theme-install script was NOT run:
+
+%1
+
+It does not match the copy shipped with this version of the app. Because it runs with root privileges, it is only ever run when it is byte-for-byte the shipped version — a mismatch means it was modified (possibly tampered with) or belongs to a different version.
+
+Reinstall the GUI to restore the original script, then try again.</source>
+        <translation>Lu script di nstallazzioni di li temi NUN fu esiquitu:
+
+%1
+
+Nun currispunni a la copia furnuta cu sta virsioni di l&apos;app. Vistu ca s&apos;esèquita cu privileggi di root, veni esiquitu sulu si è idènticu byte pi byte a la virsioni furnuta — na diffirenza signìfica ca fu mudificatu (forsi manumissu) o ca apparteni a n&apos;àutra virsioni.
+
+Torna a nstallari la GUI pi ripristinari lu script origginali, poi riprova.</translation>
+    </message>
+    <message>
+        <source>The themes were installed successfully.</source>
+        <translation>Li temi foru nstallati currettamenti.</translation>
+    </message>
+    <message>
+        <source>The themes were installed successfully.
+
+%1</source>
+        <translation>Li temi foru nstallati currettamenti.
+
+%1</translation>
+    </message>
+    <message>
+        <source>Installing the themes failed (code %1).</source>
+        <translation>La nstallazzioni di li temi fallìu (còdici %1).</translation>
+    </message>
+    <message>
+        <source>Installing the themes failed (code %1).
+
+%2</source>
+        <translation>La nstallazzioni di li temi fallìu (còdici %1).
+
+%2</translation>
+    </message>
+    <message>
+        <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots</source>
+        <translation>Scrivi macari stanzi d&apos;avviu pi li bootloader arrilivati ca nun sunnu nta unu di li quattru posti</translation>
+    </message>
 </context>
 <context>
     <name>Platform</name>
@@ -514,7 +606,7 @@ Li sfunni e l'iconi di sistema hannu a èssiri veri immàggini PNG (no simprici 
     <message>
         <location filename="platform.cpp" line="155"/>
         <source>The privileged helper is not installed under Program Files.</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;aiutanti privileggiatu nun è nstallatu sutta Program Files.</translation>
     </message>
 </context>
 <context>
