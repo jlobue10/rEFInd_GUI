@@ -82,9 +82,11 @@ Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Uninstall\{{6F9C2
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"
 Name: "{group}\Uninstall {#AppName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"; Tasks: desktopicon
-; Shortcut inside GUI\ (the folder the app's Open Folder button shows) to the
-; backgrounds folder the randomizer picks from.
+; Shortcuts inside GUI\ (the folder the app's Open Folder button shows) to the
+; backgrounds folder the randomizer picks from and the themes folder the
+; Theme box scans.
 Name: "{localappdata}\rEFInd_GUI\GUI\backgrounds"; Filename: "{localappdata}\rEFInd_GUI\backgrounds"
+Name: "{localappdata}\rEFInd_GUI\GUI\themes"; Filename: "{localappdata}\rEFInd_GUI\themes"
 
 [Run]
 ; Preserve an enabled legacy task while moving its elevated action out of the

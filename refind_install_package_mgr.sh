@@ -109,6 +109,12 @@
 	fi
 	sudo cp -rf "$HOME/.local/rEFInd_GUI/icons/" "$DEST" \
 		|| fail_install "Could not copy the rEFInd icon set to the ESP."
+	# Bundled themes: best-effort -- a failed copy must never fail the rEFInd
+	# install itself (the GUI's Install Themes button can redo it later).
+	if [ -d "$HOME/.local/rEFInd_GUI/themes" ]; then
+		sudo cp -rf "$HOME/.local/rEFInd_GUI/themes/" "$DEST" 2>/dev/null \
+			|| echo "# Warning: could not copy the themes to the ESP; use Install Themes in the GUI."
+	fi
 	sudo test -s "$DEST/refind_x64.efi" && sudo test -s "$DEST/refind.conf" \
 		|| fail_install "The installed rEFInd loader or config is missing or empty."
 	echo 90

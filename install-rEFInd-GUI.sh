@@ -71,11 +71,14 @@ mkdir -p "$HOME/.local/rEFInd_GUI"
 cp -rf "$CURRENT_WD/GUI/" "$HOME/.local/rEFInd_GUI"
 cp -rf "$CURRENT_WD/icons/" "$HOME/.local/rEFInd_GUI"
 cp -rf "$CURRENT_WD/backgrounds/" "$HOME/.local/rEFInd_GUI"
+cp -rf "$CURRENT_WD/themes/" "$HOME/.local/rEFInd_GUI"
 cp -f "$CURRENT_WD/refind_install_package_mgr.sh" "$CURRENT_WD/refind_install_Sourceforge.sh" "$CURRENT_WD/uninstall_rEFInd.sh" "$CURRENT_WD/scan_esp.sh" "$HOME/.local/rEFInd_GUI"
 cp -f "$CURRENT_WD/refind-GUI.conf" "$HOME/.local/rEFInd_GUI/GUI/refind.conf"
-# Shortcut inside GUI/ (the folder the app's Open Folder button shows) to the
-# backgrounds folder the randomizer picks from.
+# Shortcuts inside GUI/ (the folder the app's Open Folder button shows) to the
+# backgrounds folder the randomizer picks from and to the themes folder the
+# Theme box scans.
 ln -sfn ../backgrounds "$HOME/.local/rEFInd_GUI/GUI/backgrounds"
+ln -sfn ../themes "$HOME/.local/rEFInd_GUI/GUI/themes"
 
 chmod +x "$HOME/.local/rEFInd_GUI/refind_install_package_mgr.sh" "$HOME/.local/rEFInd_GUI/refind_install_Sourceforge.sh" "$HOME/.local/rEFInd_GUI/uninstall_rEFInd.sh" "$HOME/.local/rEFInd_GUI/scan_esp.sh"
 
@@ -95,7 +98,7 @@ if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 		sudo dnf install -y rpm-build cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel
 		mkdir -p "$HOME/rpmbuild/SPECS" "$HOME/rpmbuild/SOURCES"
 		cp -f "$CURRENT_WD/rEFInd_GUI.spec" "$HOME/rpmbuild/SPECS"
-		cp -f "$CURRENT_WD/rEFInd_bg_randomizer.service" "$HOME/rpmbuild/SOURCES"
+		cp -f "$CURRENT_WD/rEFInd_bg_randomizer.service" "$CURRENT_WD/rEFInd_theme_randomizer.service" "$HOME/rpmbuild/SOURCES"
 		# Fresh output dir so the copy below can't pick up stale rpms from a
 		# previous build.
 		rm -f "$HOME"/rpmbuild/RPMS/x86_64/rEFInd_GUI*.rpm
@@ -208,14 +211,17 @@ fi
 sed -i "s@USER@$USER@g" "$CURRENT_WD/zz_install_config_from_GUI"
 sed -i "s@HOME@$HOME@g" "$CURRENT_WD/rEFInd_GUI.desktop"
 sed -i "s@HOME@$HOME@g" "$CURRENT_WD/install_config_from_GUI.sh"
+sed -i "s@HOME@$HOME@g" "$CURRENT_WD/install_themes_from_GUI.sh"
 sed -i "s@USER@$USER@g" "$CURRENT_WD/rEFInd_bg_randomizer.sh"
 
 sudo mkdir -p /etc/rEFInd
 sudo cp -f "$CURRENT_WD/install_config_from_GUI.sh" /etc/rEFInd/install_config_from_GUI.sh
+sudo cp -f "$CURRENT_WD/install_themes_from_GUI.sh" /etc/rEFInd/install_themes_from_GUI.sh
 sudo cp -f "$CURRENT_WD/rEFInd_bg_randomizer.sh" /etc/rEFInd/rEFInd_bg_randomizer.sh
+sudo cp -f "$CURRENT_WD/rEFInd_theme_randomizer.sh" /etc/rEFInd/rEFInd_theme_randomizer.sh
 sudo cp -f "$CURRENT_WD/GUI/UEFI_icon.png" /etc/rEFInd/UEFI_icon.png
-sudo chown root:root /etc/rEFInd/install_config_from_GUI.sh /etc/rEFInd/rEFInd_bg_randomizer.sh
-sudo chmod 755 /etc/rEFInd/install_config_from_GUI.sh /etc/rEFInd/rEFInd_bg_randomizer.sh
+sudo chown root:root /etc/rEFInd/install_config_from_GUI.sh /etc/rEFInd/install_themes_from_GUI.sh /etc/rEFInd/rEFInd_bg_randomizer.sh /etc/rEFInd/rEFInd_theme_randomizer.sh
+sudo chmod 755 /etc/rEFInd/install_config_from_GUI.sh /etc/rEFInd/install_themes_from_GUI.sh /etc/rEFInd/rEFInd_bg_randomizer.sh /etc/rEFInd/rEFInd_theme_randomizer.sh
 
 # The sudoers rule must only be installed after the root-owned script it
 # whitelists is in place, and must be root-owned mode 0440. It is only

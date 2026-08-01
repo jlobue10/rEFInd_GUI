@@ -11,6 +11,7 @@ Summary:        Small GUI for customizing and installing rEFInd bootloader
 License:        GPL3
 URL:            https://github.com/jlobue10/rEFInd_GUI
 Source0:        rEFInd_bg_randomizer.service
+Source1:        rEFInd_theme_randomizer.service
 
 BuildRequires:  cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel
 Requires:       mokutil sbsigntools xterm zenity
@@ -27,7 +28,7 @@ cd %{_builddir}
 # packages newer main-branch code.
 git clone --branch v%{version} --depth 1 %{url}
 cd $RPM_SOURCE_DIR
-cp -f %{_builddir}/rEFInd_GUI/{rEFInd_GUI.desktop,rEFInd_bg_randomizer.service} $RPM_SOURCE_DIR
+cp -f %{_builddir}/rEFInd_GUI/{rEFInd_GUI.desktop,rEFInd_bg_randomizer.service,rEFInd_theme_randomizer.service} $RPM_SOURCE_DIR
 
 %build
 cd %{_builddir}/rEFInd_GUI/GUI/src
@@ -43,9 +44,11 @@ cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI %{buildroot}/etc/rEFInd/rEFI
 mkdir -p %{buildroot}/etc/systemd/system
 
 install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
+install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 
 %files
 /etc/systemd/system/rEFInd_bg_randomizer.service
+/etc/systemd/system/rEFInd_theme_randomizer.service
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
