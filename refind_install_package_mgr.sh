@@ -141,6 +141,8 @@
 		echo "(device: '$ESP_DEV', disk: '$ESP_DISK', partition: '$ESP_PARTNUM')." >&2
 		echo "Existing boot entries were left untouched." >&2
 	else
+		NEW_BOOTNUM=""
+		REFIND_READY=0
 		# refind-install just created its own "rEFInd Boot Manager" entry;
 		# remove it up front so the firmware list never carries it alongside
 		# our "rEFInd" entry. Only that exact label is deleted pre-create --
@@ -159,9 +161,17 @@
 		# had just made was already gone.
 		if CREATE_OUT="$(sudo efibootmgr -c -d "$ESP_DISK" -p "$ESP_PARTNUM" -L "rEFInd" -l '\EFI\refind\refind_x64.efi' 2>&1)"; then
 			# efibootmgr -c puts the new entry first in BootOrder; use that
-			# to identify it so the cleanup below never deletes it.
-			NEW_BOOTNUM="$(efibootmgr | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{4}).*/\1/p')"
-			if [ -n "$NEW_BOOTNUM" ] && efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd(\t.*)?$/\1/p' | grep -qx "$NEW_BOOTNUM"; then
+			# to identify it. Verify both the exact label/path and the live
+			# loader/config before disabling any fallback boot entry.
+			CANDIDATE_BOOTNUM="$(efibootmgr | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{4}).*/\1/p')"
+			NVRAM_VERBOSE="$(efibootmgr -v 2>/dev/null)"
+			ESP_PARTUUID="$(lsblk -no PARTUUID "$ESP_DEV" 2>/dev/null | head -1 | tr 'A-F' 'a-f')"
+			if [ -n "$CANDIDATE_BOOTNUM" ] && [ -n "$ESP_PARTUUID" ] \
+				&& printf '%s\n' "$NVRAM_VERBOSE" | grep -qiE "^Boot${CANDIDATE_BOOTNUM}\\*?[[:space:]]+rEFInd[[:space:]]+HD\\([0-9]+,GPT,${ESP_PARTUUID},[^)]*\\)/(File\\()?\\\\EFI\\\\refind\\\\refind_x64\\.efi" \
+				&& sudo test -s "$ESP_MP/EFI/refind/refind_x64.efi" \
+				&& sudo test -s "$ESP_MP/EFI/refind/refind.conf"; then
+				NEW_BOOTNUM="$CANDIDATE_BOOTNUM"
+				REFIND_READY=1
 				while read -r _num; do
 					[ "$_num" = "$NEW_BOOTNUM" ] && continue
 					echo "Deleting old rEFInd entry Boot$_num..." >&2
@@ -169,17 +179,19 @@
 						|| echo "Warning: could not delete Boot$_num." >&2
 				done < <(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd.*/\1/p')
 			else
-				echo "Warning: could not identify the new rEFInd entry; skipping cleanup of old entries." >&2
+				echo "Warning: the new rEFInd entry or its installed files could not be verified; skipping cleanup of old entries." >&2
 			fi
 		else
 			echo "ERROR: creating the rEFInd boot entry failed:" >&2
 			printf '%s\n' "$CREATE_OUT" >&2
 			echo "Existing rEFInd entries (if any) were left in place." >&2
 		fi
-		WINDOWS_BOOTNUM="$(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +Windows.*/\1/p' | head -1)"
-		if [ -n "$WINDOWS_BOOTNUM" ]; then
+		WINDOWS_BOOTNUM="$(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +Windows Boot Manager(\t.*)?$/\1/p' | head -1)"
+		if [ "$REFIND_READY" -eq 1 ] && [ -n "$NEW_BOOTNUM" ] && [ -n "$WINDOWS_BOOTNUM" ]; then
 			sudo efibootmgr -b "$WINDOWS_BOOTNUM" -A >/dev/null 2>&1 \
 				|| echo "Warning: could not deactivate the Windows boot entry." >&2
+		elif [ -n "$WINDOWS_BOOTNUM" ]; then
+			echo "Windows Boot Manager was left active because the replacement rEFInd entry was not fully verified." >&2
 		fi
 	fi
 	# CachyOS manages Secure Boot with sbctl: when Secure Boot is enabled, the
