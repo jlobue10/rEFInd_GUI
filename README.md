@@ -61,6 +61,31 @@ Windows notes:
 
 The GUI scans **every reachable EFI System Partition** at startup (and via the **Rescan OSes** button) to detect what is actually installed: Windows, SteamOS, and any Linux distro with a vendor directory under `EFI/` (shim, GRUB, or systemd-boot). The Boot Option boxes are populated with the detected OSes, and the generated `refind.conf` uses the real loader paths and volumes found on disk — multi-ESP machines (e.g. Windows and Linux each with their own ESP) are fully covered. Since 2.2.0 the Windows build also mounts and scans letterless Linux ESPs, so a distro like CachyOS booting via systemd-boot is detected from the Windows side and named after its boot entries rather than a generic "systemd-boot". **Install Config** and the background randomizer write to the ESP that the firmware's rEFInd boot entry actually points at, so a stale rEFInd copy on another ESP can't swallow your config.
 
+## Themes
+
+The GUI can dress the rEFInd boot menu in a complete community theme — background, icon set, selection highlights, and fonts — instead of (or on top of) the plain generated config:
+
+- **Choosing a theme**: pick one from the **Theme** box (next to the Preview button). `None` keeps the plain generated config, `Random` picks one of the bundled themes each time **Create Config** is pressed. When a theme is active, the generated `refind.conf` ends with a stable include line (`include themes/active_theme.conf`), and `active_theme.conf` — a copy of the chosen theme's `theme.conf` — is staged next to it. Switching themes only ever replaces that one file; the include line never changes. Theme settings intentionally supersede the generated settings above them (that is how rEFInd themes are designed to work).
+- **Install Themes** copies the theme files themselves (`themes/` in the GUI data folder) to `EFI/refind/themes/` on the EFI System Partition. Run it once (and again after adding your own themes); **Install Config** then activates whichever theme was selected at Create Config time.
+- **Rand Theme On/Off** toggles a per-boot theme randomizer (systemd service on Linux, Scheduled Task at logon on Windows) that swaps `themes/active_theme.conf` on the ESP for a random installed theme — the theme counterpart of the background randomizer. It only has a visible effect while the installed `refind.conf` carries the theme include line (i.e. it was created with a theme selected).
+- **Adding your own themes**: drop any rEFInd theme into `themes/<name>/` in the GUI data folder (`~/.local/rEFInd_GUI` on Linux, `%LOCALAPPDATA%\rEFInd_GUI` on Windows) so that `themes/<name>/theme.conf` exists, with the folder named exactly as the paths inside its `theme.conf` expect. It will appear in the Theme box on the next launch. Good starting points: the [rEFInd Themes Collection](https://refind-themes-collection.netlify.app/) gallery and the [official rEFInd theming documentation](https://www.rodsbooks.com/refind/themes.html).
+
+### Bundled themes and credits
+
+All theming credit goes to the original theme authors — this project only redistributes their work to make it installable from the GUI, and adds no artwork of its own:
+
+| Theme | Author | Upstream | License |
+| --- | --- | --- | --- |
+| Matrix-rEFInd | Yannis Vierkötter | [Yannis4444/Matrix-rEFInd](https://github.com/Yannis4444/Matrix-rEFInd) | MIT |
+| rEFInd-fallout | awanwar | [awanwar/rEFInd-fallout](https://github.com/awanwar/rEFInd-fallout) | MIT |
+| rEFInd-glassy | Pr0cella | [Pr0cella/rEFInd-glassy](https://github.com/Pr0cella/rEFInd-glassy) | No explicit theme license (see note) |
+| rEFInd-mountain | Chris Alves | [Chrisae9/rEFInd-mountain](https://github.com/Chrisae9/rEFInd-mountain) | MIT |
+| Starwars-rEFInd | thilakshan2003 | [thilakshan2003/Starwars-rEFInd](https://github.com/thilakshan2003/Starwars-rEFInd) | None published (see note) |
+| wave | zeeshan933 | [zeeshan933/Refind-Themes](https://github.com/zeeshan933/Refind-Themes) | None published (see note) |
+| BlackCatMuzzle | Scorpi-ON | [Scorpi-ON/BlackCatMuzzle-rEFInd](https://github.com/Scorpi-ON/BlackCatMuzzle-rEFInd) | MIT |
+
+Each theme's upstream LICENSE and README files are kept inside its folder under `themes/`. Note on rEFInd-glassy: its upstream LICENSE file covers the bundled Nimbus font (AGPL-3.0); the theme artwork itself carries no explicit license. The Starwars-rEFInd and wave themes publish no license at all. These three are redistributed here with full attribution, in the same spirit in which they were published for use as rEFInd themes — if you are the author of one of them and would like it removed from this repository, open an issue and it will be removed promptly.
+
 ## Bazzite specific information
 
 Auto partitioning when installing Bazzite is supported with these manual boot stanzas.
