@@ -165,6 +165,17 @@ if ! mkdir -p "$DEST" 2>/dev/null; then
 	exit 4
 fi
 
+# Best-effort sweep of staging files left behind by an earlier interrupted run
+# (the EXIT trap cannot run across SIGKILL or power loss, and every run mints
+# new random staging names, so leftovers would otherwise accumulate on the
+# small ESP). Only the exact ".<name>.new.<suffix>" shapes created below are
+# matched, so no live file can be touched.
+for f in refind.conf background.png os_icon1.png os_icon2.png os_icon3.png os_icon4.png refind.conf.prev; do
+	for stale in "$DEST/.$f.new."*; do
+		[ -f "$stale" ] && rm -f -- "$stale" 2>/dev/null
+	done
+done
+
 # A config is mandatory. Images are optional, but images alone must never make
 # the helper report success while leaving an absent or empty live config.
 if ! runuser -u "$RUN_USER" -- test -f "$SRC/refind.conf" 2>/dev/null \
@@ -221,9 +232,9 @@ if [ -f "$DEST/refind.conf" ]; then
 	fi
 fi
 
-# Publish assets first and the config last. Each rename stays on the ESP, so a
-# failed staging copy never truncates an existing live file and a failed asset
-# update cannot leave a new config referring to an incomplete set.
+# Staged, publish-last: assets first and the config last. Each rename stays on
+# the ESP, so a failed staging copy never truncates an existing live file and a
+# failed asset update cannot leave a new config referring to an incomplete set.
 for f in background.png os_icon1.png os_icon2.png os_icon3.png os_icon4.png; do
 	[ -n "${STAGED[$f]:-}" ] || continue
 	if ! mv -f -- "${STAGED[$f]}" "$DEST/$f" 2>/dev/null; then
