@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.1.3
+Version:        3.2.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -52,6 +52,14 @@ install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Sat Aug 01 2026 Jon LoBue <jlobue10@gmail.com> [3.2.0-1]
+- Theme support: seven bundled rEFInd themes (credits in README), GUI theme
+  picker with Random option, Install Themes button, and a per-boot theme
+  randomizer service. Stable include line keeps refind.conf untouched at boot.
+- Security audit fixes: verified boot-entry gating before Windows
+  deactivation, staged config-last ESP installs, hardened Windows installer
+  staging, absolute system tool paths.
+
 * Sun Jul 26 2026 Jon LoBue <jlobue10@gmail.com> [3.1.3-1]
 - Urgent fix: v3.1.2 wrapped the generated icon and loader path lines in
   double quotes, which rEFInd does not strip from path tokens, making every

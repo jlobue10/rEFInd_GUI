@@ -1,3 +1,19 @@
+refind-gui (3.2.0) unstable; urgency=medium
+
+  * Theme support: seven bundled rEFInd themes (all credit to the original
+    theme authors; see README), a theme picker in the GUI with a Random
+    option, an Install Themes button, and a per-boot theme randomizer
+    service on Linux. Themes work through a stable
+    'include themes/active_theme.conf' line, so switching themes never
+    rewrites refind.conf at boot.
+  * Security and robustness fixes from the code audit: installers verify
+    the new rEFInd boot entry before deactivating Windows Boot Manager,
+    ESP config and image installs are staged and published config-last,
+    Windows installer staging moved to a protected workspace, and system
+    tools are invoked by absolute paths.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sat, 01 Aug 2026 13:56:35 -0700
+
 refind-gui (3.1.3) unstable; urgency=high
 
   * Urgent fix: v3.1.2 wrapped the generated icon and loader path lines in
