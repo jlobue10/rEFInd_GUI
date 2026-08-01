@@ -130,7 +130,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="464"/>
-        <location filename="mainwindow.cpp" line="1537"/>
+        <location filename="mainwindow.cpp" line="1560"/>
         <source>Open Folder</source>
         <translation>ফোল্ডার খুলুন</translation>
     </message>
@@ -231,9 +231,9 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="932"/>
-        <location filename="mainwindow.cpp" line="993"/>
-        <location filename="mainwindow.cpp" line="1009"/>
-        <location filename="mainwindow.cpp" line="1014"/>
+        <location filename="mainwindow.cpp" line="1016"/>
+        <location filename="mainwindow.cpp" line="1032"/>
+        <location filename="mainwindow.cpp" line="1037"/>
         <source>Install Config</source>
         <translation>কনফিগ ইনস্টল</translation>
     </message>
@@ -251,7 +251,7 @@
         <location filename="mainwindow.ui" line="910"/>
         <location filename="mainwindow.cpp" line="890"/>
         <location filename="mainwindow.cpp" line="901"/>
-        <location filename="mainwindow.cpp" line="1074"/>
+        <location filename="mainwindow.cpp" line="1097"/>
         <source>Create Config</source>
         <translation>কনফিগ তৈরি</translation>
     </message>
@@ -332,9 +332,9 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="1110"/>
-        <location filename="mainwindow.cpp" line="1505"/>
-        <location filename="mainwindow.cpp" line="1521"/>
-        <location filename="mainwindow.cpp" line="1526"/>
+        <location filename="mainwindow.cpp" line="1528"/>
+        <location filename="mainwindow.cpp" line="1544"/>
+        <location filename="mainwindow.cpp" line="1549"/>
         <source>Install Themes</source>
         <translation>থিম ইনস্টল</translation>
     </message>
@@ -450,7 +450,7 @@
         <translation>%1 সম্পূর্ণ লেখা যায়নি — ডিস্ক পূর্ণ হয়ে থাকতে পারে। কনফিগারেশন আপডেট হয়নি।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="994"/>
+        <location filename="mainwindow.cpp" line="1017"/>
         <source>The config-install script was NOT run:
 
 %1
@@ -467,12 +467,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 মূল স্ক্রিপ্ট ফিরিয়ে আনতে GUI আবার ইনস্টল করুন, তারপর আবার চেষ্টা করুন।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1011"/>
+        <location filename="mainwindow.cpp" line="1034"/>
         <source>The config was installed successfully.</source>
         <translation>কনফিগারেশন সফলভাবে ইনস্টল হয়েছে।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1012"/>
+        <location filename="mainwindow.cpp" line="1035"/>
         <source>The config was installed successfully.
 
 %1</source>
@@ -481,12 +481,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1016"/>
+        <location filename="mainwindow.cpp" line="1039"/>
         <source>Installing the config failed (code %1).</source>
         <translation>কনফিগারেশন ইনস্টল ব্যর্থ হয়েছে (কোড %1)।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1017"/>
+        <location filename="mainwindow.cpp" line="1040"/>
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -495,31 +495,31 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1075"/>
+        <location filename="mainwindow.cpp" line="1098"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
         <translation>থিম ফাইল %1 প্রস্তুত করা যায়নি — কনফিগারেশন আপডেট হয়নি।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1097"/>
-        <location filename="mainwindow.cpp" line="1107"/>
-        <location filename="mainwindow.cpp" line="1114"/>
+        <location filename="mainwindow.cpp" line="1120"/>
+        <location filename="mainwindow.cpp" line="1130"/>
+        <location filename="mainwindow.cpp" line="1137"/>
         <source>Copy PNG</source>
         <translation>PNG কপি করুন</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1098"/>
-        <location filename="mainwindow.cpp" line="1108"/>
-        <location filename="mainwindow.cpp" line="1115"/>
+        <location filename="mainwindow.cpp" line="1121"/>
+        <location filename="mainwindow.cpp" line="1131"/>
+        <location filename="mainwindow.cpp" line="1138"/>
         <source>Could not copy %1 to %2</source>
         <translation>%1-কে %2-এ কপি করা যায়নি</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1140"/>
+        <location filename="mainwindow.cpp" line="1163"/>
         <source>Invalid PNG</source>
         <translation>অবৈধ PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1141"/>
+        <location filename="mainwindow.cpp" line="1164"/>
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -528,48 +528,48 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 পটভূমি ও OS আইকন অবশ্যই আসল PNG ছবি হতে হবে (শুধু .png এক্সটেনশনের ফাইল নয়)।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1400"/>
+        <location filename="mainwindow.cpp" line="1423"/>
         <source>Check For Update</source>
         <translation>আপডেট পরীক্ষা করুন</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1403"/>
+        <location filename="mainwindow.cpp" line="1426"/>
         <source>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;মূল GUI নির্মাতা: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;পরীক্ষা ও মান নিশ্চিতকরণের জন্য Deck Wizard-কে বিশেষ ধন্যবাদ&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard ডুয়াল বুট টিউটোরিয়াল&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1450"/>
+        <location filename="mainwindow.cpp" line="1473"/>
         <source>&lt;p align=&apos;center&apos;&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;আপডেট পরীক্ষা ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1453"/>
+        <location filename="mainwindow.cpp" line="1476"/>
         <source>&lt;p align=&apos;center&apos;&gt;An update is available &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;একটি আপডেট &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;এখানে&lt;/a&gt; পাওয়া যাচ্ছে&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1457"/>
+        <location filename="mainwindow.cpp" line="1480"/>
         <source>&lt;p align=&apos;center&apos;&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;কোনো আপডেট পাওয়া যায়নি। আপনি সর্বশেষ সংস্করণ ব্যবহার করছেন।&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1467"/>
+        <location filename="mainwindow.cpp" line="1490"/>
         <source>Background Randomizer</source>
         <translation>এলোমেলো পটভূমি</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1468"/>
-        <location filename="mainwindow.cpp" line="1485"/>
+        <location filename="mainwindow.cpp" line="1491"/>
+        <location filename="mainwindow.cpp" line="1508"/>
         <source>Failed to launch the randomizer setup.</source>
         <translation>এলোমেলো পটভূমি সেটআপ চালু করা যায়নি।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1484"/>
+        <location filename="mainwindow.cpp" line="1507"/>
         <source>Theme Randomizer</source>
         <translation>এলোমেলো থিম</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1506"/>
+        <location filename="mainwindow.cpp" line="1529"/>
         <source>The theme-install script was NOT run:
 
 %1
@@ -586,12 +586,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 মূল স্ক্রিপ্ট ফিরিয়ে আনতে GUI আবার ইনস্টল করুন, তারপর আবার চেষ্টা করুন।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1523"/>
+        <location filename="mainwindow.cpp" line="1546"/>
         <source>The themes were installed successfully.</source>
         <translation>থিমগুলি সফলভাবে ইনস্টল হয়েছে।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1524"/>
+        <location filename="mainwindow.cpp" line="1547"/>
         <source>The themes were installed successfully.
 
 %1</source>
@@ -600,12 +600,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1528"/>
+        <location filename="mainwindow.cpp" line="1551"/>
         <source>Installing the themes failed (code %1).</source>
         <translation>থিম ইনস্টল ব্যর্থ হয়েছে (কোড %1)।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1529"/>
+        <location filename="mainwindow.cpp" line="1552"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
@@ -614,7 +614,7 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1538"/>
+        <location filename="mainwindow.cpp" line="1561"/>
         <source>Failed to open %1 in the file manager.</source>
         <translation>ফাইল ব্যবস্থাপকে %1 খোলা যায়নি।</translation>
     </message>
@@ -640,22 +640,32 @@ Reinstall the GUI to restore the original script, then try again.</source>
 <context>
     <name>PreviewDialog</name>
     <message>
-        <location filename="previewdialog.cpp" line="34"/>
+        <location filename="previewdialog.cpp" line="62"/>
         <source>No boot options selected.</source>
         <translation>কোনো বুট বিকল্প নির্বাচিত নেই।</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="89"/>
+        <location filename="previewdialog.cpp" line="166"/>
         <source>Preview</source>
         <translation>প্রিভিউ</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="101"/>
+        <location filename="previewdialog.cpp" line="181"/>
         <source>Approximate preview — rEFInd&apos;s real rendering also depends on the firmware resolution and theme.</source>
         <translation>আনুমানিক প্রিভিউ — rEFInd-এর প্রকৃত প্রদর্শন ফার্মওয়্যার রেজোলিউশন ও থিমের উপরও নির্ভর করে।</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="107"/>
+        <location filename="previewdialog.cpp" line="184"/>
+        <source>Approximate preview showing the randomly picked &quot;%1&quot; theme — Random picks a theme anew each time the config is created.</source>
+        <translation>এলোমেলোভাবে বাছাই করা &quot;%1&quot; থিম দেখানো আনুমানিক প্রিভিউ — &quot;এলোমেলো&quot; প্রতিবার কনফিগ তৈরির সময় নতুন একটি থিম বেছে নেয়।</translation>
+    </message>
+    <message>
+        <location filename="previewdialog.cpp" line="188"/>
+        <source>Approximate preview with the &quot;%1&quot; theme applied — rEFInd&apos;s real rendering also depends on the firmware resolution and the theme&apos;s other settings.</source>
+        <translation>&quot;%1&quot; থিম প্রয়োগ করা আনুমানিক প্রিভিউ — rEFInd-এর প্রকৃত প্রদর্শন ফার্মওয়্যার রেজোলিউশন ও থিমের অন্যান্য সেটিংসের উপরও নির্ভর করে।</translation>
+    </message>
+    <message>
+        <location filename="previewdialog.cpp" line="197"/>
         <source>Boot screen</source>
         <translation>বুট স্ক্রিন</translation>
     </message>
