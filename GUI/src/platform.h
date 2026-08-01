@@ -12,6 +12,12 @@ namespace Platform {
 // App data root: ~/.local/rEFInd_GUI on Linux, %LOCALAPPDATA%\rEFInd_GUI on Windows.
 QString dataDir();
 
+#ifdef Q_OS_WIN
+// Absolute path to a Windows executable below the protected system directory.
+// Callers must pass a trusted, application-defined relative path.
+QString windowsSystemExecutable(const QString &relativePath);
+#endif
+
 // Populate a new per-user data directory from the immutable files shipped next
 // to the executable. Existing user files are never overwritten.
 void prepareDataDir();
