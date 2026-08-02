@@ -167,6 +167,22 @@ On **CachyOS** (which manages Secure Boot with sbctl out of the box — see the 
 
 ## Troubleshooting
 
+### Installer aborts with "Error: $HOME/rEFInd_GUI has uncommitted changes"
+
+The install script clones this repository into `~/rEFInd_GUI` and refuses to
+delete an existing checkout there that has uncommitted changes, so it never
+destroys in-progress work. If you don't need anything in that directory, remove
+it and re-run the installer:
+
+```
+rm -rf ~/rEFInd_GUI
+curl -L https://github.com/jlobue10/rEFInd_GUI/raw/main/install-rEFInd-GUI.sh | sh
+```
+
+If you *do* have work in there, move the directory aside (or commit/stash your
+changes) first. The related "exists and is not a clean rEFInd_GUI clone" error
+is resolved the same way — move or remove `~/rEFInd_GUI`, then re-run.
+
 ### Browse dialog shows no PNG previews / no "view as icons" option (KDE Plasma)
 
 The app requests the desktop's **native** file dialog, and KDE only supplies
