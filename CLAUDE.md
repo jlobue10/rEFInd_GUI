@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A Qt (C++17) GUI for customizing and installing the rEFInd bootloader, aimed especially at dual-boot handhelds (ASUS ROG Ally/Ally X, Legion Go, Steam Deck). It builds for **both Linux and Windows** from the same sources. Linux install targets: Fedora/Nobara/Bazzite (RPM) and CachyOS (PKGBUILD); Windows: `windows/install-rEFInd-GUI.ps1` into `%LOCALAPPDATA%\rEFInd_GUI`.
+A Qt (C++17) GUI for customizing and installing the rEFInd bootloader, aimed especially at dual-boot handhelds (ASUS ROG Ally/Ally X, Legion Go, Steam Deck). It builds for **both Linux and Windows** from the same sources. Linux install targets: Fedora/Nobara/Bazzite (RPM), any pacman-based Arch distro incl. CachyOS (PKGBUILD; SteamOS is explicitly refused — its immutable rootfs belongs to the sibling SteamDeck_rEFInd project), and Debian/Ubuntu (deb); Windows: `windows/install-rEFInd-GUI.ps1` into `%LOCALAPPDATA%\rEFInd_GUI`.
 
 ## Build
 
