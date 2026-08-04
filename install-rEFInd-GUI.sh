@@ -54,16 +54,25 @@ FEDORA_BASE=$?
 test -f /etc/bazzite/image_name
 BAZZITE=$?
 
-grep -q 'CachyOS' /etc/os-release
-CACHYOS=$?
+# Any pacman-based distro (Arch, CachyOS, EndeavourOS, Manjaro, ...) takes the
+# same prebuilt-package / makepkg path (issue #85). SteamOS ships pacman too,
+# but its immutable rootfs would drop the package on the next OS update -- the
+# sibling SteamDeck_rEFInd project handles the Deck.
+if grep -qE '^ID=steamos$' /etc/os-release 2>/dev/null; then
+	echo "Error: SteamOS detected. Use the SteamDeck_rEFInd project instead:" >&2
+	echo "  https://github.com/jlobue10/SteamDeck_rEFInd" >&2
+	exit 1
+fi
+command -v pacman >/dev/null 2>&1
+ARCH_BASE=$?
 
 command -v apt-get >/dev/null 2>&1
 DEB_BASE=$?
 
 # Bail out before touching the system (this script installs a sudoers rule)
 # if no supported package path exists for this distro.
-if [ "$FEDORA_BASE" != 0 ] && [ "$BAZZITE" != 0 ] && [ "$CACHYOS" != 0 ] && [ "$DEB_BASE" != 0 ]; then
-	echo "Error: unsupported distro (no dnf, apt, Bazzite, or CachyOS detected). Aborting." >&2
+if [ "$FEDORA_BASE" != 0 ] && [ "$BAZZITE" != 0 ] && [ "$ARCH_BASE" != 0 ] && [ "$DEB_BASE" != 0 ]; then
+	echo "Error: unsupported distro (no dnf, apt, pacman, or Bazzite detected). Aborting." >&2
 	exit 1
 fi
 
@@ -142,8 +151,8 @@ if [ "$BAZZITE" = 0 ]; then
 	fi
 fi
 
-if [ "$CACHYOS" = 0 ]; then
-	echo "Starting CachyOS based installation."
+if [ "$ARCH_BASE" = 0 ]; then
+	echo "Starting Arch (pacman) based installation."
 	# Prefer the CI-built package from the latest release; fall back to a
 	# local makepkg build when the release carries no package or the
 	# download fails.
