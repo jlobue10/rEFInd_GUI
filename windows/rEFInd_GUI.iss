@@ -98,6 +98,12 @@ Filename: "{app}\{#AppExe}"; Description: "Launch {#AppName}"; Flags: nowait pos
 [UninstallRun]
 ; Undo the rEFInd boot entry and ESP files before the app files disappear.
 Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\windows\uninstall_rEFInd.ps1"""; Flags: shellexec waituntilterminated; Verb: runas; RunOnceId: "UninstallRefind"; Check: ShouldRemoveRefind
+; Unconditional: the randomizer scheduled tasks execute scripts under
+; {app}\windows, which this uninstall removes, so they must be unregistered
+; even when rEFInd itself is kept bootable (uninstall_rEFInd.ps1 above only
+; runs on a full removal).
+Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\windows\rEFInd_theme_randomizer_task.ps1"" -Disable"; Flags: runhidden waituntilterminated; RunOnceId: "RemoveThemeRandTask"
+Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\windows\rEFInd_bg_randomizer_task.ps1"" -Disable"; Flags: runhidden waituntilterminated; RunOnceId: "RemoveBgRandTask"
 
 [UninstallDelete]
 ; The app generates data the uninstaller's manifest doesn't cover (the
