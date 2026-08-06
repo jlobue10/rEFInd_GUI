@@ -1,3 +1,13 @@
+refind-gui (3.2.2) unstable; urgency=medium
+
+  * Installer: accept any pacman-based Arch distro (vanilla Arch,
+    EndeavourOS, Manjaro, ...) instead of requiring CachyOS; SteamOS is
+    refused explicitly with a pointer to the SteamDeck_rEFInd project (#85).
+  * Windows uninstaller: unregister the bg/theme randomizer scheduled
+    tasks on every uninstall, not only when rEFInd itself is removed (#87).
+
+ -- Jon LoBue <jlobue10@gmail.com>  Thu, 06 Aug 2026 11:38:47 -0700
+
 refind-gui (3.2.1) unstable; urgency=medium
 
   * Theme-aware Preview: the mock boot screen now renders the selected

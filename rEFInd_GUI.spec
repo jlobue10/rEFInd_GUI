@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.2.1
+Version:        3.2.2
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -52,6 +52,11 @@ install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI
 
 %changelog
+* Thu Aug 06 2026 Jon LoBue <jlobue10@gmail.com> [3.2.2-1]
+- Installer accepts any pacman-based Arch distro (vanilla Arch, EndeavourOS,
+  Manjaro, ...); SteamOS is refused with a pointer to SteamDeck_rEFInd (#85).
+- Uninstaller unregisters the bg/theme randomizer scheduled tasks on every
+  Windows uninstall, not only when rEFInd itself is removed (#87).
 * Sat Aug 01 2026 Jon LoBue <jlobue10@gmail.com> [3.2.1-1]
 - Theme-aware Preview: the mock boot screen now renders the selected theme's
   banner, big_icon_size, and selection_big, resolves Random to a concrete
