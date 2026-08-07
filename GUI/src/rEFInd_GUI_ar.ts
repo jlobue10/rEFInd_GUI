@@ -130,7 +130,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="464"/>
-        <location filename="mainwindow.cpp" line="1560"/>
+        <location filename="mainwindow.cpp" line="1648"/>
         <source>Open Folder</source>
         <translation>فتح المجلد</translation>
     </message>
@@ -231,14 +231,30 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="932"/>
-        <location filename="mainwindow.cpp" line="1016"/>
-        <location filename="mainwindow.cpp" line="1032"/>
-        <location filename="mainwindow.cpp" line="1037"/>
+        <location filename="mainwindow.cpp" line="1094"/>
+        <location filename="mainwindow.cpp" line="1110"/>
+        <location filename="mainwindow.cpp" line="1115"/>
         <source>Install Config</source>
         <translation>تثبيت الإعدادات</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="966"/>
+        <location filename="mainwindow.ui" line="943"/>
+        <location filename="mainwindow.cpp" line="940"/>
+        <source>Showtools</source>
+        <translation>Showtools</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="946"/>
+        <source>Tools offered on the second row of the rEFInd boot menu (the showtools setting)</source>
+        <translation>الأدوات المعروضة في الصف الثاني من قائمة إقلاع rEFInd (إعداد showtools)</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="965"/>
+        <source>Comma-separated list of tools to offer on the second row of the rEFInd boot menu. Leave blank to show no tools. Valid entries: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</source>
+        <translation>قائمة أدوات مفصولة بفواصل تُعرض في الصف الثاني من قائمة إقلاع rEFInd. اتركه فارغًا لعدم عرض أي أدوات. الإدخالات الصالحة: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="1005"/>
         <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots. Only relevant when more than four OSes are detected.</source>
         <translation>يكتب أيضًا مدخلات إقلاع لمحمّلات الإقلاع المكتشفة غير الموجودة في أي من الخانات الأربع. لا يكون هذا مفيدًا إلا عند اكتشاف أكثر من أربعة أنظمة تشغيل.</translation>
     </message>
@@ -249,15 +265,15 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="910"/>
-        <location filename="mainwindow.cpp" line="890"/>
-        <location filename="mainwindow.cpp" line="901"/>
-        <location filename="mainwindow.cpp" line="1097"/>
+        <location filename="mainwindow.cpp" line="968"/>
+        <location filename="mainwindow.cpp" line="979"/>
+        <location filename="mainwindow.cpp" line="1175"/>
         <source>Create Config</source>
         <translation>إنشاء الإعدادات</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="888"/>
-        <location filename="mainwindow.cpp" line="586"/>
+        <location filename="mainwindow.cpp" line="588"/>
         <source>Install rEFInd</source>
         <translation>تثبيت rEFInd</translation>
     </message>
@@ -267,12 +283,12 @@
         <translation>طريقة تثبيت rEFInd</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="943"/>
+        <location filename="mainwindow.ui" line="982"/>
         <source>Language</source>
         <translation>اللغة</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="959"/>
+        <location filename="mainwindow.ui" line="998"/>
         <source>User interface language</source>
         <translation>لغة الواجهة</translation>
     </message>
@@ -281,176 +297,185 @@
         <translation type="vanished">يكتب أيضًا مدخلات إقلاع لمحمّلات الإقلاع المكتشفة غير الموجودة في أي من الخانات الأربع</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="969"/>
+        <location filename="mainwindow.ui" line="1008"/>
         <source>Include all OSes</source>
         <translation>تضمين كل الأنظمة</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1001"/>
+        <location filename="mainwindow.ui" line="1040"/>
         <source>Preview the rEFInd boot screen and the generated refind.conf</source>
         <translation>معاينة شاشة إقلاع rEFInd وملف refind.conf المولّد</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1004"/>
+        <location filename="mainwindow.ui" line="1043"/>
         <source>Preview</source>
         <translation>معاينة</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1015"/>
+        <location filename="mainwindow.ui" line="1054"/>
         <source>Theme</source>
         <translation>السمة</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1031"/>
+        <location filename="mainwindow.ui" line="1070"/>
         <source>rEFInd theme applied by Create Config: None keeps the plain generated config, Random picks one of the installed themes each time the config is created</source>
         <translation>سمة rEFInd التي يطبّقها «إنشاء الإعدادات»: «بلا» تُبقي الإعدادات المولّدة كما هي، و«عشوائي» يختار إحدى السمات المثبّتة في كل مرة تُنشأ فيها الإعدادات</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1063"/>
+        <location filename="mainwindow.ui" line="1102"/>
         <source>Turn on the per-boot theme randomizer (only visible while the installed config was created with a theme selected)</source>
         <translation>تشغيل السمة العشوائية عند كل إقلاع (يظهر فقط عندما تكون الإعدادات المثبّتة قد أُنشئت مع سمة محددة)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1066"/>
+        <location filename="mainwindow.ui" line="1105"/>
         <source>Rand Theme On</source>
         <translation>سمة عشوائية: تشغيل</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1085"/>
+        <location filename="mainwindow.ui" line="1124"/>
         <source>Turn off the per-boot theme randomizer</source>
         <translation>إيقاف السمة العشوائية عند كل إقلاع</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1088"/>
+        <location filename="mainwindow.ui" line="1127"/>
         <source>Rand Theme Off</source>
         <translation>سمة عشوائية: إيقاف</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1107"/>
+        <location filename="mainwindow.ui" line="1146"/>
         <source>Copy the theme files to EFI/refind/themes on the EFI System Partition</source>
         <translation>نسخ ملفات السمة إلى EFI/refind/themes على قسم نظام EFI</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1110"/>
-        <location filename="mainwindow.cpp" line="1528"/>
-        <location filename="mainwindow.cpp" line="1544"/>
-        <location filename="mainwindow.cpp" line="1549"/>
+        <location filename="mainwindow.ui" line="1149"/>
+        <location filename="mainwindow.cpp" line="1616"/>
+        <location filename="mainwindow.cpp" line="1632"/>
+        <location filename="mainwindow.cpp" line="1637"/>
         <source>Install Themes</source>
         <translation>تثبيت السمات</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1151"/>
+        <location filename="mainwindow.ui" line="1190"/>
         <source>rEFInd Background selection</source>
         <translation>اختيار خلفية rEFInd</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="44"/>
-        <location filename="mainwindow.cpp" line="222"/>
+        <location filename="mainwindow.cpp" line="224"/>
         <source>None</source>
         <translation>بلا</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="134"/>
+        <location filename="mainwindow.cpp" line="136"/>
         <source>Small (96)</source>
         <translation>صغير (96)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="135"/>
+        <location filename="mainwindow.cpp" line="137"/>
         <source>Default (128)</source>
         <translation>افتراضي (128)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="136"/>
+        <location filename="mainwindow.cpp" line="138"/>
         <source>Medium (160)</source>
         <translation>متوسط (160)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="137"/>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>Large (192)</source>
         <translation>كبير (192)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="138"/>
+        <location filename="mainwindow.cpp" line="140"/>
         <source>Extra Large (256)</source>
         <translation>كبير جدًا (256)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="139"/>
+        <location filename="mainwindow.cpp" line="141"/>
         <source>XXL (512)</source>
         <translation>XXL (512)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.cpp" line="143"/>
         <source>Requires efibootmgr (Linux only)</source>
         <translation>يتطلب efibootmgr (لينكس فقط)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="145"/>
+        <location filename="mainwindow.cpp" line="147"/>
         <source>Not needed: no unreadable EFI System Partition was found</source>
         <translation>غير مطلوب: لم يُعثر على قسم نظام EFI يتعذّر قراءته</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="177"/>
+        <location filename="mainwindow.cpp" line="179"/>
         <source>System default</source>
         <translation>افتراضي النظام</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="227"/>
+        <location filename="mainwindow.cpp" line="229"/>
         <source>Random</source>
         <translation>عشوائي</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="335"/>
+        <location filename="mainwindow.cpp" line="337"/>
         <source>Scanning…</source>
         <translation>جارٍ الفحص…</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="544"/>
+        <location filename="mainwindow.cpp" line="546"/>
         <source>Image (*.png)</source>
         <translation>صورة (*.png)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="560"/>
+        <location filename="mainwindow.cpp" line="562"/>
         <source>Select Background PNG</source>
         <translation>اختر ملف PNG للخلفية</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="565"/>
+        <location filename="mainwindow.cpp" line="567"/>
         <source>Select OS Icon 1 PNG</source>
         <translation>اختر ملف PNG لأيقونة النظام 1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="570"/>
+        <location filename="mainwindow.cpp" line="572"/>
         <source>Select OS Icon 2 PNG</source>
         <translation>اختر ملف PNG لأيقونة النظام 2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="575"/>
+        <location filename="mainwindow.cpp" line="577"/>
         <source>Select OS Icon 3 PNG</source>
         <translation>اختر ملف PNG لأيقونة النظام 3</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="580"/>
+        <location filename="mainwindow.cpp" line="582"/>
         <source>Select OS Icon 4 PNG</source>
         <translation>اختر ملف PNG لأيقونة النظام 4</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="587"/>
+        <location filename="mainwindow.cpp" line="589"/>
         <source>Failed to launch the installation script.</source>
         <translation>تعذّر تشغيل سكربت التثبيت.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="891"/>
+        <location filename="mainwindow.cpp" line="941"/>
+        <source>These showtools entries are not recognized: %1
+
+Valid entries: %2</source>
+        <translation>إدخالات showtools هذه غير معروفة: %1
+
+الإدخالات الصالحة: %2</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="969"/>
         <source>Could not write %1</source>
         <translation>تعذّرت الكتابة إلى %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="902"/>
+        <location filename="mainwindow.cpp" line="980"/>
         <source>Could not write %1 completely — the disk may be full. The config was not updated.</source>
         <translation>تعذّرت كتابة %1 كاملًا — قد يكون القرص ممتلئًا. لم يتم تحديث الإعدادات.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1017"/>
+        <location filename="mainwindow.cpp" line="1095"/>
         <source>The config-install script was NOT run:
 
 %1
@@ -467,12 +492,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 أعد تثبيت الواجهة لاستعادة السكربت الأصلي ثم حاول مجددًا.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1034"/>
+        <location filename="mainwindow.cpp" line="1112"/>
         <source>The config was installed successfully.</source>
         <translation>تم تثبيت الإعدادات بنجاح.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1035"/>
+        <location filename="mainwindow.cpp" line="1113"/>
         <source>The config was installed successfully.
 
 %1</source>
@@ -481,12 +506,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1039"/>
+        <location filename="mainwindow.cpp" line="1117"/>
         <source>Installing the config failed (code %1).</source>
         <translation>فشل تثبيت الإعدادات (الرمز %1).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1040"/>
+        <location filename="mainwindow.cpp" line="1118"/>
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -495,31 +520,31 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1098"/>
+        <location filename="mainwindow.cpp" line="1176"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
         <translation>تعذّر تجهيز ملف السمة %1 — لم يتم تحديث الإعدادات.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1120"/>
-        <location filename="mainwindow.cpp" line="1130"/>
-        <location filename="mainwindow.cpp" line="1137"/>
+        <location filename="mainwindow.cpp" line="1198"/>
+        <location filename="mainwindow.cpp" line="1208"/>
+        <location filename="mainwindow.cpp" line="1215"/>
         <source>Copy PNG</source>
         <translation>نسخ PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1121"/>
-        <location filename="mainwindow.cpp" line="1131"/>
-        <location filename="mainwindow.cpp" line="1138"/>
+        <location filename="mainwindow.cpp" line="1199"/>
+        <location filename="mainwindow.cpp" line="1209"/>
+        <location filename="mainwindow.cpp" line="1216"/>
         <source>Could not copy %1 to %2</source>
         <translation>تعذّر نسخ %1 إلى %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1163"/>
+        <location filename="mainwindow.cpp" line="1241"/>
         <source>Invalid PNG</source>
         <translation>ملف PNG غير صالح</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1164"/>
+        <location filename="mainwindow.cpp" line="1242"/>
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -528,48 +553,48 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 يجب أن تكون الخلفيات وأيقونات الأنظمة صور PNG حقيقية (وليست مجرد ملفات بامتداد ‎.png).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1423"/>
+        <location filename="mainwindow.cpp" line="1511"/>
         <source>Check For Update</source>
         <translation>التحقق من التحديثات</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1426"/>
+        <location filename="mainwindow.cpp" line="1514"/>
         <source>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;مطوّر الواجهة الأصلي: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;شكر خاص لـ Deck Wizard على الاختبار وضمان الجودة&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;شرح الإقلاع المزدوج من Deck Wizard&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1473"/>
+        <location filename="mainwindow.cpp" line="1561"/>
         <source>&lt;p align=&apos;center&apos;&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;فشل التحقق من التحديثات. يُرجى التحقق من اتصالك بالإنترنت والمحاولة مجددًا.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1476"/>
+        <location filename="mainwindow.cpp" line="1564"/>
         <source>&lt;p align=&apos;center&apos;&gt;An update is available &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;يتوفر تحديث &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;هنا&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1480"/>
+        <location filename="mainwindow.cpp" line="1568"/>
         <source>&lt;p align=&apos;center&apos;&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;لا توجد تحديثات. أنت تستخدم أحدث إصدار.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1490"/>
+        <location filename="mainwindow.cpp" line="1578"/>
         <source>Background Randomizer</source>
         <translation>الخلفية العشوائية</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1491"/>
-        <location filename="mainwindow.cpp" line="1508"/>
+        <location filename="mainwindow.cpp" line="1579"/>
+        <location filename="mainwindow.cpp" line="1596"/>
         <source>Failed to launch the randomizer setup.</source>
         <translation>تعذّر تشغيل إعداد الخلفية العشوائية.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1507"/>
+        <location filename="mainwindow.cpp" line="1595"/>
         <source>Theme Randomizer</source>
         <translation>السمة العشوائية</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1529"/>
+        <location filename="mainwindow.cpp" line="1617"/>
         <source>The theme-install script was NOT run:
 
 %1
@@ -586,12 +611,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 أعد تثبيت الواجهة لاستعادة السكربت الأصلي ثم حاول مجددًا.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1546"/>
+        <location filename="mainwindow.cpp" line="1634"/>
         <source>The themes were installed successfully.</source>
         <translation>تم تثبيت السمات بنجاح.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1547"/>
+        <location filename="mainwindow.cpp" line="1635"/>
         <source>The themes were installed successfully.
 
 %1</source>
@@ -600,12 +625,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1551"/>
+        <location filename="mainwindow.cpp" line="1639"/>
         <source>Installing the themes failed (code %1).</source>
         <translation>فشل تثبيت السمات (الرمز %1).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1552"/>
+        <location filename="mainwindow.cpp" line="1640"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
@@ -614,7 +639,7 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1561"/>
+        <location filename="mainwindow.cpp" line="1649"/>
         <source>Failed to open %1 in the file manager.</source>
         <translation>تعذّر فتح %1 في مدير الملفات.</translation>
     </message>
@@ -645,27 +670,27 @@ Reinstall the GUI to restore the original script, then try again.</source>
         <translation>لم يتم اختيار أي خيار إقلاع.</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="166"/>
+        <location filename="previewdialog.cpp" line="178"/>
         <source>Preview</source>
         <translation>معاينة</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="181"/>
+        <location filename="previewdialog.cpp" line="193"/>
         <source>Approximate preview — rEFInd&apos;s real rendering also depends on the firmware resolution and theme.</source>
         <translation>معاينة تقريبية — يعتمد العرض الفعلي في rEFInd أيضًا على دقة البرنامج الثابت والسمة.</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="184"/>
+        <location filename="previewdialog.cpp" line="196"/>
         <source>Approximate preview showing the randomly picked &quot;%1&quot; theme — Random picks a theme anew each time the config is created.</source>
         <translation>معاينة تقريبية تعرض السمة «%1» المختارة عشوائيًا — «عشوائي» يختار سمة جديدة في كل مرة يتم فيها إنشاء الإعداد.</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="188"/>
+        <location filename="previewdialog.cpp" line="200"/>
         <source>Approximate preview with the &quot;%1&quot; theme applied — rEFInd&apos;s real rendering also depends on the firmware resolution and the theme&apos;s other settings.</source>
         <translation>معاينة تقريبية مع تطبيق السمة «%1» — يعتمد العرض الفعلي في rEFInd أيضًا على دقة البرنامج الثابت وبقية إعدادات السمة.</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="197"/>
+        <location filename="previewdialog.cpp" line="209"/>
         <source>Boot screen</source>
         <translation>شاشة الإقلاع</translation>
     </message>

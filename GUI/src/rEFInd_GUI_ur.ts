@@ -130,7 +130,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="464"/>
-        <location filename="mainwindow.cpp" line="1560"/>
+        <location filename="mainwindow.cpp" line="1648"/>
         <source>Open Folder</source>
         <translation>فولڈر کھولیں</translation>
     </message>
@@ -231,14 +231,30 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="932"/>
-        <location filename="mainwindow.cpp" line="1016"/>
-        <location filename="mainwindow.cpp" line="1032"/>
-        <location filename="mainwindow.cpp" line="1037"/>
+        <location filename="mainwindow.cpp" line="1094"/>
+        <location filename="mainwindow.cpp" line="1110"/>
+        <location filename="mainwindow.cpp" line="1115"/>
         <source>Install Config</source>
         <translation>کنفیگ انسٹال کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="966"/>
+        <location filename="mainwindow.ui" line="943"/>
+        <location filename="mainwindow.cpp" line="940"/>
+        <source>Showtools</source>
+        <translation>Showtools</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="946"/>
+        <source>Tools offered on the second row of the rEFInd boot menu (the showtools setting)</source>
+        <translation>rEFInd بوٹ مینیو کی دوسری قطار میں پیش کیے جانے والے اوزار (showtools سیٹنگ)</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="965"/>
+        <source>Comma-separated list of tools to offer on the second row of the rEFInd boot menu. Leave blank to show no tools. Valid entries: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</source>
+        <translation>rEFInd بوٹ مینیو کی دوسری قطار میں دکھانے کے لیے اوزاروں کی کوما سے جدا فہرست۔ کوئی اوزار نہ دکھانے کے لیے خالی چھوڑیں۔ درست اندراجات: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="1005"/>
         <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots. Only relevant when more than four OSes are detected.</source>
         <translation>اُن شناخت شدہ بوٹ لوڈرز کے لیے بھی بوٹ اندراجات لکھتا ہے جو چاروں خانوں میں سے کسی میں نہیں ہیں۔ صرف اُس وقت متعلقہ ہے جب چار سے زیادہ آپریٹنگ سسٹم دریافت ہوں۔</translation>
     </message>
@@ -249,15 +265,15 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="910"/>
-        <location filename="mainwindow.cpp" line="890"/>
-        <location filename="mainwindow.cpp" line="901"/>
-        <location filename="mainwindow.cpp" line="1097"/>
+        <location filename="mainwindow.cpp" line="968"/>
+        <location filename="mainwindow.cpp" line="979"/>
+        <location filename="mainwindow.cpp" line="1175"/>
         <source>Create Config</source>
         <translation>کنفیگ بنائیں</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="888"/>
-        <location filename="mainwindow.cpp" line="586"/>
+        <location filename="mainwindow.cpp" line="588"/>
         <source>Install rEFInd</source>
         <translation>rEFInd انسٹال کریں</translation>
     </message>
@@ -267,12 +283,12 @@
         <translation>rEFInd انسٹال کرنے کا طریقہ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="943"/>
+        <location filename="mainwindow.ui" line="982"/>
         <source>Language</source>
         <translation>زبان</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="959"/>
+        <location filename="mainwindow.ui" line="998"/>
         <source>User interface language</source>
         <translation>انٹرفیس کی زبان</translation>
     </message>
@@ -281,176 +297,185 @@
         <translation type="vanished">اُن شناخت شدہ بوٹ لوڈرز کے لیے بھی بوٹ اندراجات لکھتا ہے جو چاروں خانوں میں سے کسی میں نہیں ہیں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="969"/>
+        <location filename="mainwindow.ui" line="1008"/>
         <source>Include all OSes</source>
         <translation>تمام OS شامل کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1001"/>
+        <location filename="mainwindow.ui" line="1040"/>
         <source>Preview the rEFInd boot screen and the generated refind.conf</source>
         <translation>rEFInd بوٹ اسکرین اور تیار شدہ refind.conf کا پیش منظر</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1004"/>
+        <location filename="mainwindow.ui" line="1043"/>
         <source>Preview</source>
         <translation>پیش منظر</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1015"/>
+        <location filename="mainwindow.ui" line="1054"/>
         <source>Theme</source>
         <translation>تھیم</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1031"/>
+        <location filename="mainwindow.ui" line="1070"/>
         <source>rEFInd theme applied by Create Config: None keeps the plain generated config, Random picks one of the installed themes each time the config is created</source>
         <translation>کنفیگ بنائیں کے ذریعے لاگو ہونے والی rEFInd تھیم: کوئی نہیں سادہ بنائی گئی کنفیگ برقرار رکھتا ہے، بے ترتیب ہر بار کنفیگ بنتے وقت انسٹال شدہ تھیمز میں سے ایک چنتا ہے</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1063"/>
+        <location filename="mainwindow.ui" line="1102"/>
         <source>Turn on the per-boot theme randomizer (only visible while the installed config was created with a theme selected)</source>
         <translation>ہر بوٹ پر بے ترتیب تھیم آن کریں (صرف اُس وقت نظر آتا ہے جب انسٹال شدہ کنفیگ کسی منتخب تھیم کے ساتھ بنائی گئی ہو)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1066"/>
+        <location filename="mainwindow.ui" line="1105"/>
         <source>Rand Theme On</source>
         <translation>بے ترتیب تھیم آن</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1085"/>
+        <location filename="mainwindow.ui" line="1124"/>
         <source>Turn off the per-boot theme randomizer</source>
         <translation>ہر بوٹ پر بے ترتیب تھیم آف کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1088"/>
+        <location filename="mainwindow.ui" line="1127"/>
         <source>Rand Theme Off</source>
         <translation>بے ترتیب تھیم آف</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1107"/>
+        <location filename="mainwindow.ui" line="1146"/>
         <source>Copy the theme files to EFI/refind/themes on the EFI System Partition</source>
         <translation>تھیم فائلیں EFI سسٹم پارٹیشن پر EFI/refind/themes میں کاپی کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1110"/>
-        <location filename="mainwindow.cpp" line="1528"/>
-        <location filename="mainwindow.cpp" line="1544"/>
-        <location filename="mainwindow.cpp" line="1549"/>
+        <location filename="mainwindow.ui" line="1149"/>
+        <location filename="mainwindow.cpp" line="1616"/>
+        <location filename="mainwindow.cpp" line="1632"/>
+        <location filename="mainwindow.cpp" line="1637"/>
         <source>Install Themes</source>
         <translation>تھیمز انسٹال کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1151"/>
+        <location filename="mainwindow.ui" line="1190"/>
         <source>rEFInd Background selection</source>
         <translation>rEFInd پس منظر کا انتخاب</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="44"/>
-        <location filename="mainwindow.cpp" line="222"/>
+        <location filename="mainwindow.cpp" line="224"/>
         <source>None</source>
         <translation>کوئی نہیں</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="134"/>
+        <location filename="mainwindow.cpp" line="136"/>
         <source>Small (96)</source>
         <translation>چھوٹا (96)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="135"/>
+        <location filename="mainwindow.cpp" line="137"/>
         <source>Default (128)</source>
         <translation>طے شدہ (128)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="136"/>
+        <location filename="mainwindow.cpp" line="138"/>
         <source>Medium (160)</source>
         <translation>درمیانہ (160)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="137"/>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>Large (192)</source>
         <translation>بڑا (192)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="138"/>
+        <location filename="mainwindow.cpp" line="140"/>
         <source>Extra Large (256)</source>
         <translation>بہت بڑا (256)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="139"/>
+        <location filename="mainwindow.cpp" line="141"/>
         <source>XXL (512)</source>
         <translation>XXL (512)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.cpp" line="143"/>
         <source>Requires efibootmgr (Linux only)</source>
         <translation>efibootmgr درکار ہے (صرف Linux)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="145"/>
+        <location filename="mainwindow.cpp" line="147"/>
         <source>Not needed: no unreadable EFI System Partition was found</source>
         <translation>ضرورت نہیں: کوئی ناقابلِ مطالعہ EFI سسٹم پارٹیشن نہیں ملا</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="177"/>
+        <location filename="mainwindow.cpp" line="179"/>
         <source>System default</source>
         <translation>سسٹم ڈیفالٹ</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="227"/>
+        <location filename="mainwindow.cpp" line="229"/>
         <source>Random</source>
         <translation>بے ترتیب</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="335"/>
+        <location filename="mainwindow.cpp" line="337"/>
         <source>Scanning…</source>
         <translation>اسکین جاری ہے…</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="544"/>
+        <location filename="mainwindow.cpp" line="546"/>
         <source>Image (*.png)</source>
         <translation>تصویر (*.png)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="560"/>
+        <location filename="mainwindow.cpp" line="562"/>
         <source>Select Background PNG</source>
         <translation>پس منظر کی PNG منتخب کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="565"/>
+        <location filename="mainwindow.cpp" line="567"/>
         <source>Select OS Icon 1 PNG</source>
         <translation>OS آئیکن 1 کی PNG منتخب کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="570"/>
+        <location filename="mainwindow.cpp" line="572"/>
         <source>Select OS Icon 2 PNG</source>
         <translation>OS آئیکن 2 کی PNG منتخب کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="575"/>
+        <location filename="mainwindow.cpp" line="577"/>
         <source>Select OS Icon 3 PNG</source>
         <translation>OS آئیکن 3 کی PNG منتخب کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="580"/>
+        <location filename="mainwindow.cpp" line="582"/>
         <source>Select OS Icon 4 PNG</source>
         <translation>OS آئیکن 4 کی PNG منتخب کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="587"/>
+        <location filename="mainwindow.cpp" line="589"/>
         <source>Failed to launch the installation script.</source>
         <translation>انسٹالیشن اسکرپٹ شروع نہیں ہو سکا۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="891"/>
+        <location filename="mainwindow.cpp" line="941"/>
+        <source>These showtools entries are not recognized: %1
+
+Valid entries: %2</source>
+        <translation>یہ showtools اندراجات شناخت نہیں ہو سکے: %1
+
+درست اندراجات: %2</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="969"/>
         <source>Could not write %1</source>
         <translation>%1 لکھا نہیں جا سکا</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="902"/>
+        <location filename="mainwindow.cpp" line="980"/>
         <source>Could not write %1 completely — the disk may be full. The config was not updated.</source>
         <translation>%1 مکمل طور پر نہیں لکھا جا سکا — ممکن ہے ڈسک بھری ہو۔ کنفیگریشن اپ ڈیٹ نہیں ہوئی۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1017"/>
+        <location filename="mainwindow.cpp" line="1095"/>
         <source>The config-install script was NOT run:
 
 %1
@@ -467,12 +492,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 اصل اسکرپٹ بحال کرنے کے لیے GUI دوبارہ انسٹال کریں، پھر دوبارہ کوشش کریں۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1034"/>
+        <location filename="mainwindow.cpp" line="1112"/>
         <source>The config was installed successfully.</source>
         <translation>کنفیگریشن کامیابی سے انسٹال ہو گئی۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1035"/>
+        <location filename="mainwindow.cpp" line="1113"/>
         <source>The config was installed successfully.
 
 %1</source>
@@ -481,12 +506,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1039"/>
+        <location filename="mainwindow.cpp" line="1117"/>
         <source>Installing the config failed (code %1).</source>
         <translation>کنفیگریشن کی تنصیب ناکام رہی (کوڈ %1)۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1040"/>
+        <location filename="mainwindow.cpp" line="1118"/>
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -495,31 +520,31 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1098"/>
+        <location filename="mainwindow.cpp" line="1176"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
         <translation>تھیم فائل %1 تیار نہیں کی جا سکی — کنفیگریشن اپ ڈیٹ نہیں ہوئی۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1120"/>
-        <location filename="mainwindow.cpp" line="1130"/>
-        <location filename="mainwindow.cpp" line="1137"/>
+        <location filename="mainwindow.cpp" line="1198"/>
+        <location filename="mainwindow.cpp" line="1208"/>
+        <location filename="mainwindow.cpp" line="1215"/>
         <source>Copy PNG</source>
         <translation>PNG کاپی کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1121"/>
-        <location filename="mainwindow.cpp" line="1131"/>
-        <location filename="mainwindow.cpp" line="1138"/>
+        <location filename="mainwindow.cpp" line="1199"/>
+        <location filename="mainwindow.cpp" line="1209"/>
+        <location filename="mainwindow.cpp" line="1216"/>
         <source>Could not copy %1 to %2</source>
         <translation>%1 کو %2 میں کاپی نہیں کیا جا سکا</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1163"/>
+        <location filename="mainwindow.cpp" line="1241"/>
         <source>Invalid PNG</source>
         <translation>غلط PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1164"/>
+        <location filename="mainwindow.cpp" line="1242"/>
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -528,48 +553,48 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 پس منظر اور OS آئیکن اصل PNG تصاویر ہونی چاہئیں (صرف ‎.png ایکسٹینشن والی فائلیں نہیں)۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1423"/>
+        <location filename="mainwindow.cpp" line="1511"/>
         <source>Check For Update</source>
         <translation>اپ ڈیٹ چیک کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1426"/>
+        <location filename="mainwindow.cpp" line="1514"/>
         <source>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;اصل GUI بنانے والا: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;جانچ اور معیار کی یقین دہانی کے لیے Deck Wizard کا خصوصی شکریہ&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard ڈوئل بوٹ ٹیوٹوریل&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1473"/>
+        <location filename="mainwindow.cpp" line="1561"/>
         <source>&lt;p align=&apos;center&apos;&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;اپ ڈیٹ چیک ناکام رہا۔ براہ کرم اپنا انٹرنیٹ کنکشن چیک کریں اور دوبارہ کوشش کریں۔&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1476"/>
+        <location filename="mainwindow.cpp" line="1564"/>
         <source>&lt;p align=&apos;center&apos;&gt;An update is available &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;اپ ڈیٹ &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;یہاں&lt;/a&gt; دستیاب ہے&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1480"/>
+        <location filename="mainwindow.cpp" line="1568"/>
         <source>&lt;p align=&apos;center&apos;&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;کوئی اپ ڈیٹ نہیں ملا۔ آپ تازہ ترین ورژن استعمال کر رہے ہیں۔&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1490"/>
+        <location filename="mainwindow.cpp" line="1578"/>
         <source>Background Randomizer</source>
         <translation>بے ترتیب پس منظر</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1491"/>
-        <location filename="mainwindow.cpp" line="1508"/>
+        <location filename="mainwindow.cpp" line="1579"/>
+        <location filename="mainwindow.cpp" line="1596"/>
         <source>Failed to launch the randomizer setup.</source>
         <translation>بے ترتیب پس منظر کا سیٹ اپ شروع نہیں ہو سکا۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1507"/>
+        <location filename="mainwindow.cpp" line="1595"/>
         <source>Theme Randomizer</source>
         <translation>بے ترتیب تھیم</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1529"/>
+        <location filename="mainwindow.cpp" line="1617"/>
         <source>The theme-install script was NOT run:
 
 %1
@@ -586,12 +611,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 اصل اسکرپٹ بحال کرنے کے لیے GUI دوبارہ انسٹال کریں، پھر دوبارہ کوشش کریں۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1546"/>
+        <location filename="mainwindow.cpp" line="1634"/>
         <source>The themes were installed successfully.</source>
         <translation>تھیمز کامیابی سے انسٹال ہو گئیں۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1547"/>
+        <location filename="mainwindow.cpp" line="1635"/>
         <source>The themes were installed successfully.
 
 %1</source>
@@ -600,12 +625,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1551"/>
+        <location filename="mainwindow.cpp" line="1639"/>
         <source>Installing the themes failed (code %1).</source>
         <translation>تھیمز کی تنصیب ناکام رہی (کوڈ %1)۔</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1552"/>
+        <location filename="mainwindow.cpp" line="1640"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
@@ -614,7 +639,7 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1561"/>
+        <location filename="mainwindow.cpp" line="1649"/>
         <source>Failed to open %1 in the file manager.</source>
         <translation>فائل مینیجر میں %1 کھولا نہیں جا سکا۔</translation>
     </message>
@@ -645,27 +670,27 @@ Reinstall the GUI to restore the original script, then try again.</source>
         <translation>کوئی بوٹ آپشن منتخب نہیں۔</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="166"/>
+        <location filename="previewdialog.cpp" line="178"/>
         <source>Preview</source>
         <translation>پیش منظر</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="181"/>
+        <location filename="previewdialog.cpp" line="193"/>
         <source>Approximate preview — rEFInd&apos;s real rendering also depends on the firmware resolution and theme.</source>
         <translation>تخمینی پیش منظر — rEFInd کا اصل ڈسپلے فرم ویئر ریزولوشن اور تھیم پر بھی منحصر ہے۔</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="184"/>
+        <location filename="previewdialog.cpp" line="196"/>
         <source>Approximate preview showing the randomly picked &quot;%1&quot; theme — Random picks a theme anew each time the config is created.</source>
         <translation>تخمینی پیش منظر جس میں بے ترتیب منتخب کردہ تھیم &quot;%1&quot; دکھایا گیا ہے — &quot;بے ترتیب&quot; ہر بار کنفیگریشن بننے پر نیا تھیم منتخب کرتا ہے۔</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="188"/>
+        <location filename="previewdialog.cpp" line="200"/>
         <source>Approximate preview with the &quot;%1&quot; theme applied — rEFInd&apos;s real rendering also depends on the firmware resolution and the theme&apos;s other settings.</source>
         <translation>تھیم &quot;%1&quot; کے اطلاق کے ساتھ تخمینی پیش منظر — rEFInd کا اصل ڈسپلے فرم ویئر ریزولوشن اور تھیم کی دیگر ترتیبات پر بھی منحصر ہے۔</translation>
     </message>
     <message>
-        <location filename="previewdialog.cpp" line="197"/>
+        <location filename="previewdialog.cpp" line="209"/>
         <source>Boot screen</source>
         <translation>بوٹ اسکرین</translation>
     </message>

@@ -1,3 +1,11 @@
+refind-gui (3.3.0) unstable; urgency=medium
+
+  * New Showtools row: comma-separated showtools options with live
+    validation, written to the generated refind.conf and persisted in
+    the INI. All translation catalogs updated.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Fri, 07 Aug 2026 08:15:00 -0700
+
 refind-gui (3.2.2) unstable; urgency=medium
 
   * Installer: accept any pacman-based Arch distro (vanilla Arch,
