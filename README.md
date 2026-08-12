@@ -1,5 +1,5 @@
 # rEFInd_GUI
-A graphical setup and customization utility to use alongside rEFInd (work in progress)
+A graphical setup and customization utility to use alongside rEFInd.
 
 ![rEFInd_GUI main window with auto-detected boot options](images/rEFInd_GUI_screenshot.png)
 
