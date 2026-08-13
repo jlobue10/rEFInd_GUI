@@ -2,6 +2,21 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> **MIGRATION IN PROGRESS (branch `claude/refind-gui-config-helper-2defin`):**
+> the privileged Linux shell scripts (`install_config_from_GUI.sh`,
+> `install_themes_from_GUI.sh`, both randomizers) have been replaced by the
+> `rEFInd_GUI_helper` binary (built from `GUI/src/helper/` +
+> `GUI/src/espops/`, parity-locked with the sibling repo like `osdetect_*`).
+> The SHA-256 tamper hash-check and its `resources.qrc` script embeds are
+> gone — replaced by a `helper --version` handshake; the sudoers file now
+> whitelists the exact `helper install-config` / `install-themes` argument
+> vectors; the systemd units ExecStart helper subcommands; the installer
+> writes `/etc/rEFInd/background-dir` instead of sed-ing HOME into the bg
+> randomizer. **The Windows `.ps1` paths are NOT yet migrated.** Sections of
+> this file describing the old script/trust machinery are stale until this
+> note is removed — see `NATIVE_HELPER_DESIGN.md` for the authoritative
+> design and remaining work.
+
 ## What this is
 
 A Qt (C++17) GUI for customizing and installing the rEFInd bootloader, aimed especially at dual-boot handhelds (ASUS ROG Ally/Ally X, Legion Go, Steam Deck). It builds for **both Linux and Windows** from the same sources. Linux install targets: Fedora/Nobara/Bazzite (RPM), any pacman-based Arch distro incl. CachyOS (PKGBUILD; SteamOS is explicitly refused — its immutable rootfs belongs to the sibling SteamDeck_rEFInd project), and Debian/Ubuntu (deb); Windows: `windows/install-rEFInd-GUI.ps1` into `%LOCALAPPDATA%\rEFInd_GUI`.
