@@ -144,7 +144,7 @@ become exact-argument commands:
 
 ```
 USER ALL = NOPASSWD: /etc/rEFInd/rEFInd_GUI_helper install-config
-USER ALL = NOPASSWD: /etc/rEFInd/rEFInd_GUI_helper install-theme
+USER ALL = NOPASSWD: /etc/rEFInd/rEFInd_GUI_helper install-themes
 ```
 
 (sudo matches listed arguments exactly, so this is as tight as today's
