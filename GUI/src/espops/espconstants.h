@@ -18,6 +18,10 @@ constexpr const char kDataDirName[] = "rEFInd_GUI";
 // sudoers NOPASSWD lines and the systemd randomizer units point at.
 constexpr const char kHelperEtcPath[] = "/etc/rEFInd/rEFInd_GUI_helper";
 
+// The user-facing installer script, named in "re-run the installer"
+// diagnostics.
+constexpr const char kInstallerName[] = "install-rEFInd-GUI.sh";
+
 // "Running system's ESP" fallback mountpoints, in preference order, for
 // when NVRAM resolution finds nothing (first install, not yet booted
 // through rEFInd). Null-terminated.
