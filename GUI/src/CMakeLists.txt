@@ -39,6 +39,19 @@ set(TS_FILES
     rEFInd_GUI_zh_CN.ts
 )
 
+# espops: the shared privileged-operation library (NATIVE_HELPER_DESIGN.md).
+# Linked into both the GUI and the helper binary. QtCore only — the helper
+# runs as root on Linux, so Widgets/Network must never leak into it.
+# espops/*.cpp/.h and helper/main.cpp are parity-locked byte-identical with
+# the sibling SteamDeck_rEFInd repo; espconstants.h is the per-repo file.
+add_library(espops STATIC
+    espops/espconstants.h
+    espops/loadoption.cpp
+    espops/loadoption.h
+)
+target_include_directories(espops PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_definitions(espops PUBLIC ESPOPS_APP_VERSION="${PROJECT_VERSION}")
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
@@ -121,7 +134,16 @@ else()
     add_custom_target(rEFInd_GUI_translations ALL DEPENDS ${QM_FILES})
 endif()
 
-target_link_libraries(rEFInd_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
+target_link_libraries(espops PUBLIC Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(rEFInd_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network espops)
+
+# The privileged helper (console app on both platforms — deliberately not
+# WIN32_EXECUTABLE and not qt_add_executable: no plugins, no deployment
+# finalization, just QtCore). Linux: installed root-owned under /etc by
+# install-rEFInd-GUI.sh, target of the sudoers NOPASSWD lines and the
+# systemd randomizer units. Windows: the Scheduled Tasks' action.
+add_executable(rEFInd_GUI_helper helper/main.cpp)
+target_link_libraries(rEFInd_GUI_helper PRIVATE espops)
 
 if(WIN32)
     # shell32: SHGetKnownFolderPath; ole32: CoTaskMemFree; uuid: the
@@ -160,6 +182,10 @@ if(BUILD_GUI_TESTS AND NOT WIN32)
     target_link_libraries(tst_osdetect PRIVATE
         Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Widgets)
     add_test(NAME osdetect COMMAND tst_osdetect)
+
+    add_executable(tst_loadoption tests/tst_loadoption.cpp)
+    target_link_libraries(tst_loadoption PRIVATE espops Qt${QT_VERSION_MAJOR}::Test)
+    add_test(NAME loadoption COMMAND tst_loadoption)
 endif()
 
 if(QT_VERSION_MAJOR EQUAL 6)
