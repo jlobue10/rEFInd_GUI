@@ -34,6 +34,7 @@ build() {
 package() {
   install -d "$pkgdir/etc/rEFInd"
   install -m755 "$srcdir/rEFInd_GUI/GUI/src/build/rEFInd_GUI" "$pkgdir/etc/rEFInd/rEFInd_GUI"
+  install -m755 "$srcdir/rEFInd_GUI/GUI/src/build/rEFInd_GUI_helper" "$pkgdir/etc/rEFInd/rEFInd_GUI_helper"
 
   install -d "$pkgdir/etc/systemd/system"
   install -m644 "$srcdir/rEFInd_bg_randomizer.service" "$pkgdir/etc/systemd/system"

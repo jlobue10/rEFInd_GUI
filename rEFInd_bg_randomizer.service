@@ -4,7 +4,9 @@ Description=Randomize Background on each rEFInd boot
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/bin/bash -c '/etc/rEFInd/rEFInd_bg_randomizer.sh'
+# The root-owned helper binary (installed by the package into /etc/rEFInd);
+# a root unit must never execute a path the desktop user can write.
+ExecStart=/etc/rEFInd/rEFInd_GUI_helper randomize-background
 
 [Install]
 WantedBy=multi-user.target

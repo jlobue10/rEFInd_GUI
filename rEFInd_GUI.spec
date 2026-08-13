@@ -40,6 +40,7 @@ make
 %install
 mkdir -p %{buildroot}/etc/rEFInd
 cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI %{buildroot}/etc/rEFInd/rEFInd_GUI
+cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI_helper %{buildroot}/etc/rEFInd/rEFInd_GUI_helper
 
 mkdir -p %{buildroot}/etc/systemd/system
 
@@ -50,6 +51,7 @@ install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 /etc/systemd/system/rEFInd_bg_randomizer.service
 /etc/systemd/system/rEFInd_theme_randomizer.service
 /etc/rEFInd/rEFInd_GUI
+/etc/rEFInd/rEFInd_GUI_helper
 
 %changelog
 * Fri Aug 07 2026 Jon LoBue <jlobue10@gmail.com> [3.3.0-1]

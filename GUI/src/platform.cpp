@@ -1,7 +1,7 @@
 #include "platform.h"
+#include "espops/espconstants.h"
 
 #include <QCoreApplication>
-#include <QCryptographicHash>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -276,15 +276,19 @@ bool runInstallerScript(const QString &installSource)
     return QProcess::startDetached(QStringLiteral("xterm"), {QStringLiteral("-e"), script});
 }
 
-// Runs one of the root-owned /etc/rEFInd helpers. Allowed without a password
-// via /etc/sudoers.d/zz_install_config_from_GUI (zz_ so it sorts after any
-// passworded catch-all drop-in -- sudo takes the last lexical match); -n
-// keeps the GUI from hanging on a prompt if that rule is missing.
-static int runRootHelperCaptured(const QString &installedPath, QString *output)
+// Runs one subcommand of the root-owned /etc/rEFInd helper binary
+// (NATIVE_HELPER_DESIGN.md). Allowed without a password via
+// /etc/sudoers.d/zz_install_config_from_GUI (zz_ so it sorts after any
+// passworded catch-all drop-in -- sudo takes the last lexical match; the
+// rule whitelists the exact helper+subcommand argument vectors); -n keeps
+// the GUI from hanging on a prompt if that rule is missing.
+static int runRootHelperCaptured(const QString &subcommand, QString *output)
 {
     QProcess proc;
     proc.setProcessChannelMode(QProcess::MergedChannels);
-    proc.start(QStringLiteral("sudo"), {QStringLiteral("-n"), installedPath});
+    proc.start(QStringLiteral("sudo"),
+               {QStringLiteral("-n"),
+                QLatin1String(EspOps::kHelperEtcPath), subcommand});
     if (!proc.waitForStarted()) {
         if (output)
             *output = QCoreApplication::translate("Platform",
@@ -299,49 +303,53 @@ static int runRootHelperCaptured(const QString &installedPath, QString *output)
 
 int installConfig(QString *output)
 {
-    return runRootHelperCaptured(
-        QStringLiteral("/etc/rEFInd/install_config_from_GUI.sh"), output);
+    return runRootHelperCaptured(QStringLiteral("install-config"), output);
 }
 
 int installThemes(QString *output)
 {
-    return runRootHelperCaptured(
-        QStringLiteral("/etc/rEFInd/install_themes_from_GUI.sh"), output);
+    return runRootHelperCaptured(QStringLiteral("install-themes"), output);
 }
 
-// The /etc/rEFInd helpers run as root via the passwordless sudoers rule, so
-// refuse to invoke one unless it hashes identically to the copy this build
-// shipped (embedded as a Qt resource at build time). The installer seds the
-// literal HOME placeholder to the user's home before copying the script to
-// /etc; replicate that on the embedded reference so the hashes are
-// comparable.
-static bool rootHelperTrusted(const QString &resourcePath, const QString &installedPath,
-                              QString *detail)
+// The /etc helper runs as root via the passwordless sudoers rule. The
+// security boundary is its root ownership (nothing user-writable is ever
+// elevated); this handshake is skew detection, not tamper detection — it
+// runs `helper --version` unprivileged (the file is world-executable) and
+// requires the version this GUI was built with, so a helper left behind by
+// an older or newer install produces a precise "reinstall" dialog instead
+// of a subtle misbehavior. It replaces the pre-4.x SHA-256 script
+// hash-check, which died with the on-disk scripts.
+static bool helperVersionMatches(QString *detail)
 {
+    const QString helper = QLatin1String(EspOps::kHelperEtcPath);
+    QString found = QCoreApplication::translate("Platform", "missing");
+    QProcess proc;
+    proc.setProcessChannelMode(QProcess::SeparateChannels);
+    proc.start(helper, {QStringLiteral("--version")});
+    bool ok = false;
+    if (proc.waitForStarted() && proc.waitForFinished(10000)
+        && proc.exitStatus() == QProcess::NormalExit && proc.exitCode() == 0) {
+        const QString version =
+            QString::fromLocal8Bit(proc.readAllStandardOutput()).trimmed();
+        if (!version.isEmpty())
+            found = version;
+        ok = version == QLatin1String(ESPOPS_APP_VERSION);
+    }
     if (detail)
-        *detail = installedPath;
-    QFile ref(resourcePath);
-    if (!ref.open(QIODevice::ReadOnly))
-        return false;
-    QByteArray expected = ref.readAll();
-    expected.replace(QByteArrayLiteral("HOME"), QDir::homePath().toUtf8());
-    QFile installed(installedPath);
-    if (!installed.open(QIODevice::ReadOnly))
-        return false;
-    return QCryptographicHash::hash(installed.readAll(), QCryptographicHash::Sha256)
-        == QCryptographicHash::hash(expected, QCryptographicHash::Sha256);
+        *detail = QCoreApplication::translate(
+                      "Platform", "%1 (expected version %2, found: %3)")
+                      .arg(helper, QLatin1String(ESPOPS_APP_VERSION), found);
+    return ok;
 }
 
 bool installConfigScriptTrusted(QString *detail)
 {
-    return rootHelperTrusted(QStringLiteral(":/install_config_from_GUI.sh"),
-                             QStringLiteral("/etc/rEFInd/install_config_from_GUI.sh"), detail);
+    return helperVersionMatches(detail);
 }
 
 bool installThemesScriptTrusted(QString *detail)
 {
-    return rootHelperTrusted(QStringLiteral(":/install_themes_from_GUI.sh"),
-                             QStringLiteral("/etc/rEFInd/install_themes_from_GUI.sh"), detail);
+    return helperVersionMatches(detail);
 }
 
 int runEspDeepScan()

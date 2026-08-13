@@ -29,11 +29,10 @@ cd rEFInd_GUI || exit 1
 CURRENT_WD="$(pwd)"
 
 # Check out the tag matching the release package this script installs below.
-# The GUI refuses to run /etc/rEFInd/install_config_from_GUI.sh unless it
-# hash-matches the copy embedded in the released binary, so staging the
-# main-branch script next to a release binary makes Install Config fail as
-# "possibly tampered with" for everyone the moment that script changes after a
-# release -- and reinstalling (which re-clones main) cannot fix it.
+# The GUI verifies /etc/rEFInd/rEFInd_GUI_helper reports its own version
+# before running it, and the sudoers rule, systemd units, and staged files
+# must all match the released package's expectations -- so install the
+# release tag's copies, not whatever main currently holds.
 LATEST_TAG="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest |
 	grep -m1 '"tag_name"' | cut -d'"' -f4)"
 if [ -n "$LATEST_TAG" ]; then
@@ -219,18 +218,24 @@ fi
 
 sed -i "s@USER@$USER@g" "$CURRENT_WD/zz_install_config_from_GUI"
 sed -i "s@HOME@$HOME@g" "$CURRENT_WD/rEFInd_GUI.desktop"
-sed -i "s@HOME@$HOME@g" "$CURRENT_WD/install_config_from_GUI.sh"
-sed -i "s@HOME@$HOME@g" "$CURRENT_WD/install_themes_from_GUI.sh"
-sed -i "s@USER@$USER@g" "$CURRENT_WD/rEFInd_bg_randomizer.sh"
 
 sudo mkdir -p /etc/rEFInd
-sudo cp -f "$CURRENT_WD/install_config_from_GUI.sh" /etc/rEFInd/install_config_from_GUI.sh
-sudo cp -f "$CURRENT_WD/install_themes_from_GUI.sh" /etc/rEFInd/install_themes_from_GUI.sh
-sudo cp -f "$CURRENT_WD/rEFInd_bg_randomizer.sh" /etc/rEFInd/rEFInd_bg_randomizer.sh
-sudo cp -f "$CURRENT_WD/rEFInd_theme_randomizer.sh" /etc/rEFInd/rEFInd_theme_randomizer.sh
 sudo cp -f "$CURRENT_WD/GUI/UEFI_icon.png" /etc/rEFInd/UEFI_icon.png
-sudo chown root:root /etc/rEFInd/install_config_from_GUI.sh /etc/rEFInd/install_themes_from_GUI.sh /etc/rEFInd/rEFInd_bg_randomizer.sh /etc/rEFInd/rEFInd_theme_randomizer.sh
-sudo chmod 755 /etc/rEFInd/install_config_from_GUI.sh /etc/rEFInd/install_themes_from_GUI.sh /etc/rEFInd/rEFInd_bg_randomizer.sh /etc/rEFInd/rEFInd_theme_randomizer.sh
+# The privileged shell scripts of previous versions are superseded by the
+# rEFInd_GUI_helper binary the package installs into /etc/rEFInd; remove
+# stale root-owned copies so nothing points at dead code.
+sudo rm -f /etc/rEFInd/install_config_from_GUI.sh \
+	/etc/rEFInd/install_themes_from_GUI.sh \
+	/etc/rEFInd/rEFInd_bg_randomizer.sh \
+	/etc/rEFInd/rEFInd_theme_randomizer.sh
+
+# The background randomizer runs as root at boot, where $HOME cannot
+# identify the desktop user: record the user's backgrounds directory as one
+# plain line in a root-owned pointer file. It is read as DATA (validated,
+# never sourced) by the helper's randomize-background subcommand.
+printf '%s\n' "$HOME/.local/rEFInd_GUI/backgrounds" | sudo tee /etc/rEFInd/background-dir > /dev/null
+sudo chown root:root /etc/rEFInd/background-dir
+sudo chmod 644 /etc/rEFInd/background-dir
 
 # The sudoers rule must only be installed after the root-owned script it
 # whitelists is in place, and must be root-owned mode 0440. It is only

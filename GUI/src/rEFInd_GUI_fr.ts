@@ -130,7 +130,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="464"/>
-        <location filename="mainwindow.cpp" line="1648"/>
+        <location filename="mainwindow.cpp" line="1642"/>
         <source>Open Folder</source>
         <translation>Ouvrir le dossier</translation>
     </message>
@@ -232,8 +232,8 @@
     <message>
         <location filename="mainwindow.ui" line="932"/>
         <location filename="mainwindow.cpp" line="1094"/>
-        <location filename="mainwindow.cpp" line="1110"/>
-        <location filename="mainwindow.cpp" line="1115"/>
+        <location filename="mainwindow.cpp" line="1107"/>
+        <location filename="mainwindow.cpp" line="1112"/>
         <source>Install Config</source>
         <translation>Installer config</translation>
     </message>
@@ -251,7 +251,7 @@
     <message>
         <location filename="mainwindow.ui" line="965"/>
         <source>Comma-separated list of tools to offer on the second row of the rEFInd boot menu. Leave blank to show no tools. Valid entries: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</source>
-        <translation>Liste, séparée par des virgules, des outils à proposer sur la deuxième ligne du menu de démarrage de rEFInd. Laissez vide pour n'afficher aucun outil. Entrées valides : shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</translation>
+        <translation>Liste, séparée par des virgules, des outils à proposer sur la deuxième ligne du menu de démarrage de rEFInd. Laissez vide pour n&apos;afficher aucun outil. Entrées valides : shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1005"/>
@@ -267,7 +267,7 @@
         <location filename="mainwindow.ui" line="910"/>
         <location filename="mainwindow.cpp" line="968"/>
         <location filename="mainwindow.cpp" line="979"/>
-        <location filename="mainwindow.cpp" line="1175"/>
+        <location filename="mainwindow.cpp" line="1172"/>
         <source>Create Config</source>
         <translation>Créer config</translation>
     </message>
@@ -348,9 +348,9 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="1149"/>
-        <location filename="mainwindow.cpp" line="1616"/>
-        <location filename="mainwindow.cpp" line="1632"/>
-        <location filename="mainwindow.cpp" line="1637"/>
+        <location filename="mainwindow.cpp" line="1613"/>
+        <location filename="mainwindow.cpp" line="1626"/>
+        <location filename="mainwindow.cpp" line="1631"/>
         <source>Install Themes</source>
         <translation>Installer thèmes</translation>
     </message>
@@ -476,14 +476,22 @@ Entrées valides : %2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1095"/>
-        <source>The config-install script was NOT run:
+        <location filename="mainwindow.cpp" line="1614"/>
+        <source>The privileged install helper was NOT run:
+
+%1
+
+It is missing or belongs to a different version of the app, so it cannot be run safely.
+
+Reinstall the GUI to restore the matching helper, then try again.</source>
+        <oldsource>The config-install script was NOT run:
 
 %1
 
 It does not match the copy shipped with this version of the app. Because it runs with root privileges, it is only ever run when it is byte-for-byte the shipped version — a mismatch means it was modified (possibly tampered with) or belongs to a different version.
 
-Reinstall the GUI to restore the original script, then try again.</source>
-        <translation>Le script d&apos;installation de la configuration n&apos;a PAS été exécuté :
+Reinstall the GUI to restore the original script, then try again.</oldsource>
+        <translation type="unfinished">Le script d&apos;installation de la configuration n&apos;a PAS été exécuté :
 
 %1
 
@@ -492,12 +500,12 @@ Il ne correspond pas à la copie livrée avec cette version de l&apos;applicatio
 Réinstallez la GUI pour restaurer le script d&apos;origine, puis réessayez.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1112"/>
+        <location filename="mainwindow.cpp" line="1109"/>
         <source>The config was installed successfully.</source>
         <translation>La configuration a été installée avec succès.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1113"/>
+        <location filename="mainwindow.cpp" line="1110"/>
         <source>The config was installed successfully.
 
 %1</source>
@@ -506,12 +514,12 @@ Réinstallez la GUI pour restaurer le script d&apos;origine, puis réessayez.</t
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1117"/>
+        <location filename="mainwindow.cpp" line="1114"/>
         <source>Installing the config failed (code %1).</source>
         <translation>L&apos;installation de la configuration a échoué (code %1).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1118"/>
+        <location filename="mainwindow.cpp" line="1115"/>
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -520,31 +528,31 @@ Réinstallez la GUI pour restaurer le script d&apos;origine, puis réessayez.</t
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1176"/>
+        <location filename="mainwindow.cpp" line="1173"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
         <translation>Impossible de préparer le fichier de thème %1 — la configuration n&apos;a pas été mise à jour.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1198"/>
-        <location filename="mainwindow.cpp" line="1208"/>
-        <location filename="mainwindow.cpp" line="1215"/>
+        <location filename="mainwindow.cpp" line="1195"/>
+        <location filename="mainwindow.cpp" line="1205"/>
+        <location filename="mainwindow.cpp" line="1212"/>
         <source>Copy PNG</source>
         <translation>Copier le PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1199"/>
-        <location filename="mainwindow.cpp" line="1209"/>
-        <location filename="mainwindow.cpp" line="1216"/>
+        <location filename="mainwindow.cpp" line="1196"/>
+        <location filename="mainwindow.cpp" line="1206"/>
+        <location filename="mainwindow.cpp" line="1213"/>
         <source>Could not copy %1 to %2</source>
         <translation>Impossible de copier %1 vers %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1241"/>
+        <location filename="mainwindow.cpp" line="1238"/>
         <source>Invalid PNG</source>
         <translation>PNG non valide</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1242"/>
+        <location filename="mainwindow.cpp" line="1239"/>
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -553,48 +561,47 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 Les arrière-plans et les icônes d&apos;OS doivent être de véritables images PNG (pas seulement des fichiers portant l&apos;extension .png).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1511"/>
+        <location filename="mainwindow.cpp" line="1508"/>
         <source>Check For Update</source>
         <translation>Vérifier les mises à jour</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1514"/>
+        <location filename="mainwindow.cpp" line="1511"/>
         <source>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Créateur original de la GUI : &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Remerciements particuliers à Deck Wizard pour les tests et l&apos;assurance qualité&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Tutoriel dual boot de Deck Wizard&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1561"/>
+        <location filename="mainwindow.cpp" line="1558"/>
         <source>&lt;p align=&apos;center&apos;&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;La vérification des mises à jour a échoué. Vérifiez votre connexion Internet et réessayez.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1564"/>
+        <location filename="mainwindow.cpp" line="1561"/>
         <source>&lt;p align=&apos;center&apos;&gt;An update is available &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;Une mise à jour est disponible &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;ici&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1568"/>
+        <location filename="mainwindow.cpp" line="1565"/>
         <source>&lt;p align=&apos;center&apos;&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;Aucune mise à jour trouvée. Vous utilisez la dernière version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1578"/>
+        <location filename="mainwindow.cpp" line="1575"/>
         <source>Background Randomizer</source>
         <translation>Arrière-plan aléatoire</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1579"/>
-        <location filename="mainwindow.cpp" line="1596"/>
+        <location filename="mainwindow.cpp" line="1576"/>
+        <location filename="mainwindow.cpp" line="1593"/>
         <source>Failed to launch the randomizer setup.</source>
         <translation>Impossible de lancer la configuration de l&apos;arrière-plan aléatoire.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1595"/>
+        <location filename="mainwindow.cpp" line="1592"/>
         <source>Theme Randomizer</source>
         <translation>Thème aléatoire</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1617"/>
         <source>The theme-install script was NOT run:
 
 %1
@@ -602,7 +609,7 @@ Les arrière-plans et les icônes d&apos;OS doivent être de véritables images 
 It does not match the copy shipped with this version of the app. Because it runs with root privileges, it is only ever run when it is byte-for-byte the shipped version — a mismatch means it was modified (possibly tampered with) or belongs to a different version.
 
 Reinstall the GUI to restore the original script, then try again.</source>
-        <translation>Le script d&apos;installation des thèmes n&apos;a PAS été exécuté :
+        <translation type="vanished">Le script d&apos;installation des thèmes n&apos;a PAS été exécuté :
 
 %1
 
@@ -611,12 +618,12 @@ Il ne correspond pas à la copie livrée avec cette version de l&apos;applicatio
 Réinstallez la GUI pour restaurer le script d&apos;origine, puis réessayez.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1634"/>
+        <location filename="mainwindow.cpp" line="1628"/>
         <source>The themes were installed successfully.</source>
         <translation>Les thèmes ont été installés avec succès.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1635"/>
+        <location filename="mainwindow.cpp" line="1629"/>
         <source>The themes were installed successfully.
 
 %1</source>
@@ -625,12 +632,12 @@ Réinstallez la GUI pour restaurer le script d&apos;origine, puis réessayez.</t
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1639"/>
+        <location filename="mainwindow.cpp" line="1633"/>
         <source>Installing the themes failed (code %1).</source>
         <translation>L&apos;installation des thèmes a échoué (code %1).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1640"/>
+        <location filename="mainwindow.cpp" line="1634"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
@@ -639,7 +646,7 @@ Réinstallez la GUI pour restaurer le script d&apos;origine, puis réessayez.</t
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1649"/>
+        <location filename="mainwindow.cpp" line="1643"/>
         <source>Failed to open %1 in the file manager.</source>
         <translation>Impossible d&apos;ouvrir %1 dans le gestionnaire de fichiers.</translation>
     </message>
@@ -657,9 +664,19 @@ Réinstallez la GUI pour restaurer le script d&apos;origine, puis réessayez.</t
         <translation>powershell.exe n&apos;a pas pu être démarré.</translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="290"/>
+        <location filename="platform.cpp" line="294"/>
         <source>sudo could not be started.</source>
         <translation>sudo n&apos;a pas pu être démarré.</translation>
+    </message>
+    <message>
+        <location filename="platform.cpp" line="325"/>
+        <source>missing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="platform.cpp" line="339"/>
+        <source>%1 (expected version %2, found: %3)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

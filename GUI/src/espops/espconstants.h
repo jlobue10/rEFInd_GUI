@@ -22,6 +22,11 @@ constexpr const char kHelperEtcPath[] = "/etc/rEFInd/rEFInd_GUI_helper";
 // diagnostics.
 constexpr const char kInstallerName[] = "install-rEFInd-GUI.sh";
 
+// Root-owned pointer file naming the user's backgrounds directory, written
+// by the installer and read (as data, never sourced) by the background
+// randomizer.
+constexpr const char kBackgroundDirPointer[] = "/etc/rEFInd/background-dir";
+
 // "Running system's ESP" fallback mountpoints, in preference order, for
 // when NVRAM resolution finds nothing (first install, not yet booted
 // through rEFInd). Null-terminated.

@@ -1090,15 +1090,12 @@ void MainWindow::on_Install_Config_clicked()
 {
     QString badScript;
     if (!Platform::installConfigScriptTrusted(&badScript)) {
-        appendLog(QStringLiteral("install config: refused, untrusted script"), badScript);
+        appendLog(QStringLiteral("install config: refused, helper missing or version mismatch"), badScript);
         QMessageBox::warning(this, tr("Install Config"),
-                             tr("The config-install script was NOT run:\n\n%1\n\n"
-                                "It does not match the copy shipped with this version of the "
-                                "app. Because it runs with root privileges, it is only ever "
-                                "run when it is byte-for-byte the shipped version — a mismatch "
-                                "means it was modified (possibly tampered with) or belongs to "
-                                "a different version.\n\n"
-                                "Reinstall the GUI to restore the original script, then try "
+                             tr("The privileged install helper was NOT run:\n\n%1\n\n"
+                                "It is missing or belongs to a different version of the app, "
+                                "so it cannot be run safely.\n\n"
+                                "Reinstall the GUI to restore the matching helper, then try "
                                 "again.").arg(badScript));
         return;
     }
@@ -1608,19 +1605,16 @@ void MainWindow::on_Rand_Theme_Off_pushButton_clicked()
 
 void MainWindow::on_Install_Themes_pushButton_clicked()
 {
-    // Same trust gate as Install Config: the helper runs privileged, so it is
-    // only ever run when it is byte-for-byte the shipped version.
+    // Same trust gate as Install Config: the helper runs privileged, so it
+    // is only ever run when its version matches this build's.
     QString badScript;
     if (!Platform::installThemesScriptTrusted(&badScript)) {
-        appendLog(QStringLiteral("install themes: refused, untrusted script"), badScript);
+        appendLog(QStringLiteral("install themes: refused, helper missing or version mismatch"), badScript);
         QMessageBox::warning(this, tr("Install Themes"),
-                             tr("The theme-install script was NOT run:\n\n%1\n\n"
-                                "It does not match the copy shipped with this version of the "
-                                "app. Because it runs with root privileges, it is only ever "
-                                "run when it is byte-for-byte the shipped version — a mismatch "
-                                "means it was modified (possibly tampered with) or belongs to "
-                                "a different version.\n\n"
-                                "Reinstall the GUI to restore the original script, then try "
+                             tr("The privileged install helper was NOT run:\n\n%1\n\n"
+                                "It is missing or belongs to a different version of the app, "
+                                "so it cannot be run safely.\n\n"
+                                "Reinstall the GUI to restore the matching helper, then try "
                                 "again.").arg(badScript));
         return;
     }

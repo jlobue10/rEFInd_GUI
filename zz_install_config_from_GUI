@@ -1,6 +1,6 @@
-# Lets the GUI's Install Config button run the root-owned config-install
-# script without a password prompt. install-rEFInd-GUI.sh replaces USER with
-# the installing user and copies this to
+# Lets the GUI's Install Config / Install Themes buttons run the root-owned
+# helper binary without a password prompt. install-rEFInd-GUI.sh replaces
+# USER with the installing user and copies this to
 # /etc/sudoers.d/zz_install_config_from_GUI (root:root 0440, after a
 # visudo -cf check).
 #
@@ -11,6 +11,8 @@
 # overridden and the password prompt comes back. zz_ sorts after everything
 # a distro plausibly ships.
 #
-# The trailing "" forbids passing any arguments to the whitelisted scripts.
-USER ALL = NOPASSWD: /etc/rEFInd/install_config_from_GUI.sh ""
-USER ALL = NOPASSWD: /etc/rEFInd/install_themes_from_GUI.sh ""
+# Listing an argument makes sudo match the command line EXACTLY, so only
+# these two argument vectors run without a password — no other helper
+# subcommand, and never with extra arguments.
+USER ALL = NOPASSWD: /etc/rEFInd/rEFInd_GUI_helper install-config
+USER ALL = NOPASSWD: /etc/rEFInd/rEFInd_GUI_helper install-themes

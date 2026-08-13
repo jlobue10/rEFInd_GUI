@@ -26,6 +26,7 @@
 #include "espops/configinstall.h"
 #include "espops/espconstants.h"
 #include "espops/espresolve.h"
+#include "espops/randomize.h"
 #include "espops/themesinstall.h"
 #include "espops/userio.h"
 
@@ -152,6 +153,33 @@ int runInstallThemes()
         });
 }
 
+// Cosmetic boot-time services (systemd units): content and environment
+// problems — including "no ESP found" — warn on stderr and exit 0; a red
+// failed unit would be worse than the symptom. Nonzero is reserved for
+// internal errors inside the payload.
+int runRandomize(int (*payload)(const QString &refindDir, QStringList *))
+{
+    const char *tag = EspOps::kProductName;
+    if (geteuid() != 0) {
+        std::fprintf(stderr, "%s: the randomizer must run as root; nothing to do.\n", tag);
+        return 0;
+    }
+    EspOps::EspResolver resolver;
+    EspOps::RefindTarget target;
+    if (!resolver.resolve(&target)) {
+        std::fprintf(stderr, "%s: no ESP with rEFInd on it; nothing to update.\n", tag);
+        return 0;
+    }
+    resolver.makeWritable(target.refindDir);
+    QStringList warnings;
+    const int code = payload(target.refindDir, &warnings);
+    for (const QString &w : warnings)
+        std::fprintf(stderr, "%s: %s\n", tag, w.toLocal8Bit().constData());
+    // Flush to the ESP before the resolver's temporary mounts go away.
+    ::sync();
+    return code;
+}
+
 #endif // Q_OS_UNIX
 
 } // namespace
@@ -197,10 +225,20 @@ int main(int argc, char *argv[])
         return notPorted(sub);
 #endif
     }
-    if (std::strcmp(sub, "randomize-background") == 0)
+    if (std::strcmp(sub, "randomize-background") == 0) {
+#ifdef Q_OS_UNIX
+        return runRandomize(EspOps::randomizeBackground);
+#else
         return notPorted(sub);
-    if (std::strcmp(sub, "randomize-theme") == 0)
+#endif
+    }
+    if (std::strcmp(sub, "randomize-theme") == 0) {
+#ifdef Q_OS_UNIX
+        return runRandomize(EspOps::randomizeTheme);
+#else
         return notPorted(sub);
+#endif
+    }
 #ifdef Q_OS_WIN
     if (std::strcmp(sub, "bootnext") == 0)
         return notPorted(sub);
