@@ -1,6 +1,16 @@
 # Native helper consolidation — design
 
-Status: **Linux implemented on this branch; Windows port pending.**
+Status: **Linux implemented on this branch and CLI-verified on hardware;
+Windows port pending.**
+§7.1 progress (CachyOS desktop, 2026-08-13): build + all 6 ctest suites
+pass; helper installed to /etc/rEFInd/; `sudo -n … install-config` and
+`… install-themes` both land on the ESP from the firmware's rEFInd boot
+entry (tier 1, /dev/nvme0n1p2) — this required fixing mountPointOf, whose
+atEnd()-guarded loop read nothing from /proc/self/mounts (procfs reports
+size 0; regression test `tests/tst_espresolve.cpp`); both randomizer units
+start clean (theme randomizer silently no-ops while the include line is
+inactive, as designed). Still to verify: GUI-launched Install buttons and
+the post-reboot randomizer check.
 Phases 1-3 are done for Linux: the espops library, the helper binary, both
 sudo-gated installs, both randomizers, the version handshake, the
 exact-argument sudoers rules, unit repointing, installer/packaging updates,
