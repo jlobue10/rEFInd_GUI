@@ -401,3 +401,72 @@ Cross-repo: implement here first (this repo is the parity source for shared
 detection code already), then port to SteamDeck_rEFInd by copying `espops/`
 + `helper/` and re-applying that repo's constants header — the same workflow
 the `osdetect_*` files use today.
+
+## 7. Verification runbook (CachyOS desktop session)
+
+Everything below assumes this branch checked out locally
+(`git fetch origin claude/refind-gui-config-helper-2defin && git checkout
+claude/refind-gui-config-helper-2defin`). Work through it in order and
+update the status header at the top of this file as steps complete.
+
+**The branch cannot be tested through the normal install paths**:
+`install-rEFInd-GUI.sh` checks out the latest release tag, and the RPM
+spec/PKGBUILD `git clone` from GitHub main — all three would ignore the
+branch. Install the branch build by hand instead.
+
+### 7.1 Linux (native on CachyOS)
+
+```
+cd GUI/src && cmake -B build && cmake --build build -j
+cmake -B build -DBUILD_GUI_TESTS=ON && cmake --build build && ctest --test-dir build   # 5 suites
+# Manual test install (what install-rEFInd-GUI.sh will do from the release):
+sudo install -o root -g root -m 755 build/rEFInd_GUI_helper /etc/rEFInd/rEFInd_GUI_helper
+sed "s/^USER /$USER /" ../../zz_install_config_from_GUI | sudo tee /tmp/zz_helper >/dev/null
+sudo visudo -cf /tmp/zz_helper && sudo install -o root -g root -m 440 /tmp/zz_helper /etc/sudoers.d/zz_install_config_from_GUI
+printf '%s\n' "$HOME/.local/rEFInd_GUI/backgrounds" | sudo tee /etc/rEFInd/background-dir >/dev/null
+sudo chmod 644 /etc/rEFInd/background-dir
+sudo cp ../../rEFInd_bg_randomizer.service ../../rEFInd_theme_randomizer.service /etc/systemd/system/ && sudo systemctl daemon-reload
+```
+
+Then run `build/rEFInd_GUI` (same tree → the version handshake matches) and
+check, in order: `/etc/rEFInd/rEFInd_GUI_helper --version` prints 3.3.0;
+`sudo -n /etc/rEFInd/rEFInd_GUI_helper install-config` runs without a
+password (the zz_ ordering vs any passworded drop-in is what's under test);
+Install Config and Install Themes from the GUI land on the ESP the firmware
+rEFInd entry points at (`(chosen as ...)` line names it); the randomizer
+units run clean (`sudo systemctl start rEFInd_theme_randomizer` — inactive
+theme config must be a silent no-op); reboot check of both randomizers.
+Secure Boot/sbctl is unaffected — the helper never lands on the ESP.
+
+### 7.2 Windows (MSYS2 UCRT64, same machine)
+
+```
+cmake -G Ninja -S GUI/src -B <builddir-outside-repo>   # Norton deletes CMakeCache under Documents
+cmake --build <builddir>
+```
+Expect the compile fixes (if any) in the three blind-written places:
+`espops/espresolve_win.cpp`, `espops/wintasks.cpp`, and the `Q_OS_WIN`
+blocks of `platform.cpp`/`randomize.cpp`. Fix here first, then copy the
+parity-locked files to the sibling repo unchanged.
+
+QA once it builds: run the elevated GUI → Install Config must pick the ESP
+the NVRAM rEFInd entry points at (the multi-ESP stale-shadow case is the
+critical test); enable a randomizer → Task Scheduler must show
+`rEFInd_GUI_helper.exe randomize-...` RunLevel Highest with
+start-on-battery allowed, and the task must survive a logon;
+`rEFInd_GUI_helper.exe bootnext` then reboot must land in rEFInd.
+
+### 7.3 After both platforms pass
+
+1. Delete `windows/install_config_from_GUI.ps1`, `install_themes_from_GUI.ps1`,
+   `rEFInd_bg_randomizer.ps1`, `rEFInd_theme_randomizer.ps1`, both
+   `*_task.ps1`, and `uefi_refind.ps1` (the uninstaller keeps its private
+   NVRAM block); update the Inno `[UninstallRun]`/migration entries that
+   reference the deleted wrappers.
+2. Extend the SignPath deploy artifact-configuration to sign
+   `rEFInd_GUI_helper.exe`.
+3. Rewrite the CLAUDE.md sections flagged by the migration banner (and
+   README where it describes the scripts); remove the banners.
+4. Sync every change to SteamDeck_rEFInd (espops/helper/tests byte-identical;
+   repo-specific files by hand), version bump across the documented list,
+   release, and run the `qa/` checklist on the Deck.
