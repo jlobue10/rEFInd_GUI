@@ -1,7 +1,36 @@
 # Native helper consolidation — design
 
-Status: **Linux implemented on this branch and §7.1 hardware-verified in
-full; Windows §7.2 compile + unit tests pass, hardware QA pending.**
+Status: **Linux §7.1 and Windows §7.2 both hardware-verified; §7.3 cleanup
+is the remaining work.**
+§7.2 hardware QA (Windows 11 desktop, single ESP, 2026-08-14): all three
+checks pass against the live ESP. **Install Config / Install Themes**
+resolve NVRAM-first to the ESP in the firmware's rEFInd entry
+(`\\?\Volume{f7633b6f-…}` = disk 4 partition 2) and publish for real —
+the ESP's `refind.conf` came out byte-identical to the staged one, with
+`refind.conf.prev` written, images updated in the same transaction, seven
+theme trees installed, no `.new.*` staging left behind, and no orphaned
+`espops-*` mount points. **Scheduled Task registration** (native COM)
+produces exactly the wrappers' settings — action = helper exe +
+subcommand, `HighestAvailable`, `InteractiveToken`, LogonTrigger,
+DisallowStartIfOnBatteries/StopIfGoingOnBatteries false,
+StartWhenAvailable true, IgnoreNew, PT5M — re-registration is idempotent
+(CREATE_OR_UPDATE, still one task), unregister removes it, and a second
+unregister is a no-op. **`bootnext`** set BootNext to Boot0002, the
+rEFInd entry (verified against an independent NVRAM walk, then restored
+to its pre-QA unset state). The `randomize-theme` payload was exercised
+end-to-end against the real ESP: six runs, five distinct themes, rc 0
+each, anti-repeat holding, no staging residue. Reboot-into-rEFInd is the
+one item left to the owner (it needs an actual reboot).
+Caveat: this desktop has a **single ESP**, so the multi-ESP
+stale-shadow case — the one that motivated NVRAM-first resolution — could
+not be exercised here; it still wants a run on the ROG Xbox Ally X.
+Two QA-only defects were found and fixed in the process: the
+letterless-ESP temp mount point leaked into user-facing messages
+("Installed 4 file(s) to C:/…/Temp/espops-ERRTzD/EFI/refind", which reads
+as "it installed into Temp"), now presented as "EFI\refind on the target
+ESP" by the Windows caller in `platform.cpp` (presentation stays out of
+the parity-locked espops files); the themes variant substitutes the
+`/themes` path first so it doesn't render a mixed tail.
 §7.2 compile pass (Windows 11 / MSYS2 UCRT64, 2026-08-14): both
 `rEFInd_GUI.exe` and `rEFInd_GUI_helper.exe` build warning-free after four
 fixes: (1) `wintasks.cpp` passed a BSTR where `RegisterTaskDefinition`
