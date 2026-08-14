@@ -1,7 +1,8 @@
 # Native helper consolidation — design
 
-Status: **Linux §7.1 and Windows §7.2 both hardware-verified; §7.3 cleanup
-is the remaining work.**
+Status: **Linux §7.1 and Windows §7.2 hardware-verified; §7.3 cleanup done
+in both repos. What is left before release: the version bump, the reboot
+checks, the Deck-side Linux run, and the SignPath artifact-config edit.**
 §7.2 hardware QA (Windows 11 desktop, single ESP, 2026-08-14): all three
 checks pass against the live ESP. **Install Config / Install Themes**
 resolve NVRAM-first to the ESP in the firmware's rEFInd entry
@@ -527,15 +528,25 @@ start-on-battery allowed, and the task must survive a logon;
 
 ### 7.3 After both platforms pass
 
-1. Delete `windows/install_config_from_GUI.ps1`, `install_themes_from_GUI.ps1`,
-   `rEFInd_bg_randomizer.ps1`, `rEFInd_theme_randomizer.ps1`, both
-   `*_task.ps1`, and `uefi_refind.ps1` (the uninstaller keeps its private
-   NVRAM block); update the Inno `[UninstallRun]`/migration entries that
-   reference the deleted wrappers.
-2. Extend the SignPath deploy artifact-configuration to sign
-   `rEFInd_GUI_helper.exe`.
-3. Rewrite the CLAUDE.md sections flagged by the migration banner (and
-   README where it describes the scripts); remove the banners.
-4. Sync every change to SteamDeck_rEFInd (espops/helper/tests byte-identical;
-   repo-specific files by hand), version bump across the documented list,
-   release, and run the `qa/` checklist on the Deck.
+1. ~~Delete the superseded `windows/*.ps1`~~ — **done** (both repos). Only
+   `install_rEFInd.ps1`, `uninstall_rEFInd.ps1`, and the manual installer
+   remain; each keeps its own private NVRAM block. Deleting them exposed an
+   upgrade gap the design had assumed away: a Scheduled Task registered by an
+   older version keeps an action pointing at a wrapper that no longer ships
+   and fails silently at every logon. Fixed with `helper migrate-tasks`
+   (re-points what exists, converts legacy names, creates nothing the user
+   had not enabled) plus `helper enable-logon-task <subcommand>` for the
+   installer's opt-in checkboxes; the task tables live in `espconstants.h`.
+   Inno `[InstallDelete]` scrubs the removed scripts on upgrade (Inno never
+   deletes files it no longer ships) and `[UninstallRun]` drops every task
+   name, current and legacy, with `schtasks`.
+2. ~~Extend the SignPath deploy artifact-configuration~~ — **documented** in
+   `windows/SIGNING.md`; the configuration itself is server-side, so add
+   `rEFInd_GUI_helper.exe` in SignPath before the next signed release.
+3. ~~Rewrite CLAUDE.md / remove the banners~~ — **done** (both repos).
+4. Sync every change to SteamDeck_rEFInd — **done** for code and docs
+   (`espops`/`helper`/`tests` byte-identical, repo-specific files by hand).
+   **Remaining:** the version bump across the documented list, the release
+   itself, the `qa/` checklist on the Deck, and the Deck-side Linux run of
+   this runbook (the shared Linux code is §7.1-verified on a CachyOS
+   desktop, but never on SteamOS's immutable rootfs + /etc overlay).
