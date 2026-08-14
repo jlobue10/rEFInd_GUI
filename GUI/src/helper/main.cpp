@@ -58,6 +58,8 @@ int usage(FILE *to)
 #ifdef Q_OS_WIN
                  "  bootnext              set NVRAM BootNext to the rEFInd entry\n"
                  "  migrate-tasks         re-point existing logon tasks at this helper\n"
+                 "  enable-logon-task <subcommand>   register a managed logon task\n"
+                 "  disable-logon-task <subcommand>  unregister it\n"
 #endif
                  "  --version             print the helper version and exit\n",
                  EspOps::kProductName, ESPOPS_APP_VERSION);
@@ -209,12 +211,48 @@ int main(int argc, char *argv[])
     if (std::strcmp(sub, "--help") == 0 || std::strcmp(sub, "help") == 0)
         return usage(stdout), 0;
 
-    if (argc != 2)
+    // Every subcommand takes no arguments except the logon-task toggles,
+    // which take exactly one (the managed task's helper subcommand).
+    if (argc != 2 && argc != 3)
         return usage(stderr);
 
     // QProcess (used by the ESP resolver for mount/lsblk) wants an
     // application object; keep it below the trivial subcommands above.
     QCoreApplication app(argc, argv);
+
+#ifdef Q_OS_WIN
+    {
+        const bool enable = std::strcmp(sub, "enable-logon-task") == 0;
+        if (enable || std::strcmp(sub, "disable-logon-task") == 0) {
+            // The installer's opt-in checkboxes register a task before the
+            // GUI has ever run. Table-driven so the argument is one of this
+            // product's own managed subcommands and nothing else.
+            if (argc != 3)
+                return usage(stderr);
+            for (const EspOps::LogonTaskSpec *t = EspOps::kLogonTasks;
+                 t->nameSuffix; ++t) {
+                if (std::strcmp(argv[2], t->subcommand) != 0)
+                    continue;
+                const QString name = QString::fromLatin1(EspOps::kProductName)
+                    + QLatin1String(t->nameSuffix);
+                if (EspOps::setLogonTask(name,
+                                         QCoreApplication::applicationFilePath(),
+                                         QLatin1String(t->subcommand), enable))
+                    return 0;
+                std::fprintf(stderr, "%s: could not %s the '%s' task.\n",
+                             EspOps::kProductName,
+                             enable ? "register" : "remove", argv[2]);
+                return 1;
+            }
+            std::fprintf(stderr, "%s: '%s' is not a managed logon task.\n",
+                         EspOps::kProductName, argv[2]);
+            return 64;
+        }
+    }
+#endif
+
+    if (argc != 2)
+        return usage(stderr);
 
     if (std::strcmp(sub, "install-config") == 0) {
 #ifdef Q_OS_UNIX
