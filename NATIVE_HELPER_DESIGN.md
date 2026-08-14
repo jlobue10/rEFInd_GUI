@@ -1,7 +1,31 @@
 # Native helper consolidation — design
 
 Status: **Linux implemented on this branch and §7.1 hardware-verified in
-full; Windows port pending.**
+full; Windows §7.2 compile + unit tests pass, hardware QA pending.**
+§7.2 compile pass (Windows 11 / MSYS2 UCRT64, 2026-08-14): both
+`rEFInd_GUI.exe` and `rEFInd_GUI_helper.exe` build warning-free after four
+fixes: (1) `wintasks.cpp` passed a BSTR where `RegisterTaskDefinition`
+takes a VARIANT sddl — a VT_EMPTY VARIANT serves for userId/password/sddl;
+(2) MinGW resolves `CLSID_TaskScheduler`/`IID_ITaskService`/
+`IID_IExecAction` from `libtaskschd.a`, not libuuid — `taskschd` added to
+espops' link libraries; (3) `std::rename` on Windows (UCRT) refuses to
+overwrite an existing destination, so staged publishes silently failed
+with exit 5 — `publishRename` (now shared in `userio.cpp`, used by
+configinstall and the randomizers) goes through `MoveFileExW(...,
+MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)` on Windows;
+(4) `QTemporaryFile` keeps its native handle open even after `close()`
+(name reservation) and Windows cannot rename an open file — the
+config-backup block and the randomizers' `publishStaged` now destruct the
+QTemporaryFile before publishing. The four platform-neutral test suites
+(loadoption, configinstall, themesinstall, randomize) were un-gated from
+`NOT WIN32` and all pass on Windows (`ctest`: 4/4; POSIX-only cases QSKIP);
+osdetect/espresolve stay Linux-only. `helper --version` prints 3.3.0 and
+usage now lists the Windows `bootnext` subcommand. Failures (3) and (4)
+were real Windows behavior bugs the unit tests caught — the
+themesinstall directory swaps are unaffected (same-volume renames to
+absent names). Still pending from §7.2: the on-hardware QA (elevated GUI
+Install Config on the multi-ESP machine, Task Scheduler registration
+surviving a logon, `bootnext` + reboot landing in rEFInd).
 §7.1 complete (CachyOS desktop, 2026-08-13): build + all 6 ctest suites
 pass; helper installed to /etc/rEFInd/; `sudo -n … install-config` and
 `… install-themes` both land on the ESP from the firmware's rEFInd boot
