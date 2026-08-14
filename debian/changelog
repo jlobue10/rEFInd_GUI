@@ -1,3 +1,20 @@
+refind-gui (3.4.0) unstable; urgency=medium
+
+  * Privileged operations are now compiled code. The root helper scripts
+    (install_config_from_GUI.sh, install_themes_from_GUI.sh and both
+    randomizers) are replaced by the rEFInd_GUI_helper binary, installed
+    root-owned in /etc/rEFInd/ and run through exact-argument NOPASSWD
+    sudoers rules; the systemd randomizer units ExecStart its subcommands.
+  * The SHA-256 tamper hash-check is gone, replaced by a version handshake.
+    Fixing privileged logic no longer blocks Install Config as "modified".
+  * ESP resolution is one shared C++ implementation for Linux and Windows,
+    retiring the hand-maintained bash/PowerShell parity pair.
+  * Install Config is passwordless-only; the zenity password fallback and
+    its detached dialogs are removed.
+  * Unit tests for the privileged code (cmake -DBUILD_GUI_TESTS=ON).
+
+ -- Jon LoBue <jlobue10@gmail.com>  Fri, 14 Aug 2026 08:00:00 -0700
+
 refind-gui (3.3.0) unstable; urgency=medium
 
   * New Showtools row: comma-separated showtools options with live

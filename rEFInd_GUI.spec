@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.3.0
+Version:        3.4.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -54,6 +54,14 @@ install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI_helper
 
 %changelog
+* Fri Aug 14 2026 Jon LoBue <jlobue10@gmail.com> [3.4.0-1]
+- Privileged operations moved into the compiled rEFInd_GUI_helper binary:
+  the root config/themes/randomizer shell scripts are gone, replaced by
+  exact-argument NOPASSWD sudoers rules and helper subcommands.
+- The SHA-256 tamper hash-check is replaced by a version handshake.
+- One shared C++ ESP resolver for Linux and Windows.
+- Install Config is passwordless-only (zenity fallback removed).
+- Optional unit tests for the privileged code.
 * Fri Aug 07 2026 Jon LoBue <jlobue10@gmail.com> [3.3.0-1]
 - New Showtools row: comma-separated showtools options with live validation,
   written to the generated refind.conf and persisted in the INI.
