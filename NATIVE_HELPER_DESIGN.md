@@ -1,16 +1,19 @@
 # Native helper consolidation — design
 
-Status: **Linux implemented on this branch and CLI-verified on hardware;
-Windows port pending.**
-§7.1 progress (CachyOS desktop, 2026-08-13): build + all 6 ctest suites
+Status: **Linux implemented on this branch and §7.1 hardware-verified in
+full; Windows port pending.**
+§7.1 complete (CachyOS desktop, 2026-08-13): build + all 6 ctest suites
 pass; helper installed to /etc/rEFInd/; `sudo -n … install-config` and
 `… install-themes` both land on the ESP from the firmware's rEFInd boot
 entry (tier 1, /dev/nvme0n1p2) — this required fixing mountPointOf, whose
 atEnd()-guarded loop read nothing from /proc/self/mounts (procfs reports
-size 0; regression test `tests/tst_espresolve.cpp`); both randomizer units
-start clean (theme randomizer silently no-ops while the include line is
-inactive, as designed). Still to verify: GUI-launched Install buttons and
-the post-reboot randomizer check.
+size 0; regression test `tests/tst_espresolve.cpp`); GUI-launched Install
+Config / Install Themes buttons succeed; both randomizer units, once
+enabled, ran at boot with exit 0 and a clean journal (active (exited),
+ExecStart the helper), and the owner confirmed the randomization takes
+effect at the rEFInd menu. Note the runbook's manual unit install only
+copies + daemon-reloads — the units must be enabled (GUI toggle or
+`systemctl enable`) before the reboot test, or it silently no-ops.
 Phases 1-3 are done for Linux: the espops library, the helper binary, both
 sudo-gated installs, both randomizers, the version handshake, the
 exact-argument sudoers rules, unit repointing, installer/packaging updates,
@@ -445,7 +448,10 @@ password (the zz_ ordering vs any passworded drop-in is what's under test);
 Install Config and Install Themes from the GUI land on the ESP the firmware
 rEFInd entry points at (`(chosen as ...)` line names it); the randomizer
 units run clean (`sudo systemctl start rEFInd_theme_randomizer` — inactive
-theme config must be a silent no-op); reboot check of both randomizers.
+theme config must be a silent no-op); reboot check of both randomizers —
+enable them first (GUI toggles or `sudo systemctl enable
+rEFInd_bg_randomizer rEFInd_theme_randomizer`; the manual install above
+only copies + daemon-reloads, so an un-enabled reboot tests nothing).
 Secure Boot/sbctl is unaffected — the helper never lands on the ESP.
 
 ### 7.2 Windows (MSYS2 UCRT64, same machine)
