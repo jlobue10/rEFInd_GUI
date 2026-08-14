@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.4.0
+Version:        3.4.1
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -54,6 +54,13 @@ install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI_helper
 
 %changelog
+* Fri Aug 14 2026 Jon LoBue <jlobue10@gmail.com> [3.4.1-1]
+- Install Config records who installed the live refind.conf in a
+  refind.conf.origin sidecar and notes when it replaces another GUI's
+  install or a hand-edited config -- alternating installs from the Linux
+  and Windows GUIs silently undid each other's changes.
+- Create Config writes the same bytes on Windows and Linux (no more CRLF).
+
 * Fri Aug 14 2026 Jon LoBue <jlobue10@gmail.com> [3.4.0-1]
 - Privileged operations moved into the compiled rEFInd_GUI_helper binary:
   the root config/themes/randomizer shell scripts are gone, replaced by

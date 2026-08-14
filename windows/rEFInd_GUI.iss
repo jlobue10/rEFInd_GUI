@@ -6,7 +6,7 @@
 ; Files; mutable user configuration remains under %LOCALAPPDATA%\rEFInd_GUI.
 
 #define AppName "rEFInd GUI"
-#define AppVersion "3.4.0"
+#define AppVersion "3.4.1"
 #define AppExe "rEFInd_GUI.exe"
 
 [Setup]
