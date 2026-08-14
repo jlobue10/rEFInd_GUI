@@ -1,3 +1,13 @@
+refind-gui (3.4.1) unstable; urgency=medium
+
+  * Install Config records who installed the live refind.conf in a
+    refind.conf.origin sidecar and notes when it replaces another GUI's
+    install or a hand-edited config; alternating installs from the Linux
+    and Windows GUIs silently undid each other's changes.
+  * Create Config writes the same bytes on Windows and Linux (no CRLF).
+
+ -- Jon LoBue <jlobue10@gmail.com>  Fri, 14 Aug 2026 15:30:00 -0700
+
 refind-gui (3.4.0) unstable; urgency=medium
 
   * Privileged operations are now compiled code. The root helper scripts
