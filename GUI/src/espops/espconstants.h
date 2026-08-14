@@ -27,6 +27,37 @@ constexpr const char kInstallerName[] = "install-rEFInd-GUI.sh";
 // randomizer.
 constexpr const char kBackgroundDirPointer[] = "/etc/rEFInd/background-dir";
 
+// Windows only. The at-logon Scheduled Tasks this product manages: the
+// suffix appended to kProductName for the task name, and the helper
+// subcommand the task runs. Null-terminated. `migrate-tasks` re-points
+// every one of these that already exists at the installed helper exe.
+struct LogonTaskSpec
+{
+    const char *nameSuffix;
+    const char *subcommand;
+};
+inline constexpr LogonTaskSpec kLogonTasks[] = {
+    {"_bg_randomizer", "randomize-background"},
+    {"_theme_randomizer", "randomize-theme"},
+    {nullptr, nullptr},
+};
+
+// Windows only. Task names registered by earlier versions, whose action ran
+// a .ps1 wrapper that no longer ships. On upgrade each one that still exists
+// is re-registered under its current name and then unregistered, so an
+// enabled feature survives instead of silently failing at every logon.
+// Null-terminated.
+struct LegacyLogonTask
+{
+    const char *oldName;
+    const char *newNameSuffix;
+    const char *subcommand;
+};
+inline constexpr LegacyLogonTask kLegacyLogonTasks[] = {
+    {"rEFInd_bg_randomizer", "_bg_randomizer", "randomize-background"},
+    {nullptr, nullptr, nullptr},
+};
+
 // "Running system's ESP" fallback mountpoints, in preference order, for
 // when NVRAM resolution finds nothing (first install, not yet booted
 // through rEFInd). Null-terminated.

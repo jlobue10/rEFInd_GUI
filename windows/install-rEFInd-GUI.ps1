@@ -25,11 +25,18 @@ foreach ($d in 'GUI','icons','backgrounds','themes') {
 New-Item -ItemType Directory -Force (Join-Path $dest 'windows') | Out-Null
 Copy-Item -Force (Join-Path $repo 'windows\*.ps1') (Join-Path $dest 'windows')
 Copy-Item -Force (Join-Path $repo 'refind-GUI.conf') (Join-Path $dest 'GUI\refind.conf')
-& (Join-Path $dest 'windows\rEFInd_bg_randomizer_task.ps1') -Migrate
 
 if ($ExePath -and (Test-Path $ExePath)) {
     $exeDir = Split-Path -Parent $ExePath
     Copy-Item -Force $ExePath (Join-Path $dest 'rEFInd_GUI.exe')
+    # The privileged helper builds beside the GUI and is what the Scheduled
+    # Tasks run; without it the randomizer toggles cannot register anything.
+    $helperSrc = Join-Path $exeDir 'rEFInd_GUI_helper.exe'
+    if (Test-Path $helperSrc) {
+        Copy-Item -Force $helperSrc (Join-Path $dest 'rEFInd_GUI_helper.exe')
+    } else {
+        Write-Warning 'rEFInd_GUI_helper.exe not found beside the GUI exe; the randomizer scheduled tasks will not work until it is built.'
+    }
     # Bring along Qt runtime files if windeployqt was run into the build dir.
     Get-ChildItem -Path $exeDir -Filter '*.dll' -File -ErrorAction SilentlyContinue |
         ForEach-Object { Copy-Item -Force $_.FullName $dest }
@@ -40,6 +47,12 @@ if ($ExePath -and (Test-Path $ExePath)) {
 } else {
     Write-Warning 'No built rEFInd_GUI.exe found; support files were staged, but you must build the exe (see README) and re-run this script.'
 }
+
+# Upgrades: re-point scheduled tasks left by an older version (their action
+# ran .ps1 wrappers that no longer ship) at the helper. No-op on a fresh
+# install; never creates a task the user had not enabled.
+$helperTarget = Join-Path $dest 'rEFInd_GUI_helper.exe'
+if (Test-Path $helperTarget) { & $helperTarget migrate-tasks }
 
 $exeTarget = Join-Path $dest 'rEFInd_GUI.exe'
 if (Test-Path $exeTarget) {

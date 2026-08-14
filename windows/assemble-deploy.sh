@@ -38,6 +38,7 @@ cp "$REPO/refind-GUI.conf" "$DEPLOY/GUI/refind.conf"
 
 echo "deploy assembled at $DEPLOY"
 echo "  exe:         $(ls -1 "$DEPLOY"/rEFInd_GUI.exe)"
+echo "  helper:      $(ls -1 "$DEPLOY"/rEFInd_GUI_helper.exe)"
 echo "  dll count:   $(ls -1 "$DEPLOY"/*.dll | wc -l)"
 echo "  plugin dirs: $(cd "$DEPLOY" && ls -d platforms styles imageformats 2>/dev/null | tr '\n' ' ')"
 echo "  ps1 scripts: $(ls -1 "$DEPLOY"/windows/*.ps1 | wc -l)"

@@ -52,6 +52,16 @@ Name: "desktopicon"; Description: "Create a &desktop shortcut"; GroupDescription
 Source: "..\deploy\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
 
 [InstallDelete]
+; Scripts superseded by the helper binary. Inno only adds and overwrites, so
+; without these an upgrade would leave the old privileged .ps1 files behind
+; in {app}\windows — dead code that no longer matches the shipped binary.
+Type: files; Name: "{app}\windows\install_config_from_GUI.ps1"
+Type: files; Name: "{app}\windows\install_themes_from_GUI.ps1"
+Type: files; Name: "{app}\windows\rEFInd_bg_randomizer.ps1"
+Type: files; Name: "{app}\windows\rEFInd_theme_randomizer.ps1"
+Type: files; Name: "{app}\windows\rEFInd_bg_randomizer_task.ps1"
+Type: files; Name: "{app}\windows\rEFInd_theme_randomizer_task.ps1"
+Type: files; Name: "{app}\windows\uefi_refind.ps1"
 ; Pre-3.x installed the app itself into %LOCALAPPDATA%\rEFInd_GUI (per-user).
 ; Its self-elevating exe and privileged helper scripts must not stay runnable
 ; from the user-writable data directory, so remove the legacy program files —
@@ -89,21 +99,26 @@ Name: "{localappdata}\rEFInd_GUI\GUI\backgrounds"; Filename: "{localappdata}\rEF
 Name: "{localappdata}\rEFInd_GUI\GUI\themes"; Filename: "{localappdata}\rEFInd_GUI\themes"
 
 [Run]
-; Preserve an enabled legacy task while moving its elevated action out of the
-; user-writable data directory.
-Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\windows\rEFInd_bg_randomizer_task.ps1"" -Migrate"; Flags: runhidden waituntilterminated
+; Upgrades: tasks registered by an older version run .ps1 wrappers that no
+; longer ship, so re-point every one the user had enabled at the helper exe
+; (and convert the pre-3.x task name). Creates nothing that wasn't enabled.
+Filename: "{app}\rEFInd_GUI_helper.exe"; Parameters: "migrate-tasks"; Flags: runhidden waituntilterminated
 ; unchecked: don't launch the GUI by default when the installer finishes.
 Filename: "{app}\{#AppExe}"; Description: "Launch {#AppName}"; Flags: nowait postinstall skipifsilent runascurrentuser unchecked
 
 [UninstallRun]
 ; Undo the rEFInd boot entry and ESP files before the app files disappear.
 Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\windows\uninstall_rEFInd.ps1"""; Flags: shellexec waituntilterminated; Verb: runas; RunOnceId: "UninstallRefind"; Check: ShouldRemoveRefind
-; Unconditional: the randomizer scheduled tasks execute scripts under
-; {app}\windows, which this uninstall removes, so they must be unregistered
-; even when rEFInd itself is kept bootable (uninstall_rEFInd.ps1 above only
-; runs on a full removal).
-Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\windows\rEFInd_theme_randomizer_task.ps1"" -Disable"; Flags: runhidden waituntilterminated; RunOnceId: "RemoveThemeRandTask"
-Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\windows\rEFInd_bg_randomizer_task.ps1"" -Disable"; Flags: runhidden waituntilterminated; RunOnceId: "RemoveBgRandTask"
+; Unconditional: the randomizer scheduled tasks execute the helper under
+; {app}, which this uninstall removes, so they must be unregistered even when
+; rEFInd itself is kept bootable (uninstall_rEFInd.ps1 above only runs on a
+; full removal). Deleting needs no battery settings, so schtasks is enough
+; here (registration is the part that requires the Task Scheduler COM API);
+; a missing task just makes schtasks exit nonzero, which is harmless.
+; The pre-3.x name is included so an ancient install leaves nothing behind.
+Filename: "{sys}\schtasks.exe"; Parameters: "/Delete /TN ""rEFInd_GUI_theme_randomizer"" /F"; Flags: runhidden waituntilterminated; RunOnceId: "RemoveThemeRandTask"
+Filename: "{sys}\schtasks.exe"; Parameters: "/Delete /TN ""rEFInd_GUI_bg_randomizer"" /F"; Flags: runhidden waituntilterminated; RunOnceId: "RemoveBgRandTask"
+Filename: "{sys}\schtasks.exe"; Parameters: "/Delete /TN ""rEFInd_bg_randomizer"" /F"; Flags: runhidden waituntilterminated; RunOnceId: "RemoveLegacyBgRandTask"
 
 [UninstallDelete]
 ; The app generates data the uninstaller's manifest doesn't cover (the

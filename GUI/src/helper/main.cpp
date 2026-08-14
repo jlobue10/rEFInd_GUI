@@ -57,6 +57,7 @@ int usage(FILE *to)
                  "  randomize-theme       pick a random installed theme (boot/logon service)\n"
 #ifdef Q_OS_WIN
                  "  bootnext              set NVRAM BootNext to the rEFInd entry\n"
+                 "  migrate-tasks         re-point existing logon tasks at this helper\n"
 #endif
                  "  --version             print the helper version and exit\n",
                  EspOps::kProductName, ESPOPS_APP_VERSION);
@@ -238,6 +239,21 @@ int main(int argc, char *argv[])
     if (std::strcmp(sub, "randomize-theme") == 0)
         return runRandomize(EspOps::randomizeTheme);
 #ifdef Q_OS_WIN
+    if (std::strcmp(sub, "migrate-tasks") == 0) {
+        // Run by the installer after an upgrade: tasks registered by an
+        // older version point at .ps1 wrappers that no longer ship, so they
+        // would fail silently at every logon. Never creates a task the user
+        // had not enabled, and never fails the install.
+        QStringList warnings;
+        const int n = EspOps::migrateLogonTasks(
+            QCoreApplication::applicationFilePath(), &warnings);
+        for (const QString &w : warnings)
+            std::fprintf(stderr, "%s: %s\n", EspOps::kProductName,
+                         w.toLocal8Bit().constData());
+        if (n > 0)
+            std::printf("Migrated %d scheduled task(s) to the helper.\n", n);
+        return 0;
+    }
     if (std::strcmp(sub, "bootnext") == 0) {
         // At-logon Scheduled Task payload; cosmetic-service semantics.
         QStringList warnings;
