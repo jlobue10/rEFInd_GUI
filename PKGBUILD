@@ -21,6 +21,17 @@ prepare() {
   # run must never silently provide stale (or unpinned main) sources.
   rm -rf rEFInd_GUI
   git clone --branch "v$pkgver" --depth 1 "$url"
+  # Optional signed-tag enforcement (see SIGNING-TAGS.md): once a release signing
+  # public key is committed to .github/release-signing-key.asc AND tags are made
+  # with `git tag -s`, require the cloned tag to be signed by that key. Best-effort
+  # and non-breaking: skipped while the key is a placeholder or gnupg is absent
+  # (install gnupg to enforce).
+  if command -v gpg >/dev/null 2>&1 \
+     && grep -q 'BEGIN PGP PUBLIC KEY BLOCK' rEFInd_GUI/.github/release-signing-key.asc 2>/dev/null; then
+    gpg --quiet --import rEFInd_GUI/.github/release-signing-key.asc
+    git -C rEFInd_GUI verify-tag "v$pkgver" \
+      || { echo "ERROR: release tag v$pkgver is not signed by the trusted release key." >&2; return 1; }
+  fi
 }
 
 build() {
