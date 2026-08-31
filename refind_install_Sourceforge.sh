@@ -49,6 +49,17 @@ if ! wget -O "$ZIP_STAGE" \
 	"https://sourceforge.net/projects/refind/files/${REFIND_VER}/refind-bin-gnuefi-${REFIND_VER}.zip"; then
 	fail_install "The rEFInd archive download failed."
 fi
+# Verify the download against the known-good SHA-256 before publishing/extracting
+# an EFI binary that boots pre-OS. The pin is version-gated so a future REFIND_VER
+# bump fails loudly (skip-with-warning) instead of checking the wrong hash.
+REFIND_SHA256_0_14_2="f0f90fcc6d879d3d5d85f5b1480a4f45e9ae61821d0c81bd3adba01319075e83"
+if [ "$REFIND_VER" = "0.14.2" ]; then
+	if ! printf '%s  %s\n' "$REFIND_SHA256_0_14_2" "$ZIP_STAGE" | sha256sum -c - >/dev/null 2>&1; then
+		fail_install "The rEFInd archive failed SHA-256 verification against the known-good ${REFIND_VER} release."
+	fi
+else
+	echo "Warning: no pinned SHA-256 for rEFInd ${REFIND_VER}; skipping checksum verification." >&2
+fi
 mv -f "$ZIP_STAGE" "$ZIP_PATH" \
 	|| fail_install "The downloaded rEFInd archive could not be published."
 echo "Unzipping rEFInd zip..."
