@@ -1,6 +1,6 @@
 # Maintainer: Jonathan LoBue <jlobue10@gmail.com>
 pkgname=rEFInd_GUI
-pkgver=3.4.1
+pkgver=3.4.2
 pkgrel=1
 pkgdesc="Small GUI for customizing and installing rEFInd bootloader"
 arch=('x86_64')

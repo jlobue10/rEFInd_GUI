@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.4.1
+Version:        3.4.2
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -54,6 +54,21 @@ install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI_helper
 
 %changelog
+* Sun Aug 31 2026 Jon LoBue <jlobue10@gmail.com> [3.4.2-1]
+- Security hardening from a full audit of both repos (no unprivileged->root
+  escalation was found; these close hardening gaps):
+  * Background randomizer lstat()s the backgrounds directory and refuses a
+    symlinked/non-directory target before dropping privileges, so it cannot be
+    pointed at another local user's files on a multi-user system (espops).
+  * Install Config/Themes result dialogs render captured helper output as plain
+    text, so an ESP-derived refind.conf.origin string cannot inject a clickable
+    link into a trusted dialog.
+  * install-rEFInd-GUI.sh validates the username before splicing it into the
+    sudoers rule; the Sourceforge installer verifies the rEFInd archive against a
+    pinned SHA-256; scan_esp.sh probe-mounts with nosuid,nodev,noexec; the
+    standalone Windows uninstaller resolves mountvol/bcdedit by absolute
+    System32 path.
+
 * Fri Aug 14 2026 Jon LoBue <jlobue10@gmail.com> [3.4.1-1]
 - Install Config records who installed the live refind.conf in a
   refind.conf.origin sidecar and notes when it replaces another GUI's

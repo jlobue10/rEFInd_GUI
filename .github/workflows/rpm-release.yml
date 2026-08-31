@@ -47,7 +47,10 @@ jobs:
         run: |
           mkdir -p ~/rpmbuild/SPECS ~/rpmbuild/SOURCES
           cp rEFInd_GUI.spec ~/rpmbuild/SPECS/
-          cp rEFInd_bg_randomizer.service ~/rpmbuild/SOURCES/
+          # Stage both SourceN files the spec declares: Source0 (bg) AND Source1
+          # (theme randomizer unit). rpmbuild verifies declared sources exist
+          # before %prep, so omitting Source1 fails the build with "Bad source".
+          cp rEFInd_bg_randomizer.service rEFInd_theme_randomizer.service ~/rpmbuild/SOURCES/
           rpmbuild -ba ~/rpmbuild/SPECS/rEFInd_GUI.spec
           mkdir out
           cp ~/rpmbuild/RPMS/x86_64/rEFInd_GUI-*.rpm out/

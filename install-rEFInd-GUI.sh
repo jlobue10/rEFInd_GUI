@@ -216,6 +216,16 @@ if [ "$DEB_BASE" = 0 ]; then
 	fi
 fi
 
+# Refuse a username that is not a plain POSIX account name before splicing it
+# into the sudoers rule: sed metacharacters (@, &, \) would corrupt the
+# substitution and whitespace could widen the generated rule. visudo -cf below
+# is the backstop, but validate up front and fail with a clear message.
+case "$USER" in
+	*[!a-z0-9_-]* | '' | [!a-z_]*)
+		echo "Error: refusing to build a sudoers rule for unexpected username '$USER'." >&2
+		echo "Fix your account name or edit /etc/sudoers.d/zz_install_config_from_GUI by hand." >&2
+		exit 1 ;;
+esac
 sed -i "s@USER@$USER@g" "$CURRENT_WD/zz_install_config_from_GUI"
 sed -i "s@HOME@$HOME@g" "$CURRENT_WD/rEFInd_GUI.desktop"
 
