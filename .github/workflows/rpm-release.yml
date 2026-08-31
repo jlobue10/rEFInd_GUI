@@ -77,8 +77,16 @@ jobs:
           name: rpm-packages
           path: release
 
+      - name: Generate checksums
+        run: |
+          cd release
+          for f in *.rpm; do sha256sum "$f" > "$f.sha256"; done
+          cat ./*.sha256
+
       - name: Attach RPMs to release
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           tag_name: ${{ env.TAG }}
-          files: release/*.rpm
+          files: |
+            release/*.rpm
+            release/*.sha256
