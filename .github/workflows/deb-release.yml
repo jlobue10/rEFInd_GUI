@@ -40,6 +40,9 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Verify release tag signature
+        # This job runs in an ubuntu container where the default run shell is
+        # /bin/sh (dash), which rejects `set -o pipefail`. Force bash.
+        shell: bash
         env:
           TAG: ${{ env.TAG }}
         run: |
