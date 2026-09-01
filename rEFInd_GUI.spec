@@ -27,6 +27,16 @@ cd %{_builddir}
 # Pinned to the release tag so rebuilding an old version never silently
 # packages newer main-branch code.
 git clone --branch v%{version} --depth 1 %{url}
+# Optional signed-tag enforcement (see SIGNING-TAGS.md): once a release signing
+# public key is committed to .github/release-signing-key.asc AND tags are made
+# with `git tag -s`, require the cloned tag to be signed by that key. Best-effort
+# and non-breaking: skipped while the key is a placeholder or gnupg is absent.
+if command -v gpg >/dev/null 2>&1 \
+   && grep -q 'BEGIN PGP PUBLIC KEY BLOCK' %{_builddir}/rEFInd_GUI/.github/release-signing-key.asc 2>/dev/null; then
+  gpg --quiet --import %{_builddir}/rEFInd_GUI/.github/release-signing-key.asc
+  git -C %{_builddir}/rEFInd_GUI verify-tag v%{version} \
+    || { echo "ERROR: release tag v%{version} is not signed by the trusted release key." >&2; exit 1; }
+fi
 cd $RPM_SOURCE_DIR
 cp -f %{_builddir}/rEFInd_GUI/{rEFInd_GUI.desktop,rEFInd_bg_randomizer.service,rEFInd_theme_randomizer.service} $RPM_SOURCE_DIR
 
