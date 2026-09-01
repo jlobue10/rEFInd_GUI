@@ -1,3 +1,13 @@
+refind-gui (3.4.3) unstable; urgency=medium
+
+  * First release carrying the post-3.4.2 supply-chain hardening: release
+    artifacts ship SHA-256 sidecars, the installer verifies each package's
+    sidecar before installing (required from 3.4.3 on), packages upgrade in
+    place instead of remove-then-install, and opt-in signed-tag verification
+    is wired in (inert until a signing key is committed).
+
+ -- Jon LoBue <jlobue10@gmail.com>  Mon, 01 Sep 2026 12:00:00 -0700
+
 refind-gui (3.4.2) unstable; urgency=medium
 
   * Security hardening from a full audit of both repos (no unprivileged-to-root
