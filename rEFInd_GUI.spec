@@ -32,7 +32,7 @@ git clone --branch v%{version} --depth 1 %{url}
 # with `git tag -s`, require the cloned tag to be signed by that key. Best-effort
 # and non-breaking: skipped while the key is a placeholder or gnupg is absent.
 if command -v gpg >/dev/null 2>&1 \
-   && grep -q 'BEGIN PGP PUBLIC KEY BLOCK' %{_builddir}/rEFInd_GUI/.github/release-signing-key.asc 2>/dev/null; then
+   && grep -q '^-----BEGIN PGP PUBLIC KEY BLOCK-----' %{_builddir}/rEFInd_GUI/.github/release-signing-key.asc 2>/dev/null; then
   gpg --quiet --import %{_builddir}/rEFInd_GUI/.github/release-signing-key.asc
   git -C %{_builddir}/rEFInd_GUI verify-tag v%{version} \
     || { echo "ERROR: release tag v%{version} is not signed by the trusted release key." >&2; exit 1; }

@@ -27,7 +27,7 @@ prepare() {
   # and non-breaking: skipped while the key is a placeholder or gnupg is absent
   # (install gnupg to enforce).
   if command -v gpg >/dev/null 2>&1 \
-     && grep -q 'BEGIN PGP PUBLIC KEY BLOCK' rEFInd_GUI/.github/release-signing-key.asc 2>/dev/null; then
+     && grep -q '^-----BEGIN PGP PUBLIC KEY BLOCK-----' rEFInd_GUI/.github/release-signing-key.asc 2>/dev/null; then
     gpg --quiet --import rEFInd_GUI/.github/release-signing-key.asc
     git -C rEFInd_GUI verify-tag "v$pkgver" \
       || { echo "ERROR: release tag v$pkgver is not signed by the trusted release key." >&2; return 1; }
