@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.4.2
+Version:        3.4.3
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -64,6 +64,13 @@ install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI_helper
 
 %changelog
+* Mon Sep 01 2026 Jon LoBue <jlobue10@gmail.com> [3.4.3-1]
+- First release carrying the post-3.4.2 supply-chain hardening: release
+  artifacts now ship SHA-256 sidecars, the installer verifies each package's
+  sidecar before installing it (required from 3.4.3 on), packages upgrade in
+  place instead of remove-then-install, and opt-in signed-tag verification is
+  wired in (inert until a signing key is committed).
+
 * Sun Aug 31 2026 Jon LoBue <jlobue10@gmail.com> [3.4.2-1]
 - Security hardening from a full audit of both repos (no unprivileged->root
   escalation was found; these close hardening gaps):
