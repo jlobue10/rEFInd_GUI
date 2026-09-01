@@ -47,6 +47,45 @@ else
 	echo "Warning: could not determine the latest release tag; staging main-branch scripts." >&2
 fi
 
+# Release workflows publish a sidecar named exactly "<artifact>.sha256". The
+# v3.4.2 release predates those assets, so allow that one transitional release
+# with a warning; every release from v3.4.3 onward must have a valid sidecar.
+CHECKSUM_REQUIRED_FROM='3.4.3'
+release_requires_checksum() {
+	local version="${LATEST_TAG#v}"
+	[ -n "$version" ] &&
+		[ "$(printf '%s\n%s\n' "$CHECKSUM_REQUIRED_FROM" "$version" | sort -V | head -n 1)" = "$CHECKSUM_REQUIRED_FROM" ]
+}
+
+verify_release_asset() {
+	local url="$1" artifact="$2" sidecar="${artifact}.sha256"
+	local expected actual
+	if ! wget -q -O "$sidecar" "${url}.sha256"; then
+		rm -f "$sidecar"
+		if release_requires_checksum; then
+			echo "Error: release $LATEST_TAG is missing the required checksum for $artifact. Aborting." >&2
+			rm -f "$artifact"
+			return 1
+		fi
+		echo "Warning: release ${LATEST_TAG:-unknown} predates published checksums; $artifact could not be verified." >&2
+		return 0
+	fi
+	expected="$(awk 'NR == 1 { print $1 }' "$sidecar")"
+	rm -f "$sidecar"
+	if [ "${#expected}" -ne 64 ] || [[ "$expected" == *[!0-9A-Fa-f]* ]]; then
+		echo "Error: malformed checksum sidecar for $artifact. Aborting." >&2
+		rm -f "$artifact"
+		return 1
+	fi
+	actual="$(sha256sum "$artifact" | cut -d' ' -f1)"
+	if [ "${actual,,}" != "${expected,,}" ]; then
+		echo "Error: SHA-256 mismatch for $artifact. Aborting before installation." >&2
+		rm -f "$artifact"
+		return 1
+	fi
+	echo "Verified SHA-256 for $artifact."
+}
+
 command -v dnf >/dev/null 2>&1
 FEDORA_BASE=$?
 
@@ -92,7 +131,10 @@ chmod +x "$HOME/.local/rEFInd_GUI/refind_install_package_mgr.sh" "$HOME/.local/r
 
 if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 	echo -e '\nFedora based installation starting.\n'
-	sudo dnf install -y xterm
+	if ! sudo dnf install -y xterm; then
+		echo "Error: failed to install the xterm runtime dependency. Aborting." >&2
+		exit 1
+	fi
 	# Prefer the CI-built rpm from the latest release; fall back to a local
 	# rpmbuild when the release carries no rpm or the download fails.
 	mkdir -p "$HOME/Downloads"
@@ -100,6 +142,8 @@ if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 	rm -f rEFInd_GUI*.rpm
 	RPM_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*\.rpm" | grep -vE "\.src\.rpm|debuginfo|debugsource" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
 	if [ -n "$RPM_URL" ] && wget "$RPM_URL"; then
+		INSTALL_RPM="$(basename "$RPM_URL")"
+		verify_release_asset "$RPM_URL" "$INSTALL_RPM" || exit 1
 		echo -e '\nInstalling the prebuilt release rpm.\n'
 	else
 		echo -e '\nNo release rpm available; building locally with rpmbuild.\n'
@@ -116,17 +160,20 @@ if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 		fi
 		cp -f "$HOME"/rpmbuild/RPMS/x86_64/rEFInd_GUI-[0-9]*.rpm "$HOME/Downloads/"
 	fi
-	if dnf list --installed | grep -q rEFInd_GUI; then
-		sudo dnf remove -y rEFInd_GUI
-	fi
 	# rEFInd_GUI-[0-9]* skips src/debug rpms and anything stale
-	sudo dnf install -y "$HOME"/Downloads/rEFInd_GUI-[0-9]*.rpm
+	if ! sudo dnf install -y "$HOME"/Downloads/rEFInd_GUI-[0-9]*.rpm; then
+		echo "Error: dnf failed to install rEFInd_GUI. Aborting." >&2
+		exit 1
+	fi
 fi
 
 if [ "$BAZZITE" = 0 ]; then
 	echo -e '\nBazzite based installation starting.\n'
 	if ! rpm-ostree status | grep -q xterm; then
-		sudo rpm-ostree install xterm
+		if ! sudo rpm-ostree install xterm; then
+			echo "Error: failed to layer the xterm runtime dependency. Aborting." >&2
+			exit 1
+		fi
 	fi
 	cd "$HOME/Downloads" || exit 1
 	rm -f rEFInd_GUI*.rpm
@@ -140,11 +187,13 @@ if [ "$BAZZITE" = 0 ]; then
 		echo "Error: failed to download $RPM_URL. Aborting." >&2
 		exit 1
 	fi
+	INSTALL_RPM="$(basename "$RPM_URL")"
+	verify_release_asset "$RPM_URL" "$INSTALL_RPM" || exit 1
 	# A previously layered rEFInd_GUI blocks installing the new local rpm
 	if rpm-ostree status | grep -q rEFInd_GUI; then
 		sudo rpm-ostree uninstall rEFInd_GUI
 	fi
-	if ! sudo rpm-ostree install ./rEFInd_GUI*.rpm; then
+	if ! sudo rpm-ostree install "./$INSTALL_RPM"; then
 		echo "Error: rpm-ostree install failed. Aborting." >&2
 		exit 1
 	fi
@@ -162,9 +211,7 @@ if [ "$ARCH_BASE" = 0 ]; then
 	if [ -n "$PKG_URL" ] && wget "$PKG_URL"; then
 		echo -e '\nInstalling the prebuilt release package.\n'
 		INSTALL_PKG="$(basename "$PKG_URL")"
-		if pacman -Qs rEFInd_GUI > /dev/null; then
-			sudo pacman -R --noconfirm rEFInd_GUI
-		fi
+		verify_release_asset "$PKG_URL" "$INSTALL_PKG" || exit 1
 		if ! sudo pacman -U --noconfirm "./$INSTALL_PKG"; then
 			echo "Error: pacman failed to install $INSTALL_PKG. Aborting." >&2
 			exit 1
@@ -192,9 +239,7 @@ if [ "$DEB_BASE" = 0 ]; then
 	if [ -n "$DEB_URL" ] && wget "$DEB_URL"; then
 		echo -e '\nInstalling the prebuilt release package.\n'
 		INSTALL_DEB="$(basename "$DEB_URL")"
-		if dpkg -s refind-gui >/dev/null 2>&1; then
-			sudo apt-get remove -y refind-gui
-		fi
+		verify_release_asset "$DEB_URL" "$INSTALL_DEB" || exit 1
 		if ! sudo apt-get install -y "./$INSTALL_DEB"; then
 			echo "Error: apt-get failed to install $INSTALL_DEB. Aborting." >&2
 			exit 1
