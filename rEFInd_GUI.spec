@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.4.3
+Version:        3.4.4
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -64,6 +64,13 @@ install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI_helper
 
 %changelog
+* Thu Sep 25 2026 Jon LoBue <jlobue10@gmail.com> [3.4.4-1]
+- Install the TouchI2cDxe touchscreen driver on the GPD WIN 5 (DMI product
+  G1618-05) from all three rEFInd install paths; TouchI2cDxe v1.4.0 adds the
+  hardware-confirmed Novatek profile for it. The deb release workflow now runs
+  its tag-verification step under bash (the v3.4.3 deb build failed on dash),
+  and the touchscreen-gate docs record the Zenbook UX8402VV as confirmed.
+
 * Mon Sep 01 2026 Jon LoBue <jlobue10@gmail.com> [3.4.3-1]
 - First release carrying the post-3.4.2 supply-chain hardening: release
   artifacts now ship SHA-256 sidecars, the installer verifies each package's
