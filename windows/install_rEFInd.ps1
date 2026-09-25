@@ -17,13 +17,14 @@ $ErrorActionPreference = 'Stop'
 # so the elevated console shows at a glance how far the install has gotten.
 # Devices with a supported HID-over-I2C touchscreen -- ROG Xbox Ally / Ally X
 # (baseboard RC73YA / RC73XA), Steam Deck OLED/LCD (product Galileo /
-# Jupiter) and ASUS Zenbook Pro 14 Duo (baseboard UX8402VV) -- get one extra
-# step: downloading the touchscreen driver (TouchI2cDxe block below).
+# Jupiter), ASUS Zenbook Pro 14 Duo (baseboard UX8402VV) and GPD WIN 5
+# (product G1618-05) -- get one extra step: downloading the touchscreen
+# driver (TouchI2cDxe block below).
 $board = (Get-CimInstance Win32_BaseBoard -ErrorAction SilentlyContinue).Product
 $product = (Get-CimInstance Win32_ComputerSystemProduct -ErrorAction SilentlyContinue).Name
 $IsTouchDevice = ($board -like 'RC73XA*' -or $board -like 'RC73YA*' -or
     $board -like 'UX8402VV*' -or
-    $product -eq 'Galileo' -or $product -eq 'Jupiter')
+    $product -eq 'Galileo' -or $product -eq 'Jupiter' -or $product -eq 'G1618-05')
 $TotalSteps = if ($IsTouchDevice) { 7 } else { 6 }
 $script:StepNum = 0
 function Write-Step([string]$Message) {
