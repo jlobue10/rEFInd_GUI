@@ -1,3 +1,15 @@
+refind-gui (3.4.4) unstable; urgency=medium
+
+  * Install the TouchI2cDxe touchscreen driver on the GPD WIN 5 (DMI product
+    G1618-05) from all three rEFInd install paths; TouchI2cDxe v1.4.0 adds the
+    hardware-confirmed Novatek profile for it.
+  * deb release workflow: run the tag-verification step under bash (the
+    v3.4.3 deb build failed on dash).
+  * Touchscreen-gate documentation records the Zenbook UX8402VV as confirmed
+    on hardware.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Thu, 25 Sep 2026 12:00:00 -0700
+
 refind-gui (3.4.3) unstable; urgency=medium
 
   * First release carrying the post-3.4.2 supply-chain hardening: release
