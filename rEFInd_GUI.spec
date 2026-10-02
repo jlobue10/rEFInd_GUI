@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.4.4
+Version:        3.4.5
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -64,6 +64,14 @@ install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 /etc/rEFInd/rEFInd_GUI_helper
 
 %changelog
+* Fri Oct 02 2026 Jon LoBue <jlobue10@gmail.com> [3.4.5-1]
+- Hand-added themes now work from any folder name (issue #101): a theme kept
+  in a folder its theme.conf does not expect (ursamajor-rEFInd-master,
+  darkmini-2.2.1) has its asset paths pointed at the folder that exists when
+  it is activated by Create Config or the theme randomizer, instead of booting
+  to rEFInd's default banner; the preview shows the same. Install Config now
+  notes when the selected theme's files are not on the ESP yet.
+
 * Thu Sep 25 2026 Jon LoBue <jlobue10@gmail.com> [3.4.4-1]
 - Install the TouchI2cDxe touchscreen driver on the GPD WIN 5 (DMI product
   G1618-05) from all three rEFInd install paths; TouchI2cDxe v1.4.0 adds the
