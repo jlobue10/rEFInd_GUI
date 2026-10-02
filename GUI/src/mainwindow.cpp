@@ -4,6 +4,7 @@
 #include "platform.h"
 #include "previewdialog.h"
 #include "uitranslation.h"
+#include "espops/themeconf.h"
 
 #include <QDateTime>
 #include <QDesktopServices>
@@ -1139,18 +1140,12 @@ void MainWindow::on_Install_Config_clicked()
     }
 }
 
-// Stages a small file next to its destination with the same QSaveFile
-// commit-or-keep-previous pattern the PNGs use: a failed or short write
-// leaves any existing destination untouched. No dialog here -- callers know
-// what the file means to the user.
-bool MainWindow::copyFileStaged(const QString &sourcePath, const QString &destPath)
+// Stages a small file with the same QSaveFile commit-or-keep-previous
+// pattern the PNGs use: a failed or short write leaves any existing
+// destination untouched. No dialog here -- callers know what the file means
+// to the user.
+bool MainWindow::writeFileStaged(const QByteArray &payload, const QString &destPath)
 {
-    QFile input(sourcePath);
-    if (!input.open(QIODevice::ReadOnly))
-        return false;
-    const QByteArray payload = input.readAll();
-    if (input.error() != QFileDevice::NoError)
-        return false;
     QSaveFile output(destPath);
     output.setDirectWriteFallback(false);
     if (!output.open(QIODevice::WriteOnly))
@@ -1162,10 +1157,17 @@ bool MainWindow::copyFileStaged(const QString &sourcePath, const QString &destPa
     return true;
 }
 
-// Resolves the Theme selection and stages GUI/active_theme.conf -- a copy of
-// the chosen theme's theme.conf -- next to refind.conf for Install Config to
-// publish. Random is resolved here, at Create Config time. Returns false
-// when staging failed and the previous refind.conf must be kept.
+// Resolves the Theme selection and stages GUI/active_theme.conf -- the chosen
+// theme's theme.conf -- next to refind.conf for Install Config to publish.
+// Random is resolved here, at Create Config time. Returns false when staging
+// failed and the previous refind.conf must be kept.
+//
+// Not a verbatim copy: asset paths that name a theme directory which does
+// not exist are re-rooted onto the theme's actual directory. A theme added
+// by hand usually sits in a folder named after the download
+// ("ursamajor-rEFInd-master") while its theme.conf still says
+// themes/ursamajor-rEFInd/..., and rEFInd answers the dangling banner path
+// with its own logo stretched over the screen (issue #101).
 bool MainWindow::stageActiveThemeConf()
 {
     const QString stagedPath = guiConfigDir + QStringLiteral("/active_theme.conf");
@@ -1188,13 +1190,31 @@ bool MainWindow::stageActiveThemeConf()
         QFile::remove(stagedPath);
         return true;
     }
-    const QString source =
-        guiDataDir + QStringLiteral("/themes/") + theme + QStringLiteral("/theme.conf");
-    if (!copyFileStaged(source, stagedPath)) {
+    const QString themesRoot = guiDataDir + QStringLiteral("/themes");
+    const QString source = themesRoot + QLatin1Char('/') + theme + QStringLiteral("/theme.conf");
+    QFile input(source);
+    bool staged = input.open(QIODevice::ReadOnly);
+    int retargeted = 0;
+    if (staged) {
+        const QByteArray conf = input.readAll();
+        staged = input.error() == QFileDevice::NoError
+                 && writeFileStaged(
+                        EspOps::retargetThemeConf(
+                            conf, theme,
+                            QDir(themesRoot).entryList(QDir::Dirs | QDir::NoDotAndDotDot),
+                            &retargeted),
+                        stagedPath);
+    }
+    if (!staged) {
         QMessageBox::warning(this, tr("Create Config"),
                              tr("Could not stage the theme file %1 — the config was not updated.")
                                  .arg(QDir::toNativeSeparators(source)));
         return false;
+    }
+    if (retargeted > 0) {
+        appendLog(QStringLiteral("create config: theme %1: re-rooted %2 asset path(s) "
+                                 "onto themes/%1")
+                      .arg(theme, QString::number(retargeted)));
     }
     return true;
 }

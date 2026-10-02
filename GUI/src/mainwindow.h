@@ -86,7 +86,7 @@ private:
     QStringList availableThemes() const;
     void populateThemeCombo();
     bool stageActiveThemeConf();
-    bool copyFileStaged(const QString &sourcePath, const QString &destPath);
+    bool writeFileStaged(const QByteArray &payload, const QString &destPath);
     QList<Selection> currentSelections();
     QString generateConfigText(const QList<Selection> &selections);
     QSize resolutionOverride() const;
