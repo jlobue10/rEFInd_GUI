@@ -1,6 +1,8 @@
 #!/usr/bin/make -f
 # Binary installs to /etc/rEFInd (not /usr/bin) to match the rpm/PKGBUILD
-# layout that the desktop file and sudoers rule expect.
+# layout that the desktop file and sudoers rule expect. The menu entry and
+# its icon ship here too, so a bare `apt install ./refind-gui_*.deb` gets a
+# launcher (issue #104); the installer script still adds the sudoers rule.
 
 %:
 	dh $@ --sourcedirectory=GUI/src --builddirectory=build-deb
@@ -10,3 +12,5 @@ override_dh_auto_install:
 	install -D -m 0755 build-deb/rEFInd_GUI_helper debian/refind-gui/etc/rEFInd/rEFInd_GUI_helper
 	install -D -m 0644 rEFInd_bg_randomizer.service debian/refind-gui/etc/systemd/system/rEFInd_bg_randomizer.service
 	install -D -m 0644 rEFInd_theme_randomizer.service debian/refind-gui/etc/systemd/system/rEFInd_theme_randomizer.service
+	install -D -m 0644 rEFInd_GUI.desktop debian/refind-gui/usr/share/applications/rEFInd_GUI.desktop
+	install -D -m 0644 GUI/UEFI_icon.png debian/refind-gui/usr/share/pixmaps/rEFInd_GUI.png

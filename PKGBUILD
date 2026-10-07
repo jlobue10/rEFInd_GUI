@@ -50,4 +50,8 @@ package() {
   install -d "$pkgdir/etc/systemd/system"
   install -m644 "$srcdir/rEFInd_bg_randomizer.service" "$pkgdir/etc/systemd/system"
   install -m644 "$srcdir/rEFInd_theme_randomizer.service" "$pkgdir/etc/systemd/system"
+
+  # Menu entry and icon, so a bare pacman -U gets a launcher (issue #104).
+  install -Dm644 "$srcdir/rEFInd_GUI/rEFInd_GUI.desktop" "$pkgdir/usr/share/applications/rEFInd_GUI.desktop"
+  install -Dm644 "$srcdir/rEFInd_GUI/GUI/UEFI_icon.png" "$pkgdir/usr/share/pixmaps/rEFInd_GUI.png"
 }

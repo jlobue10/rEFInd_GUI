@@ -8,7 +8,7 @@ A graphical setup and customization utility to use alongside rEFInd.
 Supported distros: **Fedora / Nobara / Bazzite** (RPM), **CachyOS / Arch** (pacman), and **Debian / Ubuntu** (deb).
 
 ```
-curl -L https://github.com/jlobue10/rEFInd_GUI/raw/main/install-rEFInd-GUI.sh | sh
+curl -L https://github.com/jlobue10/rEFInd_GUI/raw/main/install-rEFInd-GUI.sh | bash
 ```
 
 The installer prefers the prebuilt package from the latest release and falls back to building locally.
@@ -176,7 +176,7 @@ it and re-run the installer:
 
 ```
 rm -rf ~/rEFInd_GUI
-curl -L https://github.com/jlobue10/rEFInd_GUI/raw/main/install-rEFInd-GUI.sh | sh
+curl -L https://github.com/jlobue10/rEFInd_GUI/raw/main/install-rEFInd-GUI.sh | bash
 ```
 
 If you *do* have work in there, move the directory aside (or commit/stash your
