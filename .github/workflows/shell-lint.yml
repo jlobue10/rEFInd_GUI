@@ -1,0 +1,43 @@
+name: Shell Lint
+
+# install-rEFInd-GUI.sh is what `curl ... | sh` runs, and sh is dash on
+# Debian-family distros: a single bashism breaks every Mint/Ubuntu install
+# (issue #104). Lint it as POSIX sh on every change, and syntax-check the
+# other scripts, which run under bash.
+on:
+  push:
+    paths:
+      - '**.sh'
+      - '.github/workflows/shell-lint.yml'
+  pull_request:
+    paths:
+      - '**.sh'
+      - '.github/workflows/shell-lint.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install linters
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dash shellcheck
+
+      - name: install-rEFInd-GUI.sh must run under POSIX sh
+        run: |
+          dash -n install-rEFInd-GUI.sh
+          # --shell=sh makes shellcheck flag every bashism (SC3xxx) regardless
+          # of the #!/bin/bash shebang. SC3043: `local` is not POSIX but every
+          # sh this script targets (dash, bash, busybox ash) supports it.
+          shellcheck --shell=sh --exclude=SC3043 install-rEFInd-GUI.sh
+
+      - name: Syntax-check the bash scripts
+        run: |
+          for f in refind_install_package_mgr.sh refind_install_Sourceforge.sh uninstall_rEFInd.sh scan_esp.sh windows/assemble-deploy.sh; do
+            bash -n "$f"
+          done

@@ -57,11 +57,18 @@ mkdir -p %{buildroot}/etc/systemd/system
 install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
 
+# Menu entry and icon, so a bare rpm install gets a launcher (issue #104).
+mkdir -p %{buildroot}/usr/share/applications %{buildroot}/usr/share/pixmaps
+install -m 644 %{_builddir}/rEFInd_GUI/rEFInd_GUI.desktop %{buildroot}/usr/share/applications/rEFInd_GUI.desktop
+install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/pixmaps/rEFInd_GUI.png
+
 %files
 /etc/systemd/system/rEFInd_bg_randomizer.service
 /etc/systemd/system/rEFInd_theme_randomizer.service
 /etc/rEFInd/rEFInd_GUI
 /etc/rEFInd/rEFInd_GUI_helper
+/usr/share/applications/rEFInd_GUI.desktop
+/usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
 * Fri Oct 02 2026 Jon LoBue <jlobue10@gmail.com> [3.4.5-1]

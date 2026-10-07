@@ -1,7 +1,11 @@
 #!/bin/bash
 # A simple script to install the rEFInd customization GUI
+#
+# Keep this script POSIX sh. The README pipes it into `sh`, which is dash on
+# Debian, Ubuntu and Mint (issue #104): no [[ ]], ${var,,}, echo -e, read -p
+# or other bashisms. CI runs dash -n and shellcheck -s sh on it.
 
-echo -e "Installing rEFInd Customization GUI...\n"
+printf 'Installing rEFInd Customization GUI...\n\n'
 cd "$HOME" || exit 1
 # Never blow away an existing $HOME/rEFInd_GUI: on a contributor's machine that
 # is a development checkout with uncommitted work. Refuse anything that isn't
@@ -62,7 +66,11 @@ release_requires_checksum() {
 }
 
 verify_release_asset() {
-	local url="$1" artifact="$2" sidecar="${artifact}.sha256"
+	# One assignment per local: a POSIX shell expands every word before the
+	# builtin runs, so sidecar="${artifact}.sha256" on the same line would
+	# see the OLD artifact (bash alone special-cases this).
+	local url="$1" artifact="$2"
+	local sidecar="${artifact}.sha256"
 	local expected actual
 	if ! wget -q -O "$sidecar" "${url}.sha256"; then
 		rm -f "$sidecar"
@@ -76,13 +84,16 @@ verify_release_asset() {
 	fi
 	expected="$(awk 'NR == 1 { print $1 }' "$sidecar")"
 	rm -f "$sidecar"
-	if [ "${#expected}" -ne 64 ] || [[ "$expected" == *[!0-9A-Fa-f]* ]]; then
+	# grep rather than a case pattern: dash never matches *[!...]* after a
+	# leading *, so a shell pattern cannot reject non-hex input there.
+	if ! printf '%s\n' "$expected" | grep -qE '^[0-9A-Fa-f]{64}$'; then
 		echo "Error: malformed checksum sidecar for $artifact. Aborting." >&2
 		rm -f "$artifact"
 		return 1
 	fi
 	actual="$(sha256sum "$artifact" | cut -d' ' -f1)"
-	if [ "${actual,,}" != "${expected,,}" ]; then
+	expected="$(printf '%s' "$expected" | tr 'A-F' 'a-f')"
+	if [ "$actual" != "$expected" ]; then
 		echo "Error: SHA-256 mismatch for $artifact. Aborting before installation." >&2
 		rm -f "$artifact"
 		return 1
@@ -134,7 +145,7 @@ ln -sfn ../themes "$HOME/.local/rEFInd_GUI/GUI/themes"
 chmod +x "$HOME/.local/rEFInd_GUI/refind_install_package_mgr.sh" "$HOME/.local/rEFInd_GUI/refind_install_Sourceforge.sh" "$HOME/.local/rEFInd_GUI/uninstall_rEFInd.sh" "$HOME/.local/rEFInd_GUI/scan_esp.sh"
 
 if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
-	echo -e '\nFedora based installation starting.\n'
+	printf '\nFedora based installation starting.\n\n'
 	if ! sudo dnf install -y xterm; then
 		echo "Error: failed to install the xterm runtime dependency. Aborting." >&2
 		exit 1
@@ -148,9 +159,9 @@ if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 	if [ -n "$RPM_URL" ] && wget "$RPM_URL"; then
 		INSTALL_RPM="$(basename "$RPM_URL")"
 		verify_release_asset "$RPM_URL" "$INSTALL_RPM" || exit 1
-		echo -e '\nInstalling the prebuilt release rpm.\n'
+		printf '\nInstalling the prebuilt release rpm.\n\n'
 	else
-		echo -e '\nNo release rpm available; building locally with rpmbuild.\n'
+		printf '\nNo release rpm available; building locally with rpmbuild.\n\n'
 		sudo dnf install -y rpm-build cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel
 		mkdir -p "$HOME/rpmbuild/SPECS" "$HOME/rpmbuild/SOURCES"
 		cp -f "$CURRENT_WD/rEFInd_GUI.spec" "$HOME/rpmbuild/SPECS"
@@ -172,7 +183,7 @@ if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 fi
 
 if [ "$BAZZITE" = 0 ]; then
-	echo -e '\nBazzite based installation starting.\n'
+	printf '\nBazzite based installation starting.\n\n'
 	if ! rpm-ostree status | grep -q xterm; then
 		if ! sudo rpm-ostree install xterm; then
 			echo "Error: failed to layer the xterm runtime dependency. Aborting." >&2
@@ -211,9 +222,17 @@ if [ "$ARCH_BASE" = 0 ]; then
 	mkdir -p "$HOME/Downloads"
 	cd "$HOME/Downloads" || exit 1
 	rm -f rEFInd_GUI*.pkg.tar.zst
+	# Releases from 3.4.6 ship the menu entry and icon inside the package.
+	# pacman refuses to overwrite a file no package owns, so clear the copies
+	# an older run of this installer placed by hand.
+	for f in /usr/share/applications/rEFInd_GUI.desktop /usr/share/pixmaps/rEFInd_GUI.png; do
+		if [ -e "$f" ] && ! pacman -Qo "$f" >/dev/null 2>&1; then
+			sudo rm -f "$f"
+		fi
+	done
 	PKG_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*x86_64\.pkg\.tar\.zst" | grep -v "debug" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
 	if [ -n "$PKG_URL" ] && wget "$PKG_URL"; then
-		echo -e '\nInstalling the prebuilt release package.\n'
+		printf '\nInstalling the prebuilt release package.\n\n'
 		INSTALL_PKG="$(basename "$PKG_URL")"
 		verify_release_asset "$PKG_URL" "$INSTALL_PKG" || exit 1
 		if ! sudo pacman -U --noconfirm "./$INSTALL_PKG"; then
@@ -222,7 +241,7 @@ if [ "$ARCH_BASE" = 0 ]; then
 		fi
 		rm -f "$INSTALL_PKG"
 	else
-		echo -e '\nNo release package available; building locally with makepkg.\n'
+		printf '\nNo release package available; building locally with makepkg.\n\n'
 		sudo pacman -S --needed base-devel git cmake qt6-base qt6-tools
 		if ! (cd "$CURRENT_WD" && makepkg -si); then
 			echo "Error: makepkg failed. Aborting." >&2
@@ -232,7 +251,7 @@ if [ "$ARCH_BASE" = 0 ]; then
 fi
 
 if [ "$DEB_BASE" = 0 ]; then
-	echo -e '\nDebian/Ubuntu based installation starting.\n'
+	printf '\nDebian/Ubuntu based installation starting.\n\n'
 	# Prefer the CI-built package from the latest release; fall back to a
 	# local dpkg-buildpackage build when the release carries no package or
 	# the download fails.
@@ -241,7 +260,7 @@ if [ "$DEB_BASE" = 0 ]; then
 	rm -f refind-gui*.deb
 	DEB_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*_amd64\.deb" | grep -v "dbgsym" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
 	if [ -n "$DEB_URL" ] && wget "$DEB_URL"; then
-		echo -e '\nInstalling the prebuilt release package.\n'
+		printf '\nInstalling the prebuilt release package.\n\n'
 		INSTALL_DEB="$(basename "$DEB_URL")"
 		verify_release_asset "$DEB_URL" "$INSTALL_DEB" || exit 1
 		if ! sudo apt-get install -y "./$INSTALL_DEB"; then
@@ -250,7 +269,7 @@ if [ "$DEB_BASE" = 0 ]; then
 		fi
 		rm -f "$INSTALL_DEB"
 	else
-		echo -e '\nNo release package available; building locally with dpkg-buildpackage.\n'
+		printf '\nNo release package available; building locally with dpkg-buildpackage.\n\n'
 		sudo apt-get update
 		sudo apt-get install -y build-essential debhelper cmake qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools
 		if ! (cd "$CURRENT_WD" && dpkg-buildpackage -us -uc -b); then
@@ -276,6 +295,8 @@ case "$USER" in
 		exit 1 ;;
 esac
 sed -i "s@USER@$USER@g" "$CURRENT_WD/zz_install_config_from_GUI"
+# The desktop file of releases before 3.4.6 points Icon= at HOME/.local/...;
+# from 3.4.6 it names the packaged icon and this is a no-op.
 sed -i "s@HOME@$HOME@g" "$CURRENT_WD/rEFInd_GUI.desktop"
 
 sudo mkdir -p /etc/rEFInd
@@ -328,7 +349,9 @@ if [ "$BAZZITE" = 0 ]; then
 		cp "$CURRENT_WD/.Xresources" "$HOME/.Xresources"
 		xrdb "$HOME/.Xresources"
 	fi
-else
+elif [ ! -e /usr/share/applications/rEFInd_GUI.desktop ]; then
+	# Packages from 3.4.6 ship the menu entry themselves; this only serves a
+	# package that predates that.
 	sudo cp -f "$CURRENT_WD/rEFInd_GUI.desktop" /usr/share/applications/rEFInd_GUI.desktop
 fi
 
@@ -338,12 +361,15 @@ if [ -d "$HOME/Desktop" ]; then
 fi
 
 if [ "$BAZZITE" = 0 ]; then
-	echo -e "\nA reboot is required to finish applying the rpm-ostree changes."
-	read -r -p "Reboot now? [y/N] " REPLY
+	printf '\nA reboot is required to finish applying the rpm-ostree changes.\n'
+	# POSIX read has no -p. Read from the terminal rather than stdin so the
+	# prompt also works when this script is piped in from curl.
+	printf 'Reboot now? [y/N] '
+	read -r REPLY < /dev/tty
 	case "$REPLY" in
 		[Yy]*) systemctl reboot ;;
 		*) echo "Reboot skipped; remember to reboot before using the GUI." ;;
 	esac
 fi
 
-echo -e "Installation complete...\n"
+printf 'Installation complete...\n\n'
