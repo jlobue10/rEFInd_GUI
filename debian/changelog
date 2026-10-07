@@ -1,3 +1,14 @@
+refind-gui (3.4.6) unstable; urgency=medium
+
+  * The package ships the menu entry and icon
+    (/usr/share/applications/rEFInd_GUI.desktop and
+    /usr/share/pixmaps/rEFInd_GUI.png), so installing the .deb by hand gets
+    a launcher (issue #104). The installer script still adds the sudoers rule.
+  * install-rEFInd-GUI.sh runs under plain sh (dash): the README's
+    curl | sh command had died on Debian, Ubuntu and Mint since 3.4.3.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Wed, 07 Oct 2026 11:40:00 -0700
+
 refind-gui (3.4.5) unstable; urgency=medium
 
   * Hand-added themes now work from any folder name (issue #101): a theme

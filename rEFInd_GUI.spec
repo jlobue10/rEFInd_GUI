@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.4.5
+Version:        3.4.6
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -71,6 +71,14 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
+* Wed Oct 07 2026 Jon LoBue <jlobue10@gmail.com> [3.4.6-1]
+- The package ships the menu entry and icon (/usr/share/applications/
+  rEFInd_GUI.desktop, /usr/share/pixmaps/rEFInd_GUI.png), so a bare rpm
+  install gets a launcher (issue #104). The installer script still adds the
+  sudoers rule.
+- install-rEFInd-GUI.sh runs under plain sh (dash): the README's curl | sh
+  command had died on Debian, Ubuntu and Mint since 3.4.3.
+
 * Fri Oct 02 2026 Jon LoBue <jlobue10@gmail.com> [3.4.5-1]
 - Hand-added themes now work from any folder name (issue #101): a theme kept
   in a folder its theme.conf does not expect (ursamajor-rEFInd-master,
