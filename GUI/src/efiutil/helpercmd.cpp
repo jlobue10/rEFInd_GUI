@@ -1,5 +1,6 @@
 #include "helpercmd.h"
 
+#include "catalog.h"
 #include "install.h"
 #include "netbootxyz.h"
 #include "request.h"
@@ -12,6 +13,7 @@
 #include <QBuffer>
 #include <QDir>
 #include <QFile>
+#include <QSysInfo>
 
 #include <cstdio>
 
@@ -51,9 +53,14 @@ QByteArray readUserBytes(EspOps::UserFiles &files, const QString &path, qint64 m
     return buf.data();
 }
 
-void appendStatus(const QString &espRoot, EspOps::EspResolver &resolver, QStringList *lines)
+void appendStatus(const QString &espRoot, const QString &utilityId,
+                  EspOps::EspResolver &resolver, QStringList *lines)
 {
-    const DetectedInstall found = detectInstall(espRoot);
+    const DetectedInstall found = detectInstall(espRoot, utilityId);
+    const QString showtool = showtoolTokenFor(utilityId);
+    QString installedName = found.record.valid
+        ? managedFileFor(utilityId, found.record.asset).fileName
+        : installedNameForArch(utilityId, QSysInfo::currentCpuArchitecture());
     QString presence = QStringLiteral("absent");
     if (found.presence == Presence::Managed)
         presence = QStringLiteral("managed");
@@ -83,11 +90,12 @@ void appendStatus(const QString &espRoot, EspOps::EspResolver &resolver, QString
             const QStringList tokens = liveShowtoolsTokens(text, &present);
             if (!present)
                 live = QStringLiteral("missing");
-            else if (tokens.contains(QLatin1String(kShowtoolToken)))
+            else if (tokens.contains(showtool))
                 live = QStringLiteral("yes");
             else
                 live = QStringLiteral("no");
-            excluded = dontScanToolsExcludes(text, QLatin1String(kInstalledEfiName))
+            excluded = (!installedName.isEmpty()
+                        && dontScanToolsExcludes(text, installedName))
                 ? QStringLiteral("yes")
                 : QStringLiteral("no");
         }
@@ -121,14 +129,14 @@ int perform(EspOps::UserFiles &files, const QString &dataDir, QStringList *lines
     }
 
     if (req.action == QLatin1String("status")) {
-        appendStatus(root, resolver, lines);
+        appendStatus(root, req.utility, resolver, lines);
         lines->append(QStringLiteral("esp=%1").arg(how));
         return kExitOk;
     }
 
     if (req.action == QLatin1String("remove")) {
         resolver.makeWritable(root);
-        const FileOutcome o = removeInstall(root);
+        const FileOutcome o = removeInstall(root, req.utility);
         *lines += o.lines;
 #ifdef Q_OS_UNIX
         ::sync();
@@ -136,19 +144,29 @@ int perform(EspOps::UserFiles &files, const QString &dataDir, QStringList *lines
         return o.exitCode;
     }
 
+    if (!assetFitsArch(req.utility, req.asset, QSysInfo::currentCpuArchitecture())) {
+        lines->append(QStringLiteral(
+            "That EFI file does not match this computer's architecture."));
+        return kExitBadRequest;
+    }
+    const ManagedFile dest = managedFileFor(req.utility, req.asset);
+    if (!dest.ok) {
+        lines->append(dest.error);
+        return kExitBadRequest;
+    }
+
     UtilityRecord record;
     record.product = QLatin1String(EspOps::kProductName);
-    record.id = QLatin1String(kUtilityId);
+    record.id = req.utility;
     record.version = req.version;
     record.asset = req.asset;
     record.sha256 = req.sha256;
     record.valid = true;
 
-    const DetectedInstall current = detectInstall(root);
+    const DetectedInstall current = detectInstall(root, req.utility);
     QByteArray payload;
     if (digestsEqual(current.onDiskSha256, req.sha256)) {
-        QFile existing(QDir(root).filePath(QLatin1String(kToolsDir))
-                       + QLatin1Char('/') + QLatin1String(kInstalledEfiName));
+        QFile existing(QDir(root).filePath(dest.relativePath));
         if (!existing.open(QIODevice::ReadOnly)) {
             lines->append(QStringLiteral(
                 "The installed EFI matches the checksum but could not be read."));

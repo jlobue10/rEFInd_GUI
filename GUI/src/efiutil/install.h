@@ -1,6 +1,6 @@
-// Install, detect, and remove the managed netboot.xyz file on an ESP root.
-// The destination filename is always EFI/tools/ipxe.efi. Callers cannot
-// choose another path. Operates on a directory the caller already mounted;
+// Install, detect, and remove one managed EFI tool on an ESP root.
+// The destination filename comes from the utility catalog, never from a
+// caller-supplied path. Operates on a directory the caller already mounted;
 // it does not mount anything and it does not edit refind.conf.
 
 #ifndef EFIUTIL_INSTALL_H
@@ -44,8 +44,9 @@ struct FileOutcome
     QStringList lines;
 };
 
-// "EFI/tools/ipxe.efi". There is no other managed destination.
+// "EFI/tools/ipxe.efi" for netboot.xyz. Other utilities pass their id and asset.
 QString managedRelativePath();
+QString managedRelativePath(const QString &utilityId, const QString &asset);
 
 // True when `root` is an absolute path with no ".." component and contains
 // a real EFI directory (not a symlink).
@@ -54,17 +55,21 @@ bool looksLikeEspRoot(const QString &root, QString *error);
 UtilityRecord parseSidecar(const QString &text);
 QString formatSidecar(const UtilityRecord &record);
 
+// The one-argument form reports netboot.xyz.
 DetectedInstall detectInstall(const QString &espRoot);
+DetectedInstall detectInstall(const QString &espRoot, const QString &utilityId);
 
-// `replace` is required when ipxe.efi already exists and its bytes differ
-// from `payload`, or when the file is present but not managed. A managed
-// file whose hash already matches `payload` is left in place.
+// `replace` is required when the destination already exists and its bytes
+// differ from `payload`, or when the file is present but not managed. A
+// managed file whose hash already matches `payload` is left in place.
+// `record.id` and `record.asset` select the catalog destination.
 FileOutcome installPayload(const QString &espRoot, const QByteArray &payload,
                            const UtilityRecord &record, bool replace);
 
-// Deletes ipxe.efi and the sidecar only when the sidecar names this product
-// and the on-disk hash still matches. Every other file in EFI/tools stays.
+// Deletes that utility's EFI file and sidecar only when the sidecar names
+// it and the on-disk hash still matches. Every other file in EFI/tools stays.
 FileOutcome removeInstall(const QString &espRoot);
+FileOutcome removeInstall(const QString &espRoot, const QString &utilityId);
 
 } // namespace EfiUtil
 

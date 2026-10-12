@@ -26,6 +26,9 @@ struct GithubAsset
     QString name;
     QString url;
     qint64 size = -1;
+    // Lowercase hex from the GitHub asset "digest" field (sha256:...), or
+    // empty when the release JSON does not publish one.
+    QString sha256;
 };
 
 struct GithubRelease
@@ -62,13 +65,29 @@ QList<Variant> netbootVariants(const QString &cpuArch);
 
 QString assetForVariant(const QString &variantId, const QString &cpuArch);
 
+// Requires the netboot.xyz checksum asset. Other projects use the two
+// parsers below so a shell or memtest response is not rejected for lacking
+// that filename.
 GithubRelease parseGithubRelease(const QByteArray &json);
+
+// Same URL rules, but the checksum asset is not required. Assets may carry
+// a GitHub digest. An empty asset list fails.
+GithubRelease parseGithubAssetRelease(const QByteArray &json);
+
+// tag_name only. Used when the release publishes no EFI assets (memtest86+
+// hosts its binaries on memtest.org).
+GithubRelease parseGithubTag(const QByteArray &json);
+
 const GithubAsset *findAsset(const GithubRelease &release, const QString &name);
 
 // coreutils sha256sum text: "HEX *name" or "HEX  name". Comments (#) and
 // blank lines are ignored. A truncated or malformed line fails the file.
 ChecksumFile parseSha256Sums(const QString &text);
 QString checksumFor(const ChecksumFile &file, const QString &assetName);
+
+// Exact name, or the last path component of a sum such as
+// "v8.10/mt86plus_8.10.binaries.zip". Two matches fail closed.
+QString checksumByBasename(const ChecksumFile &file, const QString &baseName);
 
 QByteArray sha256(const QByteArray &data);
 QString sha256Hex(const QByteArray &data);

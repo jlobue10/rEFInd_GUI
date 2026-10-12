@@ -1,6 +1,6 @@
 // Privileged entry point for `helper efi-utility` and the in-process
 // Windows path. Downloads stay in the GUI; this only reads the staged
-// request and payload and writes EFI/tools/ipxe.efi.
+// request and payload and writes the catalog filename under EFI/tools.
 
 #ifndef EFIUTIL_HELPERCMD_H
 #define EFIUTIL_HELPERCMD_H

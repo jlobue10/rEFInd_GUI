@@ -1,12 +1,14 @@
 // EFI utility manager: release parsing, checksums, temp-dir install/remove,
 // showtools edits, and Secure Boot efivar bytes. No network and no real ESP.
 
+#include "efiutil/catalog.h"
 #include "efiutil/helpercmd.h"
 #include "efiutil/install.h"
 #include "efiutil/netbootxyz.h"
 #include "efiutil/request.h"
 #include "efiutil/secureboot.h"
 #include "efiutil/showtools.h"
+#include "efiutil/zipmember.h"
 #include "espops/espconstants.h"
 
 #include <QDir>
@@ -547,6 +549,145 @@ private slots:
         }
         QVERIFY(enabled != disabled);
         QVERIFY(disabled != unknown);
+    }
+
+    void catalogMapsOfficialNamesAndRejectsDiscover()
+    {
+        const ManagedFile netboot = managedFileFor(QLatin1String(kUtilityId),
+                                                   QStringLiteral("netboot.xyz.efi"));
+        QVERIFY(netboot.ok);
+        QCOMPARE(netboot.fileName, QStringLiteral("ipxe.efi"));
+        QCOMPARE(netboot.relativePath, QStringLiteral("EFI/tools/ipxe.efi"));
+
+        const ManagedFile shell = managedFileFor(QLatin1String(kShellId),
+                                                 QStringLiteral("shellx64.efi"));
+        QVERIFY(shell.ok);
+        QCOMPARE(shell.fileName, QStringLiteral("shellx64.efi"));
+        QCOMPARE(shell.showtoolToken, QStringLiteral("shell"));
+
+        const ManagedFile fwupd = managedFileFor(QLatin1String(kFwupdId),
+                                                 QStringLiteral("fwupdx64.efi"));
+        QVERIFY(fwupd.ok);
+        QCOMPARE(fwupd.fileName, QStringLiteral("fwupx64.efi"));
+        QCOMPARE(installedNameForArch(QLatin1String(kMemtestId), QStringLiteral("x86_64")),
+                 QStringLiteral("memtest86+x64.efi"));
+        QCOMPARE(installedNameForArch(QLatin1String(kGdiskId), QStringLiteral("aarch64")),
+                 QString());
+
+        QVERIFY(!managedFileFor(QLatin1String(kUtilityId), QStringLiteral("ipxe_discover.efi")).ok);
+        QVERIFY(!managedFileFor(QLatin1String(kShellId), QStringLiteral("../shellx64.efi")).ok);
+        QVERIFY(!managedFileFor(QLatin1String(kShellId), QStringLiteral("EFI/tools/shellx64.efi")).ok);
+        QVERIFY(!managedFileFor(QStringLiteral("not-a-tool"), QStringLiteral("shellx64.efi")).ok);
+
+        QVERIFY(assetFitsArch(QLatin1String(kUtilityId), QStringLiteral("netboot.xyz.efi"),
+                              QStringLiteral("x86_64")));
+        QVERIFY(!assetFitsArch(QLatin1String(kUtilityId), QStringLiteral("netboot.xyz-arm64.efi"),
+                               QStringLiteral("x86_64")));
+        QVERIFY(assetFitsArch(QLatin1String(kMemtestId), QStringLiteral("mt86p_810_x86_64"),
+                              QStringLiteral("x86_64")));
+        QVERIFY(!assetFitsArch(QLatin1String(kMemtestId), QStringLiteral("mt86p_810_i586"),
+                               QStringLiteral("x86_64")));
+        QVERIFY(!isAllowedLocalToolPath(QStringLiteral("/tmp/fwupdx64.efi")));
+        QVERIFY(!isAllowedLocalToolPath(QStringLiteral("/usr/lib/fwupd/efi/../../../etc/passwd")));
+        QVERIFY(isAllowedLocalToolPath(QStringLiteral("/usr/lib/fwupd/efi/fwupdx64.efi")));
+        const LocalToolFile missing = readLocalTool(QLatin1String(kFwupdId), QStringLiteral("x86_64"));
+        QVERIFY(!missing.ok);
+    }
+
+    void otherToolsInstallBesideNetboot()
+    {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString root = makeEsp(dir);
+        const QByteArray netboot("hello");
+        QCOMPARE(installPayload(root, netboot, recordFor(netboot), false).exitCode, kExitOk);
+        {
+            QFile discover(root + QStringLiteral("/EFI/tools/ipxe_discover.efi"));
+            QVERIFY(discover.open(QIODevice::WriteOnly));
+            QCOMPARE(discover.write("discover"), 8);
+        }
+
+        UtilityRecord shell = recordFor(QByteArray("shell-bytes"), QStringLiteral("26H2"),
+                                        QStringLiteral("shellx64.efi"));
+        shell.id = QLatin1String(kShellId);
+        QCOMPARE(installPayload(root, QByteArray("shell-bytes"), shell, false).exitCode, kExitOk);
+
+        UtilityRecord fwupd = recordFor(QByteArray("fwupd-bytes"), QStringLiteral("local"),
+                                        QStringLiteral("fwupdx64.efi"));
+        fwupd.id = QLatin1String(kFwupdId);
+        QCOMPARE(installPayload(root, QByteArray("fwupd-bytes"), fwupd, false).exitCode, kExitOk);
+
+        QCOMPARE(toolNames(root),
+                 QStringList({QStringLiteral("fwupx64.efi"),
+                              QStringLiteral("ipxe.efi"),
+                              QStringLiteral("ipxe_discover.efi"),
+                              QStringLiteral("rEFInd_GUI-fwupd"),
+                              QStringLiteral("rEFInd_GUI-netboot.xyz"),
+                              QStringLiteral("rEFInd_GUI-shell"),
+                              QStringLiteral("shellx64.efi")}));
+        QVERIFY(!QFile::exists(root + QStringLiteral("/EFI/tools/fwupdx64.efi")));
+        QCOMPARE(detectInstall(root, QLatin1String(kShellId)).presence, Presence::Managed);
+        QCOMPARE(detectInstall(root).presence, Presence::Managed);
+
+        QCOMPARE(removeInstall(root, QLatin1String(kShellId)).exitCode, kExitOk);
+        QVERIFY(!QFile::exists(root + QStringLiteral("/EFI/tools/shellx64.efi")));
+        QVERIFY(QFile::exists(root + QStringLiteral("/EFI/tools/ipxe.efi")));
+        QVERIFY(QFile::exists(root + QStringLiteral("/EFI/tools/fwupx64.efi")));
+        QVERIFY(QFile::exists(root + QStringLiteral("/EFI/tools/ipxe_discover.efi")));
+        QCOMPARE(detectInstall(root).presence, Presence::Managed);
+    }
+
+    void requestAcceptsKnownToolsOnly()
+    {
+        Request shell;
+        shell.action = QStringLiteral("install");
+        shell.utility = QLatin1String(kShellId);
+        shell.espGuid = QStringLiteral("01234567-89ab-cdef-0123-456789abcdef");
+        shell.asset = QStringLiteral("shellx64.efi");
+        shell.version = QStringLiteral("26H2");
+        shell.sha256 = QString::fromLatin1(kHelloSha);
+        const Request parsed = parseRequest(formatRequest(shell));
+        QVERIFY2(parsed.ok, qPrintable(parsed.error));
+
+        Request memtest = shell;
+        memtest.utility = QLatin1String(kMemtestId);
+        memtest.asset = QStringLiteral("mt86p_810_x86_64");
+        QVERIFY(parseRequest(formatRequest(memtest)).ok);
+
+        Request bad = shell;
+        bad.utility = QStringLiteral("poweroff");
+        QVERIFY(!parseRequest(formatRequest(bad)).ok);
+        bad = shell;
+        bad.asset = QStringLiteral("ipxe_discover.efi");
+        QVERIFY(!parseRequest(formatRequest(bad)).ok);
+    }
+
+    void memtestChecksumAndZipMember()
+    {
+        const QString sums =
+            QString::fromLatin1(kHelloSha) + QStringLiteral("  v8.10/mt86plus_8.10.binaries.zip\n");
+        const ChecksumFile file = parseSha256Sums(sums);
+        QVERIFY(file.ok);
+        QCOMPARE(checksumByBasename(file, QStringLiteral("mt86plus_8.10.binaries.zip")),
+                 QString::fromLatin1(kHelloSha));
+        const MemtestLocation loc = memtestLocation(QStringLiteral("v8.10"), QStringLiteral("x86_64"));
+        QVERIFY(loc.ok);
+        QCOMPARE(loc.zipUrl, QStringLiteral(
+            "https://memtest.org/download/v8.10/mt86plus_8.10.binaries.zip"));
+        QVERIFY(!memtestLocation(QStringLiteral("../v8.10"), QStringLiteral("x86_64")).ok);
+        QVERIFY(!memtestLocation(QStringLiteral("v8.10"), QStringLiteral("aarch64")).ok);
+
+        const ZipMember member = extractZipMember(
+            readFixture("hello-deflate.zip"),
+            QRegularExpression(QStringLiteral("^hello\\.efi$")),
+            kMaxEfiBytes);
+        QVERIFY2(member.ok, qPrintable(member.error));
+        QCOMPARE(member.bytes, QByteArray("hello"));
+        const ZipMember evil = extractZipMember(
+            readFixture("hello-deflate.zip"),
+            QRegularExpression(QStringLiteral("evil")),
+            kMaxEfiBytes);
+        QVERIFY(!evil.ok);
     }
 };
 

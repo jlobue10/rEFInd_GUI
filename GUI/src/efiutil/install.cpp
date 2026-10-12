@@ -1,8 +1,11 @@
 #include "install.h"
 
+#include "catalog.h"
 #include "netbootxyz.h"
 #include "espops/espconstants.h"
 #include "espops/userio.h"
+
+#include <QSysInfo>
 
 #include <QDir>
 #include <QFile>
@@ -28,14 +31,9 @@ QString toolsDir(const QString &espRoot)
     return QDir(espRoot).filePath(QLatin1String(kToolsDir));
 }
 
-QString efiPath(const QString &espRoot)
+QString fileInTools(const QString &espRoot, const QString &fileName)
 {
-    return QDir(toolsDir(espRoot)).filePath(QLatin1String(kInstalledEfiName));
-}
-
-QString sidecarPath(const QString &espRoot)
-{
-    return QDir(toolsDir(espRoot)).filePath(QLatin1String(kSidecarName));
+    return QDir(toolsDir(espRoot)).filePath(fileName);
 }
 
 bool componentIsDotDot(const QString &path)
@@ -105,8 +103,13 @@ bool publishBytes(const QString &destDir, const QString &finalName,
 
 QString managedRelativePath()
 {
-    return QStringLiteral("%1/%2").arg(QLatin1String(kToolsDir),
-                                       QLatin1String(kInstalledEfiName));
+    return managedRelativePath(QLatin1String(kUtilityId), QLatin1String("netboot.xyz.efi"));
+}
+
+QString managedRelativePath(const QString &utilityId, const QString &asset)
+{
+    const ManagedFile file = managedFileFor(utilityId, asset);
+    return file.ok ? file.relativePath : QString();
 }
 
 bool looksLikeEspRoot(const QString &root, QString *error)
@@ -164,7 +167,7 @@ UtilityRecord parseSidecar(const QString &text)
             rec.sha256 = value.toLower();
     }
     rec.valid = rec.product == QLatin1String(EspOps::kProductName)
-        && rec.id == QLatin1String(kUtilityId)
+        && isKnownUtility(rec.id)
         && digestsEqual(rec.sha256, rec.sha256);
     return rec;
 }
@@ -178,16 +181,36 @@ QString formatSidecar(const UtilityRecord &record)
 
 DetectedInstall detectInstall(const QString &espRoot)
 {
+    return detectInstall(espRoot, QLatin1String(kUtilityId));
+}
+
+DetectedInstall detectInstall(const QString &espRoot, const QString &utilityId)
+{
     DetectedInstall found;
-    const QString efi = efiPath(espRoot);
+    const QString sidecarName = sidecarNameFor(utilityId);
+    if (sidecarName.isEmpty())
+        return found;
+    const QString sidePath = fileInTools(espRoot, sidecarName);
+    QFile side(sidePath);
+    if (side.exists() && side.open(QIODevice::ReadOnly))
+        found.record = parseSidecar(QString::fromUtf8(side.readAll()));
+    if (found.record.valid && found.record.id != utilityId)
+        found.record.valid = false;
+
+    QString fileName;
+    if (found.record.valid)
+        fileName = managedFileFor(utilityId, found.record.asset).fileName;
+    if (fileName.isEmpty())
+        fileName = installedNameForArch(utilityId, QSysInfo::currentCpuArchitecture());
+    if (fileName.isEmpty())
+        return found;
+
+    const QString efi = fileInTools(espRoot, fileName);
     QFile bin(efi);
     if (bin.exists() && QFileInfo(efi).isFile() && !QFileInfo(efi).isSymLink()
         && bin.open(QIODevice::ReadOnly)) {
         found.onDiskSha256 = sha256Hex(bin.readAll());
     }
-    QFile side(sidecarPath(espRoot));
-    if (side.exists() && side.open(QIODevice::ReadOnly))
-        found.record = parseSidecar(QString::fromUtf8(side.readAll()));
 
     if (found.onDiskSha256.isEmpty()) {
         found.presence = Presence::Absent;
@@ -214,32 +237,32 @@ FileOutcome installPayload(const QString &espRoot, const QByteArray &payload,
     if (payload.isEmpty() || payload.size() > kMaxEfiBytes)
         return fail(kExitBadRequest,
                     QStringLiteral("The EFI binary is empty or larger than the size cap."));
-    if (!isNetbootXyzAsset(record.asset))
-        return fail(kExitBadRequest,
-                    QStringLiteral("That asset is not a netboot.xyz UEFI executable this feature installs."));
+    const ManagedFile dest = managedFileFor(record.id, record.asset);
+    if (!dest.ok)
+        return fail(kExitBadRequest, dest.error);
     const QString got = sha256Hex(payload);
     if (!digestsEqual(got, record.sha256))
         return fail(kExitBadRequest,
                     QStringLiteral("The EFI bytes do not match the recorded checksum."));
-    if (isSymlink(efiPath(espRoot)))
+    if (isSymlink(fileInTools(espRoot, dest.fileName)))
         return fail(kExitRefused,
-                    QStringLiteral("ipxe.efi is a symlink; it was left untouched."));
+                    QStringLiteral("%1 is a symlink; it was left untouched.").arg(dest.fileName));
 
     UtilityRecord owned = record;
     owned.product = QLatin1String(EspOps::kProductName);
-    owned.id = QLatin1String(kUtilityId);
+    owned.id = dest.utilityId;
     owned.sha256 = got;
 
-    const DetectedInstall current = detectInstall(espRoot);
+    const DetectedInstall current = detectInstall(espRoot, dest.utilityId);
     if (current.presence == Presence::Managed
         && digestsEqual(current.onDiskSha256, got)) {
         if (current.record.version == owned.version
             && current.record.asset == owned.asset) {
-            return fail(kExitOk, QStringLiteral(
-                            "netboot.xyz is already installed and matches this release."));
+            return fail(kExitOk, QStringLiteral("%1 is already installed and matches this release.")
+                                     .arg(dest.utilityId));
         }
         QString error;
-        if (!publishBytes(toolsDir(espRoot), QLatin1String(kSidecarName),
+        if (!publishBytes(toolsDir(espRoot), dest.sidecarName,
                           formatSidecar(owned).toUtf8(), &error))
             return fail(kExitStaging, error);
         return fail(kExitOk, QStringLiteral(
@@ -249,8 +272,9 @@ FileOutcome installPayload(const QString &espRoot, const QByteArray &payload,
     if (!current.onDiskSha256.isEmpty() && !replace) {
         return fail(kExitRefused,
                     QStringLiteral(
-                        "EFI/tools/ipxe.efi already exists and was not replaced. "
-                        "Confirm the replacement to overwrite it."));
+                        "%1 already exists and was not replaced. "
+                        "Confirm the replacement to overwrite it.")
+                        .arg(dest.relativePath));
     }
 
     const QStorageInfo space(espRoot);
@@ -271,55 +295,76 @@ FileOutcome installPayload(const QString &espRoot, const QByteArray &payload,
     }
 
     QString error;
-    if (!publishBytes(tools, QLatin1String(kInstalledEfiName), payload, &error))
+    if (!publishBytes(tools, dest.fileName, payload, &error))
         return fail(kExitStaging, error);
-    if (!publishBytes(tools, QLatin1String(kSidecarName), formatSidecar(owned).toUtf8(),
-                      &error)) {
+    if (!publishBytes(tools, dest.sidecarName, formatSidecar(owned).toUtf8(), &error)) {
         return fail(kExitStaging,
                     QStringLiteral(
-                        "ipxe.efi was copied, but the ownership record could not be written. "
-                        "The file is not marked as managed. %1")
-                        .arg(error));
+                        "%1 was copied, but the ownership record could not be written. "
+                        "The file is not marked as managed. %2")
+                        .arg(dest.fileName, error));
     }
 
-    const DetectedInstall after = detectInstall(espRoot);
+    const DetectedInstall after = detectInstall(espRoot, dest.utilityId);
     if (after.presence != Presence::Managed)
         return fail(kExitStaging,
                     QStringLiteral("The install did not verify after publishing."));
     FileOutcome ok;
-    ok.lines << QStringLiteral(
-                    "Installed netboot.xyz %1 as EFI/tools/ipxe.efi (%2).")
-                    .arg(owned.version, owned.asset);
-    ok.lines << QStringLiteral(
-        "rEFInd lists this file as \"Netboot\" only when showtools includes netboot. "
-        "This is not ipxe_discover.efi, and scanfor was not changed.");
+    ok.lines << QStringLiteral("Installed %1 %2 as %3 (%4).")
+                    .arg(dest.utilityId, owned.version, dest.relativePath, owned.asset);
+    if (dest.utilityId == QLatin1String(kUtilityId)) {
+        ok.lines << QStringLiteral(
+            "rEFInd lists this file as \"Netboot\" only when showtools includes netboot. "
+            "This is not ipxe_discover.efi, and scanfor was not changed.");
+    } else {
+        ok.lines << QStringLiteral(
+                        "rEFInd shows this file when showtools includes %1. "
+                        "scanfor was not changed, and no other tool file was written.")
+                        .arg(dest.showtoolToken);
+    }
     return ok;
 }
 
 FileOutcome removeInstall(const QString &espRoot)
 {
+    return removeInstall(espRoot, QLatin1String(kUtilityId));
+}
+
+FileOutcome removeInstall(const QString &espRoot, const QString &utilityId)
+{
     QString why;
     if (!looksLikeEspRoot(espRoot, &why))
         return fail(kExitNoEsp, why);
-    const DetectedInstall current = detectInstall(espRoot);
+    const QString sidecarName = sidecarNameFor(utilityId);
+    if (sidecarName.isEmpty())
+        return fail(kExitBadRequest, QStringLiteral("That utility is not one this feature installs."));
+    const DetectedInstall current = detectInstall(espRoot, utilityId);
+    const QString fileName = current.record.valid
+        ? managedFileFor(utilityId, current.record.asset).fileName
+        : installedNameForArch(utilityId, QSysInfo::currentCpuArchitecture());
+    const QString relative = fileName.isEmpty()
+        ? sidecarName
+        : QStringLiteral("%1/%2").arg(QLatin1String(kToolsDir), fileName);
     if (current.presence == Presence::Absent) {
         if (current.record.valid)
-            QFile::remove(sidecarPath(espRoot));
-        return fail(kExitOk, QStringLiteral("netboot.xyz is not installed on this ESP."));
+            QFile::remove(fileInTools(espRoot, sidecarName));
+        return fail(kExitOk, QStringLiteral("%1 is not installed on this ESP.").arg(utilityId));
     }
-    if (current.presence != Presence::Managed) {
+    if (current.presence != Presence::Managed || fileName.isEmpty()) {
         return fail(kExitRefused,
                     QStringLiteral(
-                        "EFI/tools/ipxe.efi is not an installation managed by this app, "
-                        "so it was not deleted."));
+                        "%1 is not an installation managed by this app, so it was not deleted.")
+                        .arg(relative));
     }
-    if (!QFile::remove(efiPath(espRoot)))
-        return fail(kExitStaging, QStringLiteral("Could not delete EFI/tools/ipxe.efi."));
-    QFile::remove(sidecarPath(espRoot));
-    if (QFile::exists(efiPath(espRoot)))
-        return fail(kExitStaging, QStringLiteral("ipxe.efi is still present after removal."));
+    const QString efi = fileInTools(espRoot, fileName);
+    if (!QFile::remove(efi))
+        return fail(kExitStaging, QStringLiteral("Could not delete %1.").arg(relative));
+    QFile::remove(fileInTools(espRoot, sidecarName));
+    if (QFile::exists(efi))
+        return fail(kExitStaging, QStringLiteral("%1 is still present after removal.").arg(fileName));
     return fail(kExitOk, QStringLiteral(
-                    "Removed the managed EFI/tools/ipxe.efi. Other files in EFI/tools were left in place."));
+                    "Removed the managed %1. Other files in EFI/tools were left in place.")
+                    .arg(relative));
 }
 
 } // namespace EfiUtil

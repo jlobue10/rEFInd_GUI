@@ -1,5 +1,6 @@
 #include "request.h"
 
+#include "catalog.h"
 #include "netbootxyz.h"
 
 #include <QRegularExpression>
@@ -67,8 +68,8 @@ Request parseRequest(const QString &text)
         req.error = QStringLiteral("The request action is not status, install, or remove.");
         return req;
     }
-    if (req.utility != QLatin1String(kUtilityId)) {
-        req.error = QStringLiteral("The request is not for netboot.xyz.");
+    if (!isKnownUtility(req.utility)) {
+        req.error = QStringLiteral("The request is not for a known EFI utility.");
         return req;
     }
     if (!isPartitionGuid(req.espGuid)) {
@@ -76,9 +77,9 @@ Request parseRequest(const QString &text)
         return req;
     }
     if (req.action == QLatin1String("install")) {
-        if (!isNetbootXyzAsset(req.asset)) {
+        if (!managedFileFor(req.utility, req.asset).ok) {
             req.error = QStringLiteral(
-                "The request asset is not a netboot.xyz UEFI executable.");
+                "The request asset is not an EFI file this feature installs.");
             return req;
         }
         if (!hex64(req.sha256)) {

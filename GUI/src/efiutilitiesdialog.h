@@ -1,6 +1,7 @@
 #ifndef EFIUTILITIESDIALOG_H
 #define EFIUTILITIESDIALOG_H
 
+#include "efiutil/catalog.h"
 #include "efiutil/netbootxyz.h"
 #include "efiutil/request.h"
 #include "efiutil/secureboot.h"
@@ -28,16 +29,24 @@ signals:
     void installConfigRequested();
 
 private:
+    void populateUtilities();
     void populateEsps();
     void populateVariants();
+    void applyUtilityChrome();
     void refreshRelease();
+    void refreshNetbootRelease();
+    void refreshShellRelease();
+    void refreshMemtestRelease();
+    void refreshPinned();
+    void refreshLocal();
     void refreshStatus();
     void applyStatus(const QString &output, int code);
     void updateButtons();
     void beginInstall();
     void beginRemove();
     void downloadAsset();
-    void finishWithPayload(const QByteArray &payload);
+    void finishWithPayload(const QByteArray &payload, const QString &asset,
+                           const QString &version, const QString &sha256);
     void runRequest(const EfiUtil::Request &request, const QByteArray &payload);
     void applyShowtoolsAfterInstall();
     void applyShowtoolsAfterRemove();
@@ -48,7 +57,15 @@ private:
     bool showtoolsFlag() const;
     QString selectedGuid() const;
     QString selectedAsset() const;
+    QString currentUtility() const;
+    QString currentInstalledName() const;
+    QStringList showtoolsAddedBy() const;
+    bool weAddedToken(const QString &token) const;
+    void rememberUtility(const QString &utilityId, bool added);
     void setBusy(bool busy);
+    void noteRelease(int generation, const QString &version, const QString &asset,
+                     const QString &sha256, const QString &url);
+    void failRelease(int generation, const QString &text);
 
     QString showtoolsText;
     QString stagedConfPath;
@@ -64,8 +81,16 @@ private:
     QString liveExcluded = QStringLiteral("unreadable");
     EfiUtil::SecureBoot secureBoot = EfiUtil::SecureBoot::Unknown;
     bool releaseReady = false;
+    int releaseGeneration = 0;
+    int statusGeneration = 0;
+    QString pendingVersion;
+    QString pendingAsset;
+    QString pendingSha;
+    QString pendingUrl;
 
     QLabel *notice = nullptr;
+    QLabel *builtInNote = nullptr;
+    QComboBox *utilityCombo = nullptr;
     QLabel *secureLabel = nullptr;
     QLabel *statusLabel = nullptr;
     QLabel *installedLabel = nullptr;

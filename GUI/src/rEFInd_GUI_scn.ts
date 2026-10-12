@@ -4,171 +4,317 @@
 <context>
     <name>EfiUtilitiesDialog</name>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="34"/>
+        <location filename="efiutilitiesdialog.cpp" line="35"/>
         <source>Installed (managed by rEFInd_GUI)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="36"/>
+        <location filename="efiutilitiesdialog.cpp" line="37"/>
         <source>Present, not managed by rEFInd_GUI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="38"/>
+        <location filename="efiutilitiesdialog.cpp" line="39"/>
         <source>Present, changed outside rEFInd_GUI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="39"/>
-        <location filename="efiutilitiesdialog.cpp" line="368"/>
+        <location filename="efiutilitiesdialog.cpp" line="40"/>
+        <location filename="efiutilitiesdialog.cpp" line="730"/>
         <source>Not installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="65"/>
-        <location filename="efiutilitiesdialog.cpp" line="420"/>
-        <location filename="efiutilitiesdialog.cpp" line="429"/>
-        <location filename="efiutilitiesdialog.cpp" line="439"/>
-        <location filename="efiutilitiesdialog.cpp" line="461"/>
-        <location filename="efiutilitiesdialog.cpp" line="467"/>
-        <location filename="efiutilitiesdialog.cpp" line="484"/>
-        <location filename="efiutilitiesdialog.cpp" line="498"/>
-        <location filename="efiutilitiesdialog.cpp" line="525"/>
-        <location filename="efiutilitiesdialog.cpp" line="534"/>
-        <location filename="efiutilitiesdialog.cpp" line="541"/>
-        <location filename="efiutilitiesdialog.cpp" line="570"/>
-        <location filename="efiutilitiesdialog.cpp" line="581"/>
-        <location filename="efiutilitiesdialog.cpp" line="585"/>
-        <location filename="efiutilitiesdialog.cpp" line="600"/>
-        <location filename="efiutilitiesdialog.cpp" line="607"/>
-        <location filename="efiutilitiesdialog.cpp" line="612"/>
-        <location filename="efiutilitiesdialog.cpp" line="617"/>
-        <location filename="efiutilitiesdialog.cpp" line="627"/>
-        <location filename="efiutilitiesdialog.cpp" line="639"/>
-        <location filename="efiutilitiesdialog.cpp" line="662"/>
-        <location filename="efiutilitiesdialog.cpp" line="674"/>
-        <location filename="efiutilitiesdialog.cpp" line="681"/>
+        <location filename="efiutilitiesdialog.cpp" line="66"/>
+        <location filename="efiutilitiesdialog.cpp" line="784"/>
+        <location filename="efiutilitiesdialog.cpp" line="793"/>
+        <location filename="efiutilitiesdialog.cpp" line="803"/>
+        <location filename="efiutilitiesdialog.cpp" line="828"/>
+        <location filename="efiutilitiesdialog.cpp" line="834"/>
+        <location filename="efiutilitiesdialog.cpp" line="853"/>
+        <location filename="efiutilitiesdialog.cpp" line="869"/>
+        <location filename="efiutilitiesdialog.cpp" line="896"/>
+        <location filename="efiutilitiesdialog.cpp" line="906"/>
+        <location filename="efiutilitiesdialog.cpp" line="914"/>
+        <location filename="efiutilitiesdialog.cpp" line="956"/>
+        <location filename="efiutilitiesdialog.cpp" line="972"/>
+        <location filename="efiutilitiesdialog.cpp" line="977"/>
+        <location filename="efiutilitiesdialog.cpp" line="992"/>
+        <location filename="efiutilitiesdialog.cpp" line="1002"/>
+        <location filename="efiutilitiesdialog.cpp" line="1007"/>
+        <location filename="efiutilitiesdialog.cpp" line="1012"/>
+        <location filename="efiutilitiesdialog.cpp" line="1022"/>
+        <location filename="efiutilitiesdialog.cpp" line="1039"/>
+        <location filename="efiutilitiesdialog.cpp" line="1046"/>
+        <location filename="efiutilitiesdialog.cpp" line="1076"/>
+        <location filename="efiutilitiesdialog.cpp" line="1083"/>
+        <location filename="efiutilitiesdialog.cpp" line="1103"/>
+        <location filename="efiutilitiesdialog.cpp" line="1109"/>
+        <location filename="efiutilitiesdialog.cpp" line="1131"/>
+        <location filename="efiutilitiesdialog.cpp" line="1160"/>
         <source>EFI Utilities</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="68"/>
+        <location filename="efiutilitiesdialog.cpp" line="90"/>
+        <source>Shutdown, reboot, about, exit, firmware setup, hidden tags, install rEFInd, boot order, Apple recovery, and SIP rotate are built into rEFInd. Turn them on with the Showtools checkboxes. rEFInd does not launch a separate power-off EFI file. gptsync ships inside the rEFInd package and is not downloaded here.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="206"/>
         <source>netboot.xyz is installed as EFI/tools/ipxe.efi so rEFInd&apos;s existing Netboot tool can launch it. rEFInd will label the icon &quot;Netboot&quot;. This is not the legacy ipxe_discover.efi scanner, and scanfor is not changed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="83"/>
+        <location filename="efiutilitiesdialog.cpp" line="82"/>
         <source>Checking the EFI System Partition...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="86"/>
-        <location filename="efiutilitiesdialog.cpp" line="268"/>
+        <location filename="efiutilitiesdialog.cpp" line="85"/>
+        <location filename="efiutilitiesdialog.cpp" line="513"/>
         <source>Checking...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="89"/>
-        <source>Show netboot in the rEFInd tools menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="92"/>
+        <location filename="efiutilitiesdialog.cpp" line="97"/>
         <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="93"/>
+        <location filename="efiutilitiesdialog.cpp" line="98"/>
         <source>Install</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="94"/>
+        <location filename="efiutilitiesdialog.cpp" line="99"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="95"/>
+        <location filename="efiutilitiesdialog.cpp" line="100"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="96"/>
+        <location filename="efiutilitiesdialog.cpp" line="101"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="108"/>
+        <location filename="efiutilitiesdialog.cpp" line="126"/>
+        <source>Utility</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="127"/>
         <source>EFI System Partition</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="109"/>
+        <location filename="efiutilitiesdialog.cpp" line="128"/>
         <source>Variant</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="110"/>
+        <location filename="efiutilitiesdialog.cpp" line="129"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="111"/>
+        <location filename="efiutilitiesdialog.cpp" line="130"/>
         <source>Installed version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="112"/>
+        <location filename="efiutilitiesdialog.cpp" line="131"/>
         <source>Latest version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="113"/>
+        <location filename="efiutilitiesdialog.cpp" line="132"/>
         <source>Tools menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="143"/>
-        <source>This CPU architecture is not supported</source>
+        <location filename="efiutilitiesdialog.cpp" line="167"/>
+        <source>netboot.xyz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="154"/>
-        <source>Standard UEFI</source>
+        <location filename="efiutilitiesdialog.cpp" line="168"/>
+        <source>UEFI shell</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="156"/>
-        <source>SNP</source>
+        <location filename="efiutilitiesdialog.cpp" line="169"/>
+        <source>Memtest86+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="158"/>
-        <source>SNP-only</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="164"/>
-        <source>The file installed here is netboot.xyz&apos;s unsigned UEFI executable. Upstream&apos;s Secure Boot images are netboot.xyz-sb.iso and netboot.xyz-sb.img, which are disk images, not an EFI tool rEFInd can launch. This app will not enroll keys, disable Secure Boot, or sign the file.</source>
+        <location filename="efiutilitiesdialog.cpp" line="170"/>
+        <source>HashTool</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="efiutilitiesdialog.cpp" line="171"/>
+        <source>MokManager</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="172"/>
+        <source>KeyTool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="173"/>
+        <source>gdisk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="174"/>
+        <source>fwupd</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="211"/>
+        <source>The UEFI shell is the EDK2 Shell v2 binary published by the UEFI-Shell project from EDK2 stable, checked with GitHub&apos;s SHA-256 digest. It is installed as EFI/tools/%1, which is a name rEFInd&apos;s shell tool launches. It is not copied to the root of the EFI System Partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="216"/>
+        <source>shell.efi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="218"/>
+        <source>Memtest86+ is taken from the binaries zip on memtest.org and checked against that site&apos;s sha256sum.txt. The file is installed as EFI/tools/%1 so rEFInd&apos;s memtest tool finds it. Upstream&apos;s own filename is not in rEFInd&apos;s search list. This is Memtest86+, not PassMark Memtest86.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="223"/>
+        <source>(unsupported architecture)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="225"/>
+        <source>HashTool is the Linux Foundation signed HashTool.efi from James Bottomley&apos;s 2013 release. It is installed as EFI/tools/HashTool.efi. rEFInd labels it &quot;MOK utility&quot; when showtools includes mok_tool. This app does not enroll keys or hashes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="231"/>
+        <source>MokManager is copied from the installed shim package (mmx64.efi, or the matching architecture). rEFInd labels it &quot;MOK utility&quot;. Shim publishes source tarballs, not a standalone EFI file, so there is no separate download. This app does not enroll keys.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="237"/>
+        <source>KeyTool is copied from the installed efitools package. The usual file is unsigned: Microsoft declined to sign it. It is installed under its own name in EFI/tools and is not signed here. rEFInd labels it &quot;MOK utility&quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="242"/>
+        <source>gdisk is the EFI build from GPT fdisk 1.0.4, the last version Rod Smith published as an EFI binary, installed as EFI/tools/gdisk_x64.efi. The zip also contains a certificate. This app does not enroll it. Later GPT fdisk versions do not ship an EFI binary.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="248"/>
+        <source>fwupd is copied from the installed fwupd package and renamed to %1, which is the filename rEFInd&apos;s fwupdate tool launches. Copying the launcher does not stage a firmware capsule; the fwupd service on the OS does that.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="252"/>
+        <source>fwupx64.efi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="256"/>
+        <source>Show %1 in the rEFInd tools menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="267"/>
+        <location filename="efiutilitiesdialog.cpp" line="279"/>
+        <location filename="efiutilitiesdialog.cpp" line="516"/>
+        <source>This CPU architecture is not supported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="271"/>
+        <source>Distro package (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="291"/>
+        <source>Standard UEFI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="293"/>
+        <source>SNP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="295"/>
+        <source>SNP-only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="304"/>
+        <source>This EDK2 shell is not signed with a key firmware trusts by default. This app will not enroll keys, disable Secure Boot, or sign the file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="308"/>
+        <source>This Memtest86+ binary is not a signed Secure Boot chain. This app will not enroll keys, disable Secure Boot, or sign the file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="312"/>
+        <source>This is the Linux Foundation signed HashTool. This app will not enroll keys or hashes, disable Secure Boot, or sign anything.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="316"/>
+        <source>The shim package&apos;s MokManager may already be signed. This app copies those bytes unchanged and will not enroll keys or disable Secure Boot.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="320"/>
+        <source>KeyTool.efi is unsigned. This app will not sign it, enroll its hash, or disable Secure Boot. A file already named KeyTool-signed.efi is copied under that name and is not re-signed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="325"/>
+        <source>The GPT fdisk EFI zip includes a certificate. This app does not enroll it, disable Secure Boot, or sign the binary.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="329"/>
+        <source>The fwupd EFI binary is copied unchanged from the distro package. This app will not sign it, enroll keys, or disable Secure Boot.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="333"/>
+        <source>The file installed here is netboot.xyz&apos;s unsigned UEFI executable. Upstream&apos;s Secure Boot images are netboot.xyz-sb.iso and netboot.xyz-sb.img, which are disk images, not an EFI tool rEFInd can launch. This app will not enroll keys, disable Secure Boot, or sign the file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="341"/>
         <source>Secure Boot is enabled. %1 It will not boot under Secure Boot unless the firmware already trusts it.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="176"/>
+        <location filename="efiutilitiesdialog.cpp" line="346"/>
         <source>Secure Boot is off. %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="177"/>
+        <location filename="efiutilitiesdialog.cpp" line="347"/>
         <source>Secure Boot state could not be read. %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="182"/>
+        <location filename="efiutilitiesdialog.cpp" line="352"/>
         <source>The privileged install helper was NOT run.
 
 It is missing, is an older build that does not provide efi-utility, or the passwordless sudo rule is not installed.
@@ -177,241 +323,281 @@ Reinstall the GUI to restore the matching helper, then try again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="200"/>
+        <location filename="efiutilitiesdialog.cpp" line="370"/>
         <source> — not mounted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="213"/>
+        <location filename="efiutilitiesdialog.cpp" line="383"/>
         <source>No EFI System Partition found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="273"/>
+        <location filename="efiutilitiesdialog.cpp" line="540"/>
+        <location filename="efiutilitiesdialog.cpp" line="590"/>
+        <location filename="efiutilitiesdialog.cpp" line="616"/>
         <source>Could not reach GitHub: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="287"/>
+        <location filename="efiutilitiesdialog.cpp" line="551"/>
         <source>The release has no checksum file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="296"/>
+        <location filename="efiutilitiesdialog.cpp" line="560"/>
+        <location filename="efiutilitiesdialog.cpp" line="635"/>
         <source>Could not download the checksum file: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="321"/>
+        <location filename="efiutilitiesdialog.cpp" line="600"/>
+        <source>The shell release has no SHA-256 digest for %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="646"/>
+        <source>The checksum file has no entry for %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="674"/>
+        <source>local</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="682"/>
         <source>No EFI System Partition is selected.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="330"/>
+        <location filename="efiutilitiesdialog.cpp" line="691"/>
         <source>The privileged helper is missing or is a different version.
 %1
 Reinstall rEFInd_GUI, then try again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="347"/>
+        <location filename="efiutilitiesdialog.cpp" line="709"/>
         <source>Could not read the EFI System Partition (code %1).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="366"/>
+        <location filename="efiutilitiesdialog.cpp" line="728"/>
         <source>%1 (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="370"/>
+        <location filename="efiutilitiesdialog.cpp" line="732"/>
         <source>Unknown (not managed)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="374"/>
+        <location filename="efiutilitiesdialog.cpp" line="738"/>
         <source>no staged refind.conf</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="381"/>
+        <location filename="efiutilitiesdialog.cpp" line="745"/>
         <source>staged config has no showtools line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="383"/>
-        <source>staged config includes netboot</source>
+        <location filename="efiutilitiesdialog.cpp" line="1034"/>
+        <source>%1 is already on this ESP and was not installed by rEFInd_GUI.
+
+Replace it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="385"/>
-        <source>staged config omits netboot</source>
+        <location filename="efiutilitiesdialog.cpp" line="1037"/>
+        <source>The installed %1 no longer matches the ownership record.
+
+Replace it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="387"/>
-        <source>; dont_scan_tools hides ipxe.efi (left unchanged)</source>
+        <location filename="efiutilitiesdialog.cpp" line="1161"/>
+        <source>The EFI file failed the final check. Nothing was written.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="391"/>
-        <source>live config includes netboot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="393"/>
-        <source>live config omits netboot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="395"/>
+        <location filename="efiutilitiesdialog.cpp" line="759"/>
         <source>live config has no showtools line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="397"/>
+        <location filename="efiutilitiesdialog.cpp" line="761"/>
         <source>live config could not be read</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="399"/>
-        <source>; dont_scan_tools hides ipxe.efi</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="405"/>
+        <location filename="efiutilitiesdialog.cpp" line="769"/>
         <source>Shown in the tools menu: yes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="407"/>
-        <location filename="efiutilitiesdialog.cpp" line="411"/>
+        <location filename="efiutilitiesdialog.cpp" line="771"/>
+        <location filename="efiutilitiesdialog.cpp" line="775"/>
         <source>Shown in the tools menu: no</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="409"/>
+        <location filename="efiutilitiesdialog.cpp" line="773"/>
         <source>Shown in the tools menu: unknown (live config could not be read)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="421"/>
+        <location filename="efiutilitiesdialog.cpp" line="785"/>
         <source>Could not create the staging directory in the data folder.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="430"/>
+        <location filename="efiutilitiesdialog.cpp" line="794"/>
         <source>Could not stage the EFI binary.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="440"/>
+        <location filename="efiutilitiesdialog.cpp" line="804"/>
         <source>Could not stage the install request.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="470"/>
+        <location filename="efiutilitiesdialog.cpp" line="837"/>
         <source>The helper returned code %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="485"/>
-        <source>The Showtools box is empty. Create Config would then publish a tools row containing only netboot, and the other tools would be hidden.
-
-Add netboot as the only tool?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="499"/>
-        <source>dont_scan_tools already hides ipxe.efi. That line was left unchanged, so the tools menu will not show Netboot until you remove the exclusion.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="526"/>
-        <source>netboot was added to the staged refind.conf without changing other lines. Install Config to publish it?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="535"/>
-        <source>The staged refind.conf has no showtools line, so it was left unchanged. Create Config will write the Showtools box, which now includes netboot. That regenerates the rest of the file from the current settings.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="542"/>
-        <source>The Showtools box now includes netboot. Create Config writes that into refind.conf, and Install Config publishes the file.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="571"/>
-        <source>netboot was removed from the staged refind.conf. Other lines were left in place. Install Config to publish it?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="582"/>
-        <source>EFI/tools/ipxe.efi is not an installation managed by rEFInd_GUI, so it will not be deleted.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="586"/>
-        <source>Remove the managed ipxe.efi from EFI/tools? Other tools in that directory are left in place.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="601"/>
-        <source>The latest netboot.xyz release is not available yet.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="608"/>
+        <location filename="efiutilitiesdialog.cpp" line="572"/>
         <source>The selected variant is not in the published checksum file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="613"/>
+        <location filename="efiutilitiesdialog.cpp" line="747"/>
+        <source>staged config includes %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="749"/>
+        <source>staged config omits %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="751"/>
+        <source>; dont_scan_tools hides %1 (left unchanged)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="755"/>
+        <source>live config includes %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="757"/>
+        <source>live config omits %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="763"/>
+        <source>; dont_scan_tools hides %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="854"/>
+        <source>The Showtools box is empty. Create Config would then publish a tools row containing only %1, and the other tools would be hidden.
+
+Add %1 as the only tool?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="870"/>
+        <source>dont_scan_tools already hides %1. That line was left unchanged, so the tools menu will not show it until you remove the exclusion.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="897"/>
+        <source>%1 was added to the staged refind.conf without changing other lines. Install Config to publish it?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="907"/>
+        <source>The staged refind.conf has no showtools line, so it was left unchanged. Create Config will write the Showtools box, which now includes %1. That regenerates the rest of the file from the current settings.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="915"/>
+        <source>The Showtools box now includes %1. Create Config writes that into refind.conf, and Install Config publishes the file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="957"/>
+        <source>%1 was removed from the staged refind.conf. Other lines were left in place. Install Config to publish it?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="973"/>
+        <source>%1 is not an installation managed by rEFInd_GUI, so it will not be deleted.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="978"/>
+        <source>Remove the managed %1? Other tools in EFI/tools are left in place.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="993"/>
+        <source>The selected utility is not available yet.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="1003"/>
+        <source>The selected file has no published checksum.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="1008"/>
         <source>Select an EFI System Partition first.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="619"/>
+        <location filename="efiutilitiesdialog.cpp" line="1014"/>
         <source>Install it anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="628"/>
+        <location filename="efiutilitiesdialog.cpp" line="1023"/>
         <source>The installed file already matches %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="635"/>
+        <location filename="efiutilitiesdialog.cpp" line="1031"/>
         <source>EFI/tools/ipxe.efi is already on this ESP and was not installed by rEFInd_GUI. It may be rEFInd&apos;s own iPXE tool, which is not netboot.xyz.
 
 Replace it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="638"/>
-        <source>The installed ipxe.efi no longer matches the ownership record.
-
-Replace it?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="efiutilitiesdialog.cpp" line="663"/>
+        <location filename="efiutilitiesdialog.cpp" line="1077"/>
         <source>The release does not publish %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="667"/>
+        <location filename="efiutilitiesdialog.cpp" line="1084"/>
+        <source>There is no download URL for this utility.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="efiutilitiesdialog.cpp" line="1091"/>
         <source>Downloading %1...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="675"/>
+        <location filename="efiutilitiesdialog.cpp" line="1104"/>
         <source>The download failed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="efiutilitiesdialog.cpp" line="682"/>
+        <location filename="efiutilitiesdialog.cpp" line="1110"/>
         <source>The download does not match the published checksum. Nothing was written to the EFI System Partition.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1090,7 +1276,8 @@ Li sfunni e l&apos;iconi di sistema hannu a èssiri veri immàggini PNG (no simp
     </message>
     <message>
         <location filename="mainwindow.ui" line="1088"/>
-        <source>Download, install, update, or remove netboot.xyz as rEFInd&apos;s Netboot tool</source>
+        <source>Download, install, update, or remove rEFInd EFI tools: netboot.xyz, the UEFI shell, Memtest86+, HashTool, MokManager, KeyTool, gdisk, and fwupd</source>
+        <oldsource>Download, install, update, or remove netboot.xyz as rEFInd&apos;s Netboot tool</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>

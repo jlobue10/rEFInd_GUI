@@ -1,5 +1,5 @@
 // showtools token edits. These functions never rewrite scanfor or menuentry
-// stanzas; they only add or remove the single "netboot" token.
+// stanzas; they only add or remove one token.
 
 #ifndef EFIUTIL_SHOWTOOLS_H
 #define EFIUTIL_SHOWTOOLS_H

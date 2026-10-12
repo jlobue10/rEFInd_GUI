@@ -156,11 +156,16 @@ endif()
 
 target_link_libraries(espops PUBLIC Qt${QT_VERSION_MAJOR}::Core)
 
-# EFI utility manager (netboot.xyz). QtCore only, same as espops, so the
-# helper can link it. Not parity-locked: this repo owns the whole library.
+# EFI utility manager. QtCore only, same as espops, so the helper can link
+# it. Not parity-locked: this repo owns the whole library.
+find_package(ZLIB REQUIRED)
 add_library(efiutil STATIC
     efiutil/netbootxyz.cpp
     efiutil/netbootxyz.h
+    efiutil/catalog.cpp
+    efiutil/catalog.h
+    efiutil/zipmember.cpp
+    efiutil/zipmember.h
     efiutil/install.cpp
     efiutil/install.h
     efiutil/showtools.cpp
@@ -172,7 +177,7 @@ add_library(efiutil STATIC
     efiutil/helpercmd.cpp
     efiutil/helpercmd.h
 )
-target_link_libraries(efiutil PUBLIC Qt${QT_VERSION_MAJOR}::Core espops)
+target_link_libraries(efiutil PUBLIC Qt${QT_VERSION_MAJOR}::Core ZLIB::ZLIB espops)
 target_include_directories(efiutil PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 if(WIN32)
     # advapi32: OpenProcessToken/AdjustTokenPrivileges for the

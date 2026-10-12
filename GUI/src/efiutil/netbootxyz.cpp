@@ -75,7 +75,18 @@ QString assetForVariant(const QString &variantId, const QString &cpuArch)
     return {};
 }
 
-GithubRelease parseGithubRelease(const QByteArray &json)
+QString digestHex(const QString &digest)
+{
+    const QString prefix = QStringLiteral("sha256:");
+    if (!digest.startsWith(prefix, Qt::CaseInsensitive))
+        return {};
+    const QString hex = digest.mid(prefix.size()).trimmed().toLower();
+    return hex64(hex) ? hex : QString();
+}
+
+enum class ReleaseParse { NetbootChecksum, Assets, TagOnly };
+
+GithubRelease parseRelease(const QByteArray &json, ReleaseParse mode)
 {
     GithubRelease out;
     QJsonParseError err;
@@ -94,6 +105,10 @@ GithubRelease parseGithubRelease(const QByteArray &json)
         out.error = QStringLiteral("The release has no tag_name.");
         return out;
     }
+    if (mode == ReleaseParse::TagOnly) {
+        out.ok = true;
+        return out;
+    }
     const QJsonArray assets = root.value(QStringLiteral("assets")).toArray();
     if (assets.isEmpty()) {
         out.error = QStringLiteral("The release lists no assets.");
@@ -107,6 +122,7 @@ GithubRelease parseGithubRelease(const QByteArray &json)
         a.name = o.value(QStringLiteral("name")).toString();
         a.url = o.value(QStringLiteral("browser_download_url")).toString();
         a.size = qint64(o.value(QStringLiteral("size")).toDouble(-1));
+        a.sha256 = digestHex(o.value(QStringLiteral("digest")).toString());
         if (a.name.isEmpty() || a.url.isEmpty())
             continue;
         const QUrl url(a.url);
@@ -119,14 +135,33 @@ GithubRelease parseGithubRelease(const QByteArray &json)
         }
         out.assets.append(a);
     }
-    if (!findAsset(out, QLatin1String(kChecksumAsset))) {
+    if (mode == ReleaseParse::NetbootChecksum && !findAsset(out, QLatin1String(kChecksumAsset))) {
         out.error = QStringLiteral(
             "The release does not publish netboot.xyz-sha256-checksums.txt.");
         out.assets.clear();
         return out;
     }
+    if (out.assets.isEmpty()) {
+        out.error = QStringLiteral("The release lists no assets.");
+        return out;
+    }
     out.ok = true;
     return out;
+}
+
+GithubRelease parseGithubRelease(const QByteArray &json)
+{
+    return parseRelease(json, ReleaseParse::NetbootChecksum);
+}
+
+GithubRelease parseGithubAssetRelease(const QByteArray &json)
+{
+    return parseRelease(json, ReleaseParse::Assets);
+}
+
+GithubRelease parseGithubTag(const QByteArray &json)
+{
+    return parseRelease(json, ReleaseParse::TagOnly);
 }
 
 const GithubAsset *findAsset(const GithubRelease &release, const QString &name)
@@ -173,6 +208,25 @@ QString checksumFor(const ChecksumFile &file, const QString &assetName)
             return row.second;
     }
     return {};
+}
+
+QString checksumByBasename(const ChecksumFile &file, const QString &baseName)
+{
+    if (baseName.isEmpty() || baseName.contains(QLatin1Char('/'))
+        || baseName.contains(QLatin1Char('\\')) || baseName.contains(QLatin1String("..")))
+        return {};
+    QString found;
+    for (const auto &row : file.sums) {
+        const QString name = row.first;
+        const int slash = name.lastIndexOf(QLatin1Char('/'));
+        const QString base = slash < 0 ? name : name.mid(slash + 1);
+        if (name != baseName && base != baseName)
+            continue;
+        if (!found.isEmpty() && found != row.second)
+            return {};
+        found = row.second;
+    }
+    return found;
 }
 
 QByteArray sha256(const QByteArray &data)

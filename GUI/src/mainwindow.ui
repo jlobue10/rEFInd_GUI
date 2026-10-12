@@ -1085,7 +1085,7 @@
           </size>
          </property>
          <property name="toolTip">
-          <string>Download, install, update, or remove netboot.xyz as rEFInd's Netboot tool</string>
+          <string>Download, install, update, or remove rEFInd EFI tools: netboot.xyz, the UEFI shell, Memtest86+, HashTool, MokManager, KeyTool, gdisk, and fwupd</string>
          </property>
          <property name="text">
           <string>EFI Utilities</string>
