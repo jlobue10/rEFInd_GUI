@@ -49,6 +49,15 @@ int installThemes(QString *output = nullptr);
 // Program Files location on Windows).
 bool installThemesScriptTrusted(QString *detail = nullptr);
 
+// Runs `helper efi-utility` (Linux, passwordless sudo) or the same operation
+// in-process (Windows, already elevated). The GUI writes the request file
+// under the data directory first. Returns the helper exit code.
+int runEfiUtility(QString *output = nullptr);
+
+// Same version handshake as installConfigScriptTrusted. On Windows the GUI
+// itself is the privileged process, so this is always true.
+bool efiUtilityReady(QString *detail = nullptr);
+
 // Runs the elevated ESP scan (scan_esp.sh), caching the EFI/ tree for
 // detection to read. Blocks while the script prompts for a password and shows
 // its own result dialogs. Returns 0 on success. Linux only: the Windows build

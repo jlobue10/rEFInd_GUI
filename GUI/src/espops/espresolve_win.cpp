@@ -23,6 +23,7 @@
 
 #include <QDir>
 #include <QFileInfo>
+#include <QRegularExpression>
 #include <QTemporaryDir>
 #include <QUuid>
 
@@ -320,6 +321,57 @@ bool EspResolver::resolve(RefindTarget *out)
     }
 
     return false;
+}
+
+bool EspResolver::mountByPartUuid(const QString &partUuid, QString *root,
+                                 QString *how, QString *error)
+{
+    const auto fail = [error](const QString &message) {
+        if (error)
+            *error = message;
+        return false;
+    };
+    static const QRegularExpression guidRe(
+        QStringLiteral("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-"
+                       "[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"));
+    if (!guidRe.match(partUuid).hasMatch())
+        return fail(QStringLiteral("The partition id is not a GUID."));
+    const QString guid = partUuid.toLower();
+    const QList<VolumeInfo> volumes = enumerateVolumes();
+    for (const VolumeInfo &vi : volumes) {
+        if (vi.gptPartitionGuid != guid)
+            continue;
+        if (vi.gptPartitionType != QLatin1String(kEspTypeGuid))
+            return fail(QStringLiteral("That partition is not an EFI System Partition."));
+        const QString mp = ensureMounted(vi.volumeName);
+        if (mp.isEmpty())
+            return fail(QStringLiteral("The EFI System Partition could not be mounted."));
+        if (!QDir(mp + QLatin1String("/EFI")).exists())
+            return fail(QStringLiteral(
+                "The partition mounted, but it has no EFI directory."));
+        if (root)
+            *root = mp;
+        if (how)
+            *how = QStringLiteral("ESP %1 (%2)").arg(guid, vi.volumeName);
+        return true;
+    }
+    return fail(QStringLiteral("No EFI System Partition with that GUID was found."));
+}
+
+QList<EspPartition> listEspPartitions()
+{
+    QList<EspPartition> parts;
+    const QList<VolumeInfo> volumes = enumerateVolumes();
+    for (const VolumeInfo &vi : volumes) {
+        if (vi.gptPartitionType != QLatin1String(kEspTypeGuid) || vi.gptPartitionGuid.isEmpty())
+            continue;
+        EspPartition part;
+        part.partUuid = vi.gptPartitionGuid;
+        part.device = vi.volumeName;
+        part.mountPoint = mountPointForVolume(vi.volumeName);
+        parts.append(part);
+    }
+    return parts;
 }
 
 } // namespace EspOps

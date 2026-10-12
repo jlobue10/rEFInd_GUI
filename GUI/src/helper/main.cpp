@@ -30,6 +30,7 @@
 #include "espops/themesinstall.h"
 #include "espops/userio.h"
 #include "espops/wintasks.h"
+#include "efiutil/helpercmd.h"
 
 #include <QCoreApplication>
 
@@ -53,6 +54,7 @@ int usage(FILE *to)
                  "usage: helper <subcommand>\n"
                  "  install-config        install the generated refind.conf set onto the ESP\n"
                  "  install-themes        install the staged theme trees onto the ESP\n"
+                 "  efi-utility            install, update, remove, or query a managed EFI tool\n"
                  "  randomize-background  pick a random boot background (boot/logon service)\n"
                  "  randomize-theme       pick a random installed theme (boot/logon service)\n"
 #ifdef Q_OS_WIN
@@ -269,6 +271,15 @@ int main(int argc, char *argv[])
 #else
         // Windows never routes install-themes through the helper: the GUI
         // is already elevated and runs espops in-process.
+        return notPorted(sub);
+#endif
+    }
+    // rEFInd_GUI only. SteamDeck_rEFInd does not ship this subcommand; keep
+    // the dispatch here rather than inside the parity-locked espops library.
+    if (std::strcmp(sub, "efi-utility") == 0) {
+#ifdef Q_OS_UNIX
+        return EfiUtil::runEfiUtilityHelper();
+#else
         return notPorted(sub);
 #endif
     }

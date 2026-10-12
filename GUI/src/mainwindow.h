@@ -5,6 +5,8 @@
 
 #include <QComboBox>
 #include <QLineEdit>
+
+class QCheckBox;
 #include <QList>
 #include <QMainWindow>
 #include <QString>
@@ -47,6 +49,7 @@ private slots:
     void on_Rand_Theme_On_pushButton_clicked();
     void on_Rand_Theme_Off_pushButton_clicked();
     void on_Install_Themes_pushButton_clicked();
+    void on_Efi_Utilities_pushButton_clicked();
     void on_Open_Folder_pushButton_clicked();
     void on_Preview_pushButton_clicked();
     void on_Language_comboBox_currentIndexChanged(int index);
@@ -93,6 +96,10 @@ private:
     QStringList showtoolsTokens() const;
     QStringList invalidShowtoolsTokens() const;
     void updateShowtoolsValidity();
+    void setupShowtoolsChecks();
+    void syncShowtoolsChecks();
+    QString showtoolLabel(const QString &token) const;
+    QString showtoolTip(const QString &token) const;
     void onUpdateReply(bool ok, const QString &remoteRaw, const QString &errorString);
     void startDetection(bool resetToDefaults);
     void detectionFinished(const QList<BootEntry> &result, bool resetToDefaults);
@@ -114,6 +121,8 @@ private:
     QList<BootEntry> detected;
     QSize panelPrefill; // quirk/EDID resolution, computed off-thread by startDetection
     bool populating = false;
+    bool syncingShowtools = false;
+    QList<QCheckBox *> showtoolChecks;
     bool settingsLoaded = false; // readSettings() ran; gates the exit write
     QThread *scanThread = nullptr;          // active background detection, if any
     QNetworkAccessManager *network = nullptr; // lazy, for the update check

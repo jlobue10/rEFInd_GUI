@@ -5,6 +5,7 @@
 #include "espops/themesinstall.h"
 #include "espops/userio.h"
 #include "espops/wintasks.h"
+#include "efiutil/helpercmd.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -234,6 +235,18 @@ bool installThemesScriptTrusted(QString *detail)
     return true;
 }
 
+int runEfiUtility(QString *output)
+{
+    return EfiUtil::runEfiUtilityInProcess(dataDir(), output);
+}
+
+bool efiUtilityReady(QString *detail)
+{
+    if (detail)
+        detail->clear();
+    return true;
+}
+
 int runEspDeepScan()
 {
     return -1; // the elevated Windows build scans ESPs directly
@@ -377,6 +390,16 @@ bool installConfigScriptTrusted(QString *detail)
 }
 
 bool installThemesScriptTrusted(QString *detail)
+{
+    return helperVersionMatches(detail);
+}
+
+int runEfiUtility(QString *output)
+{
+    return runRootHelperCaptured(QStringLiteral("efi-utility"), output);
+}
+
+bool efiUtilityReady(QString *detail)
 {
     return helperVersionMatches(detail);
 }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>613</width>
-    <height>558</height>
+    <height>760</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -936,40 +936,49 @@
       </layout>
      </item>
      <item row="13" column="0" colspan="7">
-      <layout class="QHBoxLayout" name="showtoolsRowLayout">
+      <layout class="QVBoxLayout" name="showtoolsRowLayout">
        <item>
-        <widget class="QLabel" name="Showtools_label">
-         <property name="text">
-          <string>Showtools</string>
-         </property>
-         <property name="toolTip">
-          <string>Tools offered on the second row of the rEFInd boot menu (the showtools setting)</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="showtoolsEditLayout">
+         <item>
+          <widget class="QLabel" name="Showtools_label">
+           <property name="text">
+            <string>Showtools</string>
+           </property>
+           <property name="toolTip">
+            <string>Tools offered on the second row of the rEFInd boot menu (the showtools setting). Check a tool to add it, or edit the list to set the order.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="Showtools_lineEdit">
+           <property name="minimumSize">
+            <size>
+             <width>170</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Order of tools on rEFInd's second row. Checking a tool adds it at the end; unchecking removes it. Leave blank to show no tools. Valid entries: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</string>
+           </property>
+           <property name="placeholderText">
+            <string notr="true">shutdown,firmware,hidden_tags</string>
+           </property>
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
-        <widget class="QLineEdit" name="Showtools_lineEdit">
-         <property name="minimumSize">
-          <size>
-           <width>170</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>32</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Comma-separated list of tools to offer on the second row of the rEFInd boot menu. Leave blank to show no tools. Valid entries: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</string>
-         </property>
-         <property name="placeholderText">
-          <string notr="true">shutdown,firmware,hidden_tags</string>
-         </property>
-         <property name="clearButtonEnabled">
-          <bool>true</bool>
-         </property>
+        <widget class="QWidget" name="Showtools_checksHost">
+         <layout class="QGridLayout" name="showtoolsChecksLayout"/>
         </widget>
        </item>
       </layout>
@@ -1041,6 +1050,45 @@
          </property>
          <property name="text">
           <string>Preview</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="16" column="0" colspan="7">
+      <layout class="QHBoxLayout" name="efiUtilitiesRowLayout">
+       <item>
+        <spacer name="efiUtilitiesSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Efi_Utilities_pushButton">
+         <property name="minimumSize">
+          <size>
+           <width>140</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>32</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Download, install, update, or remove netboot.xyz as rEFInd's Netboot tool</string>
+         </property>
+         <property name="text">
+          <string>EFI Utilities</string>
          </property>
         </widget>
        </item>

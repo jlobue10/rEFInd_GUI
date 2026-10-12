@@ -15,6 +15,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QList>
 
 namespace EspOps {
 
@@ -45,6 +46,13 @@ public:
     // esp_make_writable).
     void makeWritable(const QString &path);
 
+    // Mounts the ESP with this partition GUID (an already-mounted filesystem,
+    // or a private probe mount owned by this resolver). Fails when the GUID
+    // is not an EFI System Partition. Does not change resolve().
+    // rEFInd_GUI only: re-apply on the next SteamDeck_rEFInd parity sync.
+    bool mountByPartUuid(const QString &partUuid, QString *root, QString *how,
+                         QString *error);
+
 private:
     QString ensureMounted(const QString &devicePath);
     QStringList probeMounts_;
@@ -55,6 +63,18 @@ private:
 // first, then the rest; a \EFI\refind\refind*.efi loader path wins over the
 // exact "rEFInd" label tier. Reads /sys/firmware/efi/efivars directly.
 QString refindEspGuidFromNvram();
+
+struct EspPartition
+{
+    QString partUuid;   // lowercase
+    QString label;
+    QString device;
+    QString mountPoint; // empty when not currently mounted
+};
+
+// ESP-typed partitions visible without mounting anything new. Empty when
+// enumeration fails. Does not require the chosen ESP to be mounted.
+QList<EspPartition> listEspPartitions();
 
 } // namespace EspOps
 

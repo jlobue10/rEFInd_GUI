@@ -42,8 +42,10 @@ set(TS_FILES
 # espops: the shared privileged-operation library (NATIVE_HELPER_DESIGN.md).
 # Linked into both the GUI and the helper binary. QtCore only — the helper
 # runs as root on Linux, so Widgets/Network must never leak into it.
-# espops/*.cpp/.h and helper/main.cpp are parity-locked byte-identical with
-# the sibling SteamDeck_rEFInd repo; espconstants.h is the per-repo file.
+# espops is parity-locked with SteamDeck_rEFInd except the additive
+# EspResolver::mountByPartUuid / listEspPartitions APIs (resolve() is
+# unchanged). helper/main.cpp has a marked efi-utility dispatch that the
+# sibling repo does not ship. espconstants.h stays the per-repo file.
 add_library(espops STATIC
     espops/configinstall.cpp
     espops/configinstall.h
@@ -79,6 +81,8 @@ set(PROJECT_SOURCES
         platform.h
         previewdialog.cpp
         previewdialog.h
+        efiutilitiesdialog.cpp
+        efiutilitiesdialog.h
         uitranslation.cpp
         uitranslation.h
         resources.qrc
@@ -151,6 +155,25 @@ else()
 endif()
 
 target_link_libraries(espops PUBLIC Qt${QT_VERSION_MAJOR}::Core)
+
+# EFI utility manager (netboot.xyz). QtCore only, same as espops, so the
+# helper can link it. Not parity-locked: this repo owns the whole library.
+add_library(efiutil STATIC
+    efiutil/netbootxyz.cpp
+    efiutil/netbootxyz.h
+    efiutil/install.cpp
+    efiutil/install.h
+    efiutil/showtools.cpp
+    efiutil/showtools.h
+    efiutil/secureboot.cpp
+    efiutil/secureboot.h
+    efiutil/request.cpp
+    efiutil/request.h
+    efiutil/helpercmd.cpp
+    efiutil/helpercmd.h
+)
+target_link_libraries(efiutil PUBLIC Qt${QT_VERSION_MAJOR}::Core espops)
+target_include_directories(efiutil PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 if(WIN32)
     # advapi32: OpenProcessToken/AdjustTokenPrivileges for the
     # SeSystemEnvironmentPrivilege enable in espresolve_win.cpp.
@@ -159,7 +182,7 @@ if(WIN32)
     # are NOT in libuuid); uuid still supplies the generic COM IIDs.
     target_link_libraries(espops PUBLIC advapi32 ole32 oleaut32 taskschd uuid)
 endif()
-target_link_libraries(rEFInd_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network espops)
+target_link_libraries(rEFInd_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network espops efiutil)
 
 # The privileged helper (console app on both platforms — deliberately not
 # WIN32_EXECUTABLE and not qt_add_executable: no plugins, no deployment
@@ -167,7 +190,7 @@ target_link_libraries(rEFInd_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_V
 # install-rEFInd-GUI.sh, target of the sudoers NOPASSWD lines and the
 # systemd randomizer units. Windows: the Scheduled Tasks' action.
 add_executable(rEFInd_GUI_helper helper/main.cpp)
-target_link_libraries(rEFInd_GUI_helper PRIVATE espops)
+target_link_libraries(rEFInd_GUI_helper PRIVATE efiutil)
 
 if(WIN32)
     # shell32: SHGetKnownFolderPath; ole32: CoTaskMemFree; uuid: the
@@ -223,6 +246,31 @@ if(BUILD_GUI_TESTS)
     add_executable(tst_themeconf tests/tst_themeconf.cpp)
     target_link_libraries(tst_themeconf PRIVATE espops Qt${QT_VERSION_MAJOR}::Test)
     add_test(NAME themeconf COMMAND tst_themeconf)
+
+    if(NOT WIN32)
+        add_executable(tst_showtools_ui
+            tests/tst_showtools_ui.cpp
+            mainwindow.cpp
+            previewdialog.cpp
+            efiutilitiesdialog.cpp
+            uitranslation.cpp
+            osdetect_common.cpp
+            osdetect_linux.cpp
+            platform.cpp
+            resources.qrc)
+        target_link_libraries(tst_showtools_ui PRIVATE
+            Qt${QT_VERSION_MAJOR}::Test
+            Qt${QT_VERSION_MAJOR}::Widgets
+            Qt${QT_VERSION_MAJOR}::Network
+            efiutil)
+        add_test(NAME showtools_ui COMMAND tst_showtools_ui)
+    endif()
+
+    add_executable(tst_efiutil tests/tst_efiutil.cpp)
+    target_link_libraries(tst_efiutil PRIVATE efiutil Qt${QT_VERSION_MAJOR}::Test)
+    target_compile_definitions(tst_efiutil PRIVATE
+        EFIUTIL_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
+    add_test(NAME efiutil COMMAND tst_efiutil)
 
     if(NOT WIN32)
         add_executable(tst_osdetect tests/tst_osdetect.cpp osdetect_common.cpp osdetect_linux.cpp platform.cpp)
