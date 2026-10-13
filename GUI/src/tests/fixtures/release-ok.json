@@ -1,0 +1,26 @@
+{
+  "tag_name": "3.0.3",
+  "prerelease": false,
+  "assets": [
+    {
+      "name": "netboot.xyz.efi",
+      "browser_download_url": "https://github.com/netbootxyz/netboot.xyz/releases/download/3.0.3/netboot.xyz.efi",
+      "size": 1048576
+    },
+    {
+      "name": "netboot.xyz-snp.efi",
+      "browser_download_url": "https://github.com/netbootxyz/netboot.xyz/releases/download/3.0.3/netboot.xyz-snp.efi",
+      "size": 1048576
+    },
+    {
+      "name": "netboot.xyz-sha256-checksums.txt",
+      "browser_download_url": "https://github.com/netbootxyz/netboot.xyz/releases/download/3.0.3/netboot.xyz-sha256-checksums.txt",
+      "size": 4096
+    },
+    {
+      "name": "netboot.xyz-sb.iso",
+      "browser_download_url": "https://github.com/netbootxyz/netboot.xyz/releases/download/3.0.3/netboot.xyz-sb.iso",
+      "size": 16777216
+    }
+  ]
+}

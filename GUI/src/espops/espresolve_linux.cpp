@@ -14,6 +14,9 @@
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QProcess>
 #include <QRegularExpression>
 
@@ -298,6 +301,112 @@ bool EspResolver::resolve(RefindTarget *out)
     }
 
     return false;
+}
+
+bool EspResolver::mountByPartUuid(const QString &partUuid, QString *root,
+                                 QString *how, QString *error)
+{
+    const auto fail = [error](const QString &message) {
+        if (error)
+            *error = message;
+        return false;
+    };
+    static const QRegularExpression guidRe(
+        QStringLiteral("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-"
+                       "[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"));
+    if (!guidRe.match(partUuid).hasMatch())
+        return fail(QStringLiteral("The partition id is not a GUID."));
+    const QString guid = partUuid.toLower();
+    const QString dev = deviceForPartUuid(guid);
+    if (dev.isEmpty())
+        return fail(QStringLiteral("No partition with that GUID was found."));
+
+    QString partType;
+    QByteArray outBytes;
+    if (runTool(systemTool("lsblk"),
+                {QStringLiteral("-rno"), QStringLiteral("PATH,PARTTYPE")},
+                &outBytes)
+        == 0) {
+        const QString canonical = QFileInfo(dev).canonicalFilePath();
+        const QStringList lines =
+            QString::fromLocal8Bit(outBytes).split(QLatin1Char('\n'));
+        for (const QString &line : lines) {
+            const QStringList cols = line.split(QLatin1Char(' '));
+            if (cols.size() < 2)
+                continue;
+            const QString path = QFileInfo(cols.at(0)).canonicalFilePath();
+            if (path == canonical || cols.at(0) == dev)
+                partType = cols.at(1).toLower();
+        }
+    }
+    if (partType != QLatin1String(kEspTypeGuid) && partType != QLatin1String("0xef"))
+        return fail(QStringLiteral("That partition is not an EFI System Partition."));
+
+    const QString mp = ensureMounted(dev);
+    if (mp.isEmpty())
+        return fail(QStringLiteral("The EFI System Partition could not be mounted."));
+    if (!QDir(mp + QLatin1String("/EFI")).exists())
+        return fail(QStringLiteral(
+            "The partition mounted, but it has no EFI directory."));
+    if (root)
+        *root = mp;
+    if (how)
+        *how = QStringLiteral("ESP %1 (%2)").arg(guid, dev);
+    return true;
+}
+
+static void collectEspPartitions(const QJsonArray &nodes, QList<EspPartition> *out)
+{
+    for (const QJsonValue &value : nodes) {
+        if (!value.isObject())
+            continue;
+        const QJsonObject obj = value.toObject();
+        const QString partType = obj.value(QStringLiteral("parttype")).toString().toLower();
+        if (obj.value(QStringLiteral("type")).toString() == QLatin1String("part")
+            && (partType == QLatin1String(kEspTypeGuid) || partType == QLatin1String("0xef"))) {
+            EspPartition part;
+            part.partUuid = obj.value(QStringLiteral("partuuid")).toString().toLower();
+            part.label = obj.value(QStringLiteral("label")).toString();
+            part.device = obj.value(QStringLiteral("path")).toString();
+            part.mountPoint = obj.value(QStringLiteral("mountpoint")).toString();
+            if (part.mountPoint.isEmpty()) {
+                const QJsonArray points = obj.value(QStringLiteral("mountpoints")).toArray();
+                if (!points.isEmpty())
+                    part.mountPoint = points.at(0).toString();
+            }
+            if (!part.partUuid.isEmpty())
+                out->append(part);
+        }
+        const QJsonValue children = obj.value(QStringLiteral("children"));
+        if (children.isArray())
+            collectEspPartitions(children.toArray(), out);
+    }
+}
+
+QList<EspPartition> listEspPartitions()
+{
+    const auto query = [](const char *columns) -> QByteArray {
+        QByteArray out;
+        if (runTool(systemTool("lsblk"),
+                    {QStringLiteral("-J"), QStringLiteral("-o"),
+                     QString::fromLatin1(columns)},
+                    &out)
+            != 0)
+            return {};
+        return out;
+    };
+    QByteArray json = query("PATH,TYPE,PARTTYPE,LABEL,PARTUUID,MOUNTPOINTS");
+    if (json.isEmpty())
+        json = query("PATH,TYPE,PARTTYPE,LABEL,PARTUUID,MOUNTPOINT");
+    QList<EspPartition> parts;
+    if (json.isEmpty())
+        return parts;
+    const QJsonDocument doc = QJsonDocument::fromJson(json);
+    if (!doc.isObject())
+        return parts;
+    collectEspPartitions(doc.object().value(QStringLiteral("blockdevices")).toArray(),
+                         &parts);
+    return parts;
 }
 
 } // namespace EspOps

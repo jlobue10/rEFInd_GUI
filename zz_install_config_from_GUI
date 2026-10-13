@@ -12,7 +12,8 @@
 # a distro plausibly ships.
 #
 # Listing an argument makes sudo match the command line EXACTLY, so only
-# these two argument vectors run without a password — no other helper
+# these argument vectors run without a password — no other helper
 # subcommand, and never with extra arguments.
 USER ALL = NOPASSWD: /etc/rEFInd/rEFInd_GUI_helper install-config
 USER ALL = NOPASSWD: /etc/rEFInd/rEFInd_GUI_helper install-themes
+USER ALL = NOPASSWD: /etc/rEFInd/rEFInd_GUI_helper efi-utility

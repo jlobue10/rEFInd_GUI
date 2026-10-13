@@ -1,0 +1,16 @@
+{
+  "tag_name": "3.0.4-rc1",
+  "prerelease": true,
+  "assets": [
+    {
+      "name": "netboot.xyz.efi",
+      "browser_download_url": "https://github.com/netbootxyz/netboot.xyz/releases/download/3.0.4-rc1/netboot.xyz.efi",
+      "size": 1048576
+    },
+    {
+      "name": "netboot.xyz-sha256-checksums.txt",
+      "browser_download_url": "https://github.com/netbootxyz/netboot.xyz/releases/download/3.0.4-rc1/netboot.xyz-sha256-checksums.txt",
+      "size": 4096
+    }
+  ]
+}

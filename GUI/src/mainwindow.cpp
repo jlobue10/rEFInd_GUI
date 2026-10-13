@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "efiutilitiesdialog.h"
 #include "osdetect.h"
 #include "platform.h"
 #include "previewdialog.h"
@@ -1107,6 +1108,22 @@ static void showCapturedOutput(QWidget *parent, QMessageBox::Icon icon,
     box.setTextFormat(Qt::PlainText);
     box.setStandardButtons(QMessageBox::Ok);
     box.exec();
+}
+
+void MainWindow::on_Efi_Utilities_pushButton_clicked()
+{
+    EfiUtilitiesDialog dialog(ui->Showtools_lineEdit->text(),
+                              guiConfigDir + QStringLiteral("/refind.conf"),
+                              settingsPath, this);
+    connect(&dialog, &EfiUtilitiesDialog::showtoolsEdited, this,
+            [this](const QString &text) {
+                ui->Showtools_lineEdit->setText(text);
+                persistSetting(QStringLiteral("ShowTools"), QStringLiteral("ShowTools"), text);
+            });
+    connect(&dialog, &EfiUtilitiesDialog::installConfigRequested, this, [this] {
+        on_Install_Config_clicked();
+    });
+    dialog.exec();
 }
 
 void MainWindow::on_Install_Config_clicked()

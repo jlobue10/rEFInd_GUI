@@ -47,6 +47,7 @@ private slots:
     void on_Rand_Theme_On_pushButton_clicked();
     void on_Rand_Theme_Off_pushButton_clicked();
     void on_Install_Themes_pushButton_clicked();
+    void on_Efi_Utilities_pushButton_clicked();
     void on_Open_Folder_pushButton_clicked();
     void on_Preview_pushButton_clicked();
     void on_Language_comboBox_currentIndexChanged(int index);
