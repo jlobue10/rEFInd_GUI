@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.4.6
+Version:        3.4.7
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -71,6 +71,17 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
+* Tue Oct 13 2026 Jon LoBue <jlobue10@gmail.com> [3.4.7-1]
+- New EFI Utilities dialog, opened from the button beside Showtools (PR #109
+  by zany130): install, update or remove netboot.xyz, the UEFI shell,
+  Memtest86+, HashTool, MokManager, KeyTool, gdisk and fwupd in EFI/tools on
+  the ESP. The helper only installs bytes that match a checksum built into
+  it, a root-owned distro file, or a publisher checksum it downloads itself,
+  and only removes files this app installed.
+- The sudoers rule gains one exact command, rEFInd_GUI_helper efi-utility.
+  Re-run the installer script to add it; the package alone does not update
+  the sudoers rule.
+
 * Wed Oct 07 2026 Jon LoBue <jlobue10@gmail.com> [3.4.6-1]
 - The package ships the menu entry and icon (/usr/share/applications/
   rEFInd_GUI.desktop, /usr/share/pixmaps/rEFInd_GUI.png), so a bare rpm
