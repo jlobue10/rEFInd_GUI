@@ -834,35 +834,35 @@ Replace it?</source>
         <translation>کنفیگ انسٹال کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="943"/>
+        <location filename="mainwindow.ui" line="955"/>
+        <source>Install, update, or remove a managed EFI tool such as netboot.xyz, the UEFI shell, or Memtest86+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="958"/>
+        <source>EFI Utilities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="965"/>
         <location filename="mainwindow.cpp" line="942"/>
         <source>Showtools</source>
         <translation>Showtools</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="946"/>
+        <location filename="mainwindow.ui" line="968"/>
         <source>Tools offered on the second row of the rEFInd boot menu (the showtools setting)</source>
         <translation>rEFInd بوٹ مینیو کی دوسری قطار میں پیش کیے جانے والے اوزار (showtools سیٹنگ)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="965"/>
+        <location filename="mainwindow.ui" line="987"/>
         <source>Comma-separated list of tools to offer on the second row of the rEFInd boot menu. Leave blank to show no tools. Valid entries: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</source>
         <translation>rEFInd بوٹ مینیو کی دوسری قطار میں دکھانے کے لیے اوزاروں کی کوما سے جدا فہرست۔ کوئی اوزار نہ دکھانے کے لیے خالی چھوڑیں۔ درست اندراجات: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1005"/>
+        <location filename="mainwindow.ui" line="1027"/>
         <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots. Only relevant when more than four OSes are detected.</source>
         <translation>اُن شناخت شدہ بوٹ لوڈرز کے لیے بھی بوٹ اندراجات لکھتا ہے جو چاروں خانوں میں سے کسی میں نہیں ہیں۔ صرف اُس وقت متعلقہ ہے جب چار سے زیادہ آپریٹنگ سسٹم دریافت ہوں۔</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="1253"/>
-        <source>Install, update, or remove a managed EFI tool such as netboot.xyz, the UEFI shell, or Memtest86+</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="1256"/>
-        <source>EFI Utilities</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="907"/>
@@ -889,12 +889,12 @@ Replace it?</source>
         <translation>rEFInd انسٹال کرنے کا طریقہ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="982"/>
+        <location filename="mainwindow.ui" line="1004"/>
         <source>Language</source>
         <translation>زبان</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="998"/>
+        <location filename="mainwindow.ui" line="1020"/>
         <source>User interface language</source>
         <translation>انٹرفیس کی زبان</translation>
     </message>
@@ -903,57 +903,57 @@ Replace it?</source>
         <translation type="vanished">اُن شناخت شدہ بوٹ لوڈرز کے لیے بھی بوٹ اندراجات لکھتا ہے جو چاروں خانوں میں سے کسی میں نہیں ہیں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1008"/>
+        <location filename="mainwindow.ui" line="1030"/>
         <source>Include all OSes</source>
         <translation>تمام OS شامل کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1040"/>
+        <location filename="mainwindow.ui" line="1062"/>
         <source>Preview the rEFInd boot screen and the generated refind.conf</source>
         <translation>rEFInd بوٹ اسکرین اور تیار شدہ refind.conf کا پیش منظر</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1043"/>
+        <location filename="mainwindow.ui" line="1065"/>
         <source>Preview</source>
         <translation>پیش منظر</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1054"/>
+        <location filename="mainwindow.ui" line="1076"/>
         <source>Theme</source>
         <translation>تھیم</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1070"/>
+        <location filename="mainwindow.ui" line="1092"/>
         <source>rEFInd theme applied by Create Config: None keeps the plain generated config, Random picks one of the installed themes each time the config is created</source>
         <translation>کنفیگ بنائیں کے ذریعے لاگو ہونے والی rEFInd تھیم: کوئی نہیں سادہ بنائی گئی کنفیگ برقرار رکھتا ہے، بے ترتیب ہر بار کنفیگ بنتے وقت انسٹال شدہ تھیمز میں سے ایک چنتا ہے</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1102"/>
+        <location filename="mainwindow.ui" line="1124"/>
         <source>Turn on the per-boot theme randomizer (only visible while the installed config was created with a theme selected)</source>
         <translation>ہر بوٹ پر بے ترتیب تھیم آن کریں (صرف اُس وقت نظر آتا ہے جب انسٹال شدہ کنفیگ کسی منتخب تھیم کے ساتھ بنائی گئی ہو)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1105"/>
+        <location filename="mainwindow.ui" line="1127"/>
         <source>Rand Theme On</source>
         <translation>بے ترتیب تھیم آن</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1124"/>
+        <location filename="mainwindow.ui" line="1146"/>
         <source>Turn off the per-boot theme randomizer</source>
         <translation>ہر بوٹ پر بے ترتیب تھیم آف کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1127"/>
+        <location filename="mainwindow.ui" line="1149"/>
         <source>Rand Theme Off</source>
         <translation>بے ترتیب تھیم آف</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1146"/>
+        <location filename="mainwindow.ui" line="1168"/>
         <source>Copy the theme files to EFI/refind/themes on the EFI System Partition</source>
         <translation>تھیم فائلیں EFI سسٹم پارٹیشن پر EFI/refind/themes میں کاپی کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1149"/>
+        <location filename="mainwindow.ui" line="1171"/>
         <location filename="mainwindow.cpp" line="1672"/>
         <location filename="mainwindow.cpp" line="1685"/>
         <location filename="mainwindow.cpp" line="1690"/>
@@ -961,7 +961,7 @@ Replace it?</source>
         <translation>تھیمز انسٹال کریں</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1190"/>
+        <location filename="mainwindow.ui" line="1212"/>
         <source>rEFInd Background selection</source>
         <translation>rEFInd پس منظر کا انتخاب</translation>
     </message>

@@ -834,35 +834,35 @@ Replace it?</source>
         <translation>Konfig installieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="943"/>
+        <location filename="mainwindow.ui" line="955"/>
+        <source>Install, update, or remove a managed EFI tool such as netboot.xyz, the UEFI shell, or Memtest86+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="958"/>
+        <source>EFI Utilities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="965"/>
         <location filename="mainwindow.cpp" line="942"/>
         <source>Showtools</source>
         <translation>Showtools</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="946"/>
+        <location filename="mainwindow.ui" line="968"/>
         <source>Tools offered on the second row of the rEFInd boot menu (the showtools setting)</source>
         <translation>Werkzeuge, die in der zweiten Zeile des rEFInd-Bootmenüs angeboten werden (die Einstellung showtools)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="965"/>
+        <location filename="mainwindow.ui" line="987"/>
         <source>Comma-separated list of tools to offer on the second row of the rEFInd boot menu. Leave blank to show no tools. Valid entries: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</source>
         <translation>Kommagetrennte Liste der Werkzeuge für die zweite Zeile des rEFInd-Bootmenüs. Leer lassen, um keine Werkzeuge anzuzeigen. Gültige Einträge: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1005"/>
+        <location filename="mainwindow.ui" line="1027"/>
         <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots. Only relevant when more than four OSes are detected.</source>
         <translation>Schreibt zusätzlich Boot-Stanzas für erkannte Bootloader, die keinem der vier Slots zugewiesen sind. Nur relevant, wenn mehr als vier Betriebssysteme erkannt wurden.</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="1253"/>
-        <source>Install, update, or remove a managed EFI tool such as netboot.xyz, the UEFI shell, or Memtest86+</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="1256"/>
-        <source>EFI Utilities</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="907"/>
@@ -889,12 +889,12 @@ Replace it?</source>
         <translation>rEFInd-Installationsmethode</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="982"/>
+        <location filename="mainwindow.ui" line="1004"/>
         <source>Language</source>
         <translation>Sprache</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="998"/>
+        <location filename="mainwindow.ui" line="1020"/>
         <source>User interface language</source>
         <translation>Sprache der Benutzeroberfläche</translation>
     </message>
@@ -903,57 +903,57 @@ Replace it?</source>
         <translation type="vanished">Schreibt zusätzlich Boot-Stanzas für erkannte Bootloader, die keinem der vier Slots zugewiesen sind</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1008"/>
+        <location filename="mainwindow.ui" line="1030"/>
         <source>Include all OSes</source>
         <translation>Alle Systeme aufnehmen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1040"/>
+        <location filename="mainwindow.ui" line="1062"/>
         <source>Preview the rEFInd boot screen and the generated refind.conf</source>
         <translation>Vorschau des rEFInd-Bootbildschirms und der erzeugten refind.conf</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1043"/>
+        <location filename="mainwindow.ui" line="1065"/>
         <source>Preview</source>
         <translation>Vorschau</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1054"/>
+        <location filename="mainwindow.ui" line="1076"/>
         <source>Theme</source>
         <translation>Thema</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1070"/>
+        <location filename="mainwindow.ui" line="1092"/>
         <source>rEFInd theme applied by Create Config: None keeps the plain generated config, Random picks one of the installed themes each time the config is created</source>
         <translation>rEFInd-Thema, das von „Konfig erstellen“ angewendet wird: „Keine“ behält die schlicht erzeugte Konfiguration, „Zufällig“ wählt bei jedem Erstellen der Konfiguration eines der installierten Themen aus</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1102"/>
+        <location filename="mainwindow.ui" line="1124"/>
         <source>Turn on the per-boot theme randomizer (only visible while the installed config was created with a theme selected)</source>
         <translation>Themen-Zufallswechsel pro Systemstart aktivieren (nur sichtbar, solange die installierte Konfiguration mit einem ausgewählten Thema erstellt wurde)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1105"/>
+        <location filename="mainwindow.ui" line="1127"/>
         <source>Rand Theme On</source>
         <translation>Zufalls-Thema an</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1124"/>
+        <location filename="mainwindow.ui" line="1146"/>
         <source>Turn off the per-boot theme randomizer</source>
         <translation>Themen-Zufallswechsel pro Systemstart deaktivieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1127"/>
+        <location filename="mainwindow.ui" line="1149"/>
         <source>Rand Theme Off</source>
         <translation>Zufalls-Thema aus</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1146"/>
+        <location filename="mainwindow.ui" line="1168"/>
         <source>Copy the theme files to EFI/refind/themes on the EFI System Partition</source>
         <translation>Kopiert die Themendateien nach EFI/refind/themes auf der EFI-Systempartition</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1149"/>
+        <location filename="mainwindow.ui" line="1171"/>
         <location filename="mainwindow.cpp" line="1672"/>
         <location filename="mainwindow.cpp" line="1685"/>
         <location filename="mainwindow.cpp" line="1690"/>
@@ -961,7 +961,7 @@ Replace it?</source>
         <translation>Themen installieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1190"/>
+        <location filename="mainwindow.ui" line="1212"/>
         <source>rEFInd Background selection</source>
         <translation>rEFInd-Hintergrundauswahl</translation>
     </message>

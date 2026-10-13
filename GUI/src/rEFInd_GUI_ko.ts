@@ -834,35 +834,35 @@ Replace it?</source>
         <translation>구성 설치</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="943"/>
+        <location filename="mainwindow.ui" line="955"/>
+        <source>Install, update, or remove a managed EFI tool such as netboot.xyz, the UEFI shell, or Memtest86+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="958"/>
+        <source>EFI Utilities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="965"/>
         <location filename="mainwindow.cpp" line="942"/>
         <source>Showtools</source>
         <translation>Showtools</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="946"/>
+        <location filename="mainwindow.ui" line="968"/>
         <source>Tools offered on the second row of the rEFInd boot menu (the showtools setting)</source>
         <translation>rEFInd 부팅 메뉴 두 번째 줄에 제공되는 도구 (showtools 설정)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="965"/>
+        <location filename="mainwindow.ui" line="987"/>
         <source>Comma-separated list of tools to offer on the second row of the rEFInd boot menu. Leave blank to show no tools. Valid entries: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</source>
         <translation>rEFInd 부팅 메뉴 두 번째 줄에 제공할 도구의 쉼표로 구분된 목록입니다. 비워 두면 도구가 표시되지 않습니다. 유효한 항목: shell, memtest, gdisk, gptsync, install, bootorder, apple_recovery, csr_rotate, mok_tool, fwupdate, netboot, about, hidden_tags, exit, shutdown, reboot, firmware</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1005"/>
+        <location filename="mainwindow.ui" line="1027"/>
         <source>Also write boot stanzas for detected bootloaders that are not in one of the four slots. Only relevant when more than four OSes are detected.</source>
         <translation>네 개의 슬롯에 없는 감지된 부트로더의 부팅 항목도 기록합니다. 감지된 OS가 4개를 초과할 때만 해당됩니다.</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="1253"/>
-        <source>Install, update, or remove a managed EFI tool such as netboot.xyz, the UEFI shell, or Memtest86+</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="1256"/>
-        <source>EFI Utilities</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="907"/>
@@ -889,12 +889,12 @@ Replace it?</source>
         <translation>rEFInd 설치 방법</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="982"/>
+        <location filename="mainwindow.ui" line="1004"/>
         <source>Language</source>
         <translation>언어</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="998"/>
+        <location filename="mainwindow.ui" line="1020"/>
         <source>User interface language</source>
         <translation>인터페이스 언어</translation>
     </message>
@@ -903,57 +903,57 @@ Replace it?</source>
         <translation type="vanished">네 개의 슬롯에 없는 감지된 부트로더의 부팅 항목도 기록합니다</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1008"/>
+        <location filename="mainwindow.ui" line="1030"/>
         <source>Include all OSes</source>
         <translation>모든 OS 포함</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1040"/>
+        <location filename="mainwindow.ui" line="1062"/>
         <source>Preview the rEFInd boot screen and the generated refind.conf</source>
         <translation>rEFInd 부팅 화면과 생성된 refind.conf 미리보기</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1043"/>
+        <location filename="mainwindow.ui" line="1065"/>
         <source>Preview</source>
         <translation>미리보기</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1054"/>
+        <location filename="mainwindow.ui" line="1076"/>
         <source>Theme</source>
         <translation>테마</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1070"/>
+        <location filename="mainwindow.ui" line="1092"/>
         <source>rEFInd theme applied by Create Config: None keeps the plain generated config, Random picks one of the installed themes each time the config is created</source>
         <translation>구성 생성이 적용하는 rEFInd 테마: 없음은 생성된 구성을 그대로 유지하고, 무작위는 구성을 만들 때마다 설치된 테마 중 하나를 선택합니다</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1102"/>
+        <location filename="mainwindow.ui" line="1124"/>
         <source>Turn on the per-boot theme randomizer (only visible while the installed config was created with a theme selected)</source>
         <translation>부팅마다 테마 무작위 변경 켜기(설치된 구성이 테마를 선택해 만들어진 동안에만 표시됨)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1105"/>
+        <location filename="mainwindow.ui" line="1127"/>
         <source>Rand Theme On</source>
         <translation>무작위 테마 켬</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1124"/>
+        <location filename="mainwindow.ui" line="1146"/>
         <source>Turn off the per-boot theme randomizer</source>
         <translation>부팅마다 테마 무작위 변경 끄기</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1127"/>
+        <location filename="mainwindow.ui" line="1149"/>
         <source>Rand Theme Off</source>
         <translation>무작위 테마 끔</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1146"/>
+        <location filename="mainwindow.ui" line="1168"/>
         <source>Copy the theme files to EFI/refind/themes on the EFI System Partition</source>
         <translation>테마 파일을 EFI 시스템 파티션의 EFI/refind/themes로 복사</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1149"/>
+        <location filename="mainwindow.ui" line="1171"/>
         <location filename="mainwindow.cpp" line="1672"/>
         <location filename="mainwindow.cpp" line="1685"/>
         <location filename="mainwindow.cpp" line="1690"/>
@@ -961,7 +961,7 @@ Replace it?</source>
         <translation>테마 설치</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1190"/>
+        <location filename="mainwindow.ui" line="1212"/>
         <source>rEFInd Background selection</source>
         <translation>rEFInd 배경 선택</translation>
     </message>
