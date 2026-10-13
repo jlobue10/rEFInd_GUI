@@ -13,7 +13,7 @@ URL:            https://github.com/jlobue10/rEFInd_GUI
 Source0:        rEFInd_bg_randomizer.service
 Source1:        rEFInd_theme_randomizer.service
 
-BuildRequires:  cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel
+BuildRequires:  cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel zlib-devel
 Requires:       mokutil sbsigntools xterm zenity
 Provides:       rEFInd_GUI
 Conflicts:      rEFInd_GUI
