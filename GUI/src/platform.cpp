@@ -1,4 +1,6 @@
 #include "platform.h"
+#include "efiutil/helpercmd.h"
+#include "efiutil/trust.h"
 #include "espops/configinstall.h"
 #include "espops/espconstants.h"
 #include "espops/espresolve.h"
@@ -234,6 +236,19 @@ bool installThemesScriptTrusted(QString *detail)
     return true;
 }
 
+int runEfiUtility(QString *output)
+{
+    return EfiUtil::runEfiUtilityInProcess(dataDir(), output);
+}
+
+bool efiUtilityReady(QString *detail)
+{
+    // The Windows GUI is already the elevated process.
+    if (detail)
+        detail->clear();
+    return true;
+}
+
 int runEspDeepScan()
 {
     return -1; // the elevated Windows build scans ESPs directly
@@ -379,6 +394,41 @@ bool installConfigScriptTrusted(QString *detail)
 bool installThemesScriptTrusted(QString *detail)
 {
     return helperVersionMatches(detail);
+}
+
+static bool helperListsEfiUtility(QString *detail)
+{
+    const QString helper = QLatin1String(EspOps::kHelperEtcPath);
+    QProcess proc;
+    proc.setProcessChannelMode(QProcess::SeparateChannels);
+    proc.start(helper, {});
+    QString text;
+    if (proc.waitForStarted() && proc.waitForFinished(10000)) {
+        text = QString::fromLocal8Bit(proc.readAllStandardOutput());
+        text += QString::fromLocal8Bit(proc.readAllStandardError());
+    }
+    if (EfiUtil::usageListsSubcommand(text, QStringLiteral("efi-utility")))
+        return true;
+    if (detail) {
+        *detail = QCoreApplication::translate(
+            "Platform",
+            "%1 does not provide the efi-utility operation (expected version %2). "
+            "Reinstall rEFInd_GUI to repair.")
+                      .arg(helper, QLatin1String(ESPOPS_APP_VERSION));
+    }
+    return false;
+}
+
+int runEfiUtility(QString *output)
+{
+    return runRootHelperCaptured(QStringLiteral("efi-utility"), output);
+}
+
+bool efiUtilityReady(QString *detail)
+{
+    if (!helperVersionMatches(detail))
+        return false;
+    return helperListsEfiUtility(detail);
 }
 
 int runEspDeepScan()

@@ -1,0 +1,11 @@
+{
+  "tag_name": "3.0.3",
+  "prerelease": false,
+  "assets": [
+    {
+      "name": "netboot.xyz.efi",
+      "browser_download_url": "https://github.com/netbootxyz/netboot.xyz/releases/download/3.0.3/netboot.xyz.efi",
+      "size": 1048576
+    }
+  ]
+}
