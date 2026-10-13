@@ -12,6 +12,7 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
+class QCheckBox;
 class QNetworkAccessManager;
 class QThread;
 QT_END_NAMESPACE
@@ -93,6 +94,10 @@ private:
     QStringList showtoolsTokens() const;
     QStringList invalidShowtoolsTokens() const;
     void updateShowtoolsValidity();
+    void setupShowtoolsChecks();
+    void syncShowtoolsChecks();
+    QString showtoolLabel(const QString &token) const;
+    QString showtoolTip(const QString &token) const;
     void onUpdateReply(bool ok, const QString &remoteRaw, const QString &errorString);
     void startDetection(bool resetToDefaults);
     void detectionFinished(const QList<BootEntry> &result, bool resetToDefaults);
@@ -114,6 +119,8 @@ private:
     QList<BootEntry> detected;
     QSize panelPrefill; // quirk/EDID resolution, computed off-thread by startDetection
     bool populating = false;
+    bool syncingShowtools = false;
+    QList<QCheckBox *> showtoolChecks;
     bool settingsLoaded = false; // readSettings() ran; gates the exit write
     QThread *scanThread = nullptr;          // active background detection, if any
     QNetworkAccessManager *network = nullptr; // lazy, for the update check

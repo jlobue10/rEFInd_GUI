@@ -1,11 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "efiutil/showtools.h"
 #include "osdetect.h"
 #include "platform.h"
 #include "previewdialog.h"
 #include "uitranslation.h"
 #include "espops/themeconf.h"
 
+#include <QCheckBox>
 #include <QDateTime>
 #include <QDesktopServices>
 #include <QDir>
@@ -67,8 +69,11 @@ MainWindow::MainWindow(QWidget *parent)
             ui->Res_Width_lineEdit, &QWidget::setEnabled);
     connect(ui->Res_Override_checkBox, &QCheckBox::toggled,
             ui->Res_Height_lineEdit, &QWidget::setEnabled);
-    connect(ui->Showtools_lineEdit, &QLineEdit::textChanged,
-            this, [this] { updateShowtoolsValidity(); });
+    connect(ui->Showtools_lineEdit, &QLineEdit::textChanged, this, [this] {
+        updateShowtoolsValidity();
+        syncShowtoolsChecks();
+    });
+    setupShowtoolsChecks();
 
     // OS icon size on the boot screen (rEFInd's big_icon_size). 128 is both
     // rEFInd's default and the shipped PNGs' native size, so it emits no
@@ -140,6 +145,11 @@ void MainWindow::applyDynamicTexts()
     ui->Icon_Size_comboBox->setItemText(ui->Icon_Size_comboBox->findData(192), tr("Large (192)"));
     ui->Icon_Size_comboBox->setItemText(ui->Icon_Size_comboBox->findData(256), tr("Extra Large (256)"));
     ui->Icon_Size_comboBox->setItemText(ui->Icon_Size_comboBox->findData(512), tr("XXL (512)"));
+    for (QCheckBox *box : showtoolChecks) {
+        const QString token = box->property("token").toString();
+        box->setText(showtoolLabel(token));
+        box->setToolTip(showtoolTip(token));
+    }
     if (!Platform::firmwareBootnumSupported())
         ui->Firmware_bootnum_CheckBox->setToolTip(tr("Requires efibootmgr (Linux only)"));
     if (!Platform::espDeepScanUseful()) {
@@ -741,6 +751,129 @@ QSize MainWindow::resolutionOverride() const
     if (w < 640 || h < 480 || w > 16384 || h > 16384)
         return QSize();
     return QSize(w, h);
+}
+
+static const QStringList &validShowtoolsTokens();
+
+void MainWindow::setupShowtoolsChecks()
+{
+    ui->showtoolsChecksLayout->setContentsMargins(0, 0, 0, 0);
+    ui->showtoolsChecksLayout->setHorizontalSpacing(12);
+    ui->showtoolsChecksLayout->setVerticalSpacing(2);
+    const QStringList tokens = validShowtoolsTokens();
+    const int columns = 4;
+    for (int i = 0; i < tokens.size(); ++i) {
+        const QString token = tokens.at(i);
+        auto *box = new QCheckBox(ui->Showtools_checksHost);
+        box->setObjectName(QStringLiteral("Showtool_%1_checkBox").arg(token));
+        box->setProperty("token", token);
+        ui->showtoolsChecksLayout->addWidget(box, i / columns, i % columns);
+        connect(box, &QCheckBox::toggled, this, [this, box](bool on) {
+            if (syncingShowtools)
+                return;
+            const QString name = box->property("token").toString();
+            bool changed = false;
+            const QString next = on
+                ? EfiUtil::appendShowtoolToken(ui->Showtools_lineEdit->text(), name, &changed)
+                : EfiUtil::removeShowtoolToken(ui->Showtools_lineEdit->text(), name, &changed);
+            if (!changed)
+                return;
+            ui->Showtools_lineEdit->setText(next);
+            // textEdited does not fire for setText(), and that is the signal
+            // initSettingsPersistence() listens on. A checkbox change still
+            // has to land in the INI, because force-quit skips the destructor.
+            persistSetting(QStringLiteral("ShowTools"), QStringLiteral("ShowTools"), next);
+        });
+        showtoolChecks << box;
+    }
+}
+
+void MainWindow::syncShowtoolsChecks()
+{
+    const QStringList tokens = showtoolsTokens();
+    const bool was = syncingShowtools;
+    syncingShowtools = true;
+    for (QCheckBox *box : showtoolChecks)
+        box->setChecked(tokens.contains(box->property("token").toString()));
+    syncingShowtools = was;
+}
+
+QString MainWindow::showtoolLabel(const QString &token) const
+{
+    if (token == QLatin1String("shell"))
+        return tr("EFI shell");
+    if (token == QLatin1String("memtest"))
+        return tr("Memtest");
+    if (token == QLatin1String("gdisk"))
+        return tr("gdisk");
+    if (token == QLatin1String("gptsync"))
+        return tr("GPT sync");
+    if (token == QLatin1String("install"))
+        return tr("Install rEFInd");
+    if (token == QLatin1String("bootorder"))
+        return tr("Boot order");
+    if (token == QLatin1String("apple_recovery"))
+        return tr("Apple recovery");
+    if (token == QLatin1String("csr_rotate"))
+        return tr("SIP rotate");
+    if (token == QLatin1String("mok_tool"))
+        return tr("MOK tool");
+    if (token == QLatin1String("fwupdate"))
+        return tr("Firmware update");
+    if (token == QLatin1String("netboot"))
+        return tr("Netboot");
+    if (token == QLatin1String("about"))
+        return tr("About");
+    if (token == QLatin1String("hidden_tags"))
+        return tr("Hidden tags");
+    if (token == QLatin1String("exit"))
+        return tr("Exit");
+    if (token == QLatin1String("shutdown"))
+        return tr("Shutdown");
+    if (token == QLatin1String("reboot"))
+        return tr("Reboot");
+    if (token == QLatin1String("firmware"))
+        return tr("Firmware setup");
+    return token;
+}
+
+QString MainWindow::showtoolTip(const QString &token) const
+{
+    if (token == QLatin1String("shell"))
+        return tr("EFI shell (shell.efi)");
+    if (token == QLatin1String("memtest"))
+        return tr("Memory test tool");
+    if (token == QLatin1String("gdisk"))
+        return tr("Partition editor");
+    if (token == QLatin1String("gptsync"))
+        return tr("Sync GPT and MBR partition tables");
+    if (token == QLatin1String("install"))
+        return tr("Install rEFInd from the tools row");
+    if (token == QLatin1String("bootorder"))
+        return tr("Adjust the firmware boot order");
+    if (token == QLatin1String("apple_recovery"))
+        return tr("Apple Recovery");
+    if (token == QLatin1String("csr_rotate"))
+        return tr("Adjust Apple System Integrity Protection");
+    if (token == QLatin1String("mok_tool"))
+        return tr("Machine Owner Key maintenance");
+    if (token == QLatin1String("fwupdate"))
+        return tr("Firmware update utility");
+    if (token == QLatin1String("netboot"))
+        return tr("Network boot. rEFInd launches EFI/tools/ipxe.efi");
+    if (token == QLatin1String("about"))
+        return tr("About rEFInd");
+    if (token == QLatin1String("hidden_tags"))
+        return tr("Manage hidden boot tags");
+    if (token == QLatin1String("exit"))
+        return tr("Exit rEFInd");
+    if (token == QLatin1String("shutdown"))
+        return tr("Shut down the computer");
+    if (token == QLatin1String("reboot"))
+        return tr("Reboot the computer");
+    if (token == QLatin1String("firmware"))
+        return tr("Reboot into firmware setup");
+    return token;
 }
 
 // Valid arguments to rEFInd's showtools directive.

@@ -151,6 +151,16 @@ else()
 endif()
 
 target_link_libraries(espops PUBLIC Qt${QT_VERSION_MAJOR}::Core)
+
+# Showtools token list for the main window. QtCore only, and owned by this
+# repo (not parity-locked). The helper does not link it: the checkboxes edit
+# the list the GUI already writes into refind.conf, with no privileged path.
+add_library(efiutil STATIC
+    efiutil/showtools.cpp
+    efiutil/showtools.h
+)
+target_link_libraries(efiutil PUBLIC Qt${QT_VERSION_MAJOR}::Core)
+target_include_directories(efiutil PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 if(WIN32)
     # advapi32: OpenProcessToken/AdjustTokenPrivileges for the
     # SeSystemEnvironmentPrivilege enable in espresolve_win.cpp.
@@ -159,7 +169,7 @@ if(WIN32)
     # are NOT in libuuid); uuid still supplies the generic COM IIDs.
     target_link_libraries(espops PUBLIC advapi32 ole32 oleaut32 taskschd uuid)
 endif()
-target_link_libraries(rEFInd_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network espops)
+target_link_libraries(rEFInd_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network espops efiutil)
 
 # The privileged helper (console app on both platforms — deliberately not
 # WIN32_EXECUTABLE and not qt_add_executable: no plugins, no deployment
@@ -199,6 +209,7 @@ install(TARGETS rEFInd_GUI
 # cmake -DBUILD_GUI_TESTS=ON, then ctest --test-dir <builddir>. The five
 # espops suites are platform-neutral (POSIX-only cases QSKIP on Windows);
 # osdetect/espresolve compile Linux-only sources and stay Linux-gated.
+# showtools_ui builds the main window, so it is Linux-gated the same way.
 option(BUILD_GUI_TESTS "Build the developer unit tests" OFF)
 if(BUILD_GUI_TESTS)
     enable_testing()
@@ -223,6 +234,27 @@ if(BUILD_GUI_TESTS)
     add_executable(tst_themeconf tests/tst_themeconf.cpp)
     target_link_libraries(tst_themeconf PRIVATE espops Qt${QT_VERSION_MAJOR}::Test)
     add_test(NAME themeconf COMMAND tst_themeconf)
+
+    if(NOT WIN32)
+        add_executable(tst_showtools_ui
+            tests/tst_showtools_ui.cpp
+            mainwindow.cpp
+            mainwindow.ui
+            previewdialog.cpp
+            uitranslation.cpp
+            osdetect_common.cpp
+            osdetect_linux.cpp
+            platform.cpp
+            resources.qrc)
+        target_include_directories(tst_showtools_ui PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+        target_link_libraries(tst_showtools_ui PRIVATE
+            Qt${QT_VERSION_MAJOR}::Test
+            Qt${QT_VERSION_MAJOR}::Widgets
+            Qt${QT_VERSION_MAJOR}::Network
+            espops
+            efiutil)
+        add_test(NAME showtools_ui COMMAND tst_showtools_ui)
+    endif()
 
     if(NOT WIN32)
         add_executable(tst_osdetect tests/tst_osdetect.cpp osdetect_common.cpp osdetect_linux.cpp platform.cpp)
