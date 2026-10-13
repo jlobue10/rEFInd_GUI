@@ -8,7 +8,7 @@ url="https://github.com/jlobue10/rEFInd_GUI"
 license=('GPL3')
 # No debug split package; install scripts glob the built package by name
 options=('!debug')
-depends=('mokutil' 'qt6-base' 'sbsigntools' 'xterm' 'zenity')
+depends=('mokutil' 'qt6-base' 'sbsigntools' 'xterm' 'zenity' 'zlib')
 makedepends=('cmake' 'gcc' 'qt6-base' 'qt6-tools' 'git')
 source=("rEFInd_bg_randomizer.service"
         "rEFInd_theme_randomizer.service")
