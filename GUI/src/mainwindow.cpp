@@ -979,6 +979,20 @@ void MainWindow::on_Create_Config_clicked()
     // a truncated refind.conf to the ESP, and a config cut off mid-stanza is a
     // boot menu missing entries.
     const QByteArray payload = generateConfigText(currentSelections()).toUtf8();
+
+    // A config with no boot stanza boots nothing: an empty menu with
+    // nothing to select and nothing on timeout. Refuse to write it rather
+    // than silently install a dead config.
+    if (!payload.contains("menuentry")) {
+        conf.cancelWriting();
+        QMessageBox::critical(this, tr("Create Config"),
+            tr("No OS entries were detected or selected.\n\n"
+               "The generated config would contain no boot stanzas, so it "
+               "was not written. Use Deep Scan to look for more bootloaders, "
+               "or pick an OS in the Boot Option boxes, then create the "
+               "config again."));
+        return;
+    }
     const qint64 written = conf.write(payload);
     if (written != payload.size() || !conf.commit()) {
         conf.cancelWriting();
