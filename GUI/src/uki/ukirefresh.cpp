@@ -177,10 +177,10 @@ void reclaimBootPriority()
 
 } // namespace
 
-int runHelperRefresh(bool quiet)
+int runHelperRefresh(bool quiet, const QString &removingVersion)
 {
     bool hasUkiStanzas = false;
-    const int code = refreshStanzas(quiet, &hasUkiStanzas);
+    const int code = refreshStanzas(quiet, removingVersion, &hasUkiStanzas);
     // Kernel-install path only (not the quiet run after install-config):
     // a kernel update is when uki-direct takes the boot priority.
     if (!quiet && hasUkiStanzas)
@@ -188,7 +188,7 @@ int runHelperRefresh(bool quiet)
     return code;
 }
 
-int refreshStanzas(bool quiet, bool *hasUkiStanzas)
+int refreshStanzas(bool quiet, const QString &removingVersion, bool *hasUkiStanzas)
 {
     if (geteuid() != 0) {
         say(QStringLiteral("uki-refresh must run as root (it is run by kernel-install)."));
@@ -228,6 +228,42 @@ int refreshStanzas(bool quiet, bool *hasUkiStanzas)
     const QString refindEspRoot = QDir::cleanPath(target.refindDir + QLatin1String("/../.."));
     QHash<QString, QList<Family>> familiesByVolume;
     QStringList notes;
+
+    // This machine's kernels are checked against what is installed (see
+    // Uki::dropUninstalledKernels): the kernel being removed right now, and
+    // any whose /usr/lib/modules tree is gone. Other systems' families on a
+    // shared ESP are never second-guessed.
+    QString machineId, runningOsId;
+    {
+        QFile id(QStringLiteral("/etc/machine-id"));
+        if (id.open(QIODevice::ReadOnly))
+            machineId = QString::fromLatin1(id.readLine()).trimmed();
+        QFile osr(QStringLiteral("/etc/os-release"));
+        if (osr.open(QIODevice::ReadOnly)) {
+            for (const QByteArray &line : osr.readAll().split('\n')) {
+                if (line.startsWith("ID="))
+                    runningOsId = QString::fromUtf8(line.mid(3)).remove(QLatin1Char('"'))
+                                      .remove(QLatin1Char('\'')).trimmed();
+            }
+        }
+    }
+    const bool modulesUsable = modulesTreeUsable();
+    const auto installed = [&](const QString &version) {
+        if (!removingVersion.isEmpty() && version == removingVersion)
+            return false;
+        return !modulesUsable || kernelInstalled(version);
+    };
+    const auto prune = [&](QList<Family> families) {
+        for (Family &fam : families) {
+            if (!isThisMachinesFamily(fam.token, fam.osId, machineId, runningOsId))
+                continue;
+            for (const QString &gone : dropUninstalledKernels(&fam.loaders, &fam.versions, installed))
+                notes << QStringLiteral("left %1 out of the boot menu: its kernel is not installed. "
+                                        "kernel-install did not delete it; remove the file to free "
+                                        "ESP space.").arg(gone);
+        }
+        return families;
+    };
     const FamilyLookup lookup = [&](const QString &volume) {
         const QString key = volume.toLower();
         if (!familiesByVolume.contains(key)) {
@@ -243,7 +279,7 @@ int refreshStanzas(bool quiet, bool *hasUkiStanzas)
             } else {
                 notes << QStringLiteral("Volume '%1' is not a partition GUID; skipped.").arg(volume);
             }
-            familiesByVolume.insert(key, root.isEmpty() ? QList<Family>() : scanFamilies(root));
+            familiesByVolume.insert(key, root.isEmpty() ? QList<Family>() : prune(scanFamilies(root)));
         }
         return familiesByVolume.value(key);
     };

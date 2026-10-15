@@ -601,6 +601,58 @@ QString refreshConf(const QString &conf, const FamilyLookup &lookup, bool *chang
     return lines.join(QLatin1Char('\n'));
 }
 
+bool kernelInstalled(const QString &version, const QString &modulesRoot)
+{
+    if (version.isEmpty())
+        return true;
+    if (version.contains(QLatin1Char('/')) || version.startsWith(QLatin1Char('.')))
+        return true; // not a kernel version string; never prune on it
+    const QString dir = modulesRoot + QLatin1Char('/') + version;
+    return QFile::exists(dir + QLatin1String("/modules.builtin"))
+        || QFile::exists(dir + QLatin1String("/modules.order"));
+}
+
+bool modulesTreeUsable(const QString &modulesRoot)
+{
+    const QDir root(modulesRoot);
+    for (const QString &d : root.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        if (kernelInstalled(d, modulesRoot))
+            return true;
+    }
+    return false;
+}
+
+bool isThisMachinesFamily(const QString &token, const QString &osId, const QString &machineId,
+                          const QString &runningOsId)
+{
+    if (!machineId.isEmpty() && token.compare(machineId, Qt::CaseInsensitive) == 0)
+        return true;
+    return token == QLatin1String(kNoToken) && !osId.isEmpty() && osId == runningOsId;
+}
+
+QStringList dropUninstalledKernels(QStringList *loaders, QStringList *versions,
+                                   const std::function<bool(const QString &version)> &installed)
+{
+    QStringList dropped;
+    if (!loaders || !versions || !installed)
+        return dropped;
+    QStringList keptLoaders, keptVersions;
+    for (int i = 0; i < loaders->size(); ++i) {
+        const QString v = versions->value(i);
+        if (installed(v)) {
+            keptLoaders << loaders->at(i);
+            keptVersions << v;
+        } else {
+            dropped << loaders->at(i);
+        }
+    }
+    if (keptLoaders.isEmpty())
+        return {}; // never empty a family: better a stale entry than none
+    *loaders = keptLoaders;
+    *versions = keptVersions;
+    return dropped;
+}
+
 QString ukiBootedBy(const BootVar &var)
 {
     QString loader = var.loaderPath;

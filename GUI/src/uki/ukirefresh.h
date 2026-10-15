@@ -11,6 +11,8 @@
 #ifndef UKI_UKIREFRESH_H
 #define UKI_UKIREFRESH_H
 
+#include <QString>
+
 namespace Uki {
 
 // Exit codes: 0 refreshed / nothing to do / no rEFInd ESP (the kernel
@@ -21,11 +23,14 @@ namespace Uki {
 // stanzas, also hands the boot priority back to rEFInd after a distro tool
 // (Fedora uki-direct) pointed BootNext/BootOrder at the new kernel's own
 // firmware entry; see Uki::planRefindPriority().
-int runHelperRefresh(bool quiet);
+// `removingVersion` (kernel-install remove's KERNEL_VERSION) is treated as
+// uninstalled even though its modules are still on disk while the remove
+// runs.
+int runHelperRefresh(bool quiet, const QString &removingVersion = QString());
 
 // The stanza refresh alone; *hasUkiStanzas reports whether the live config
 // has any marked UKI stanza.
-int refreshStanzas(bool quiet, bool *hasUkiStanzas);
+int refreshStanzas(bool quiet, const QString &removingVersion, bool *hasUkiStanzas);
 
 } // namespace Uki
 

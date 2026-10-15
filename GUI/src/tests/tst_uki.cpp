@@ -429,6 +429,53 @@ private slots:
         QVERIFY(out.contains(QStringLiteral("-7.0.1-100.fc44.x86_64.efi\n")));
     }
 
+    void uninstalledKernelsLeaveTheMenu()
+    {
+        // Fedora's kernel package removes with --entry-type=type1, so its
+        // UKI stays on the ESP: an image whose modules tree is gone (or the
+        // kernel being removed right now) is dropped, never the last image.
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString mods = dir.filePath(QStringLiteral("modules"));
+        QVERIFY(QDir().mkpath(mods + QStringLiteral("/7.2.10-200.fc44.x86_64")));
+        QVERIFY(writeFile(mods + QStringLiteral("/7.2.10-200.fc44.x86_64/modules.builtin"), "x"));
+        // A leftover dir without the package-owned files is not installed.
+        QVERIFY(QDir().mkpath(mods + QStringLiteral("/6.19.10-300.fc44.x86_64/weak-updates")));
+        QVERIFY(Uki::modulesTreeUsable(mods));
+        QVERIFY(Uki::kernelInstalled(QStringLiteral("7.2.10-200.fc44.x86_64"), mods));
+        QVERIFY(!Uki::kernelInstalled(QStringLiteral("6.19.10-300.fc44.x86_64"), mods));
+        QVERIFY(Uki::kernelInstalled(QString(), mods));
+        QVERIFY(!Uki::modulesTreeUsable(dir.filePath(QStringLiteral("nothing"))));
+
+        QStringList loaders{QStringLiteral("/EFI/Linux/a-7.2.11.efi"), QStringLiteral("/EFI/Linux/a-7.2.10.efi"),
+                            QStringLiteral("/EFI/Linux/a-6.19.efi")};
+        QStringList versions{QStringLiteral("7.2.11"), QStringLiteral("7.2.10"), QStringLiteral("6.19")};
+        const QStringList dropped = Uki::dropUninstalledKernels(
+            &loaders, &versions,
+            [](const QString &v) { return v == QLatin1String("7.2.10"); });
+        QCOMPARE(dropped, QStringList({QStringLiteral("/EFI/Linux/a-7.2.11.efi"),
+                                       QStringLiteral("/EFI/Linux/a-6.19.efi")}));
+        QCOMPARE(loaders, QStringList{QStringLiteral("/EFI/Linux/a-7.2.10.efi")});
+        QCOMPARE(versions, QStringList{QStringLiteral("7.2.10")});
+
+        // Never empties a family.
+        QVERIFY(Uki::dropUninstalledKernels(&loaders, &versions,
+                                            [](const QString &) { return false; }).isEmpty());
+        QCOMPARE(loaders.size(), 1);
+    }
+
+    void onlyThisMachinesFamiliesArePruned()
+    {
+        QVERIFY(Uki::isThisMachinesFamily(kMid, QString(), kMid.toUpper(), QStringLiteral("fedora")));
+        QVERIFY(Uki::isThisMachinesFamily(QLatin1String(Uki::kNoToken), QStringLiteral("fedora"),
+                                          kMid, QStringLiteral("fedora")));
+        // Another install's family on a shared ESP.
+        QVERIFY(!Uki::isThisMachinesFamily(QStringLiteral("arch-linux"), QStringLiteral("arch"),
+                                           kMid, QStringLiteral("fedora")));
+        QVERIFY(!Uki::isThisMachinesFamily(QLatin1String(Uki::kNoToken), QStringLiteral("arch"),
+                                           kMid, QStringLiteral("fedora")));
+    }
+
     void ukiBootEntriesAreRecognized()
     {
         Uki::BootVar direct;

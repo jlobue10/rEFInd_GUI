@@ -36,6 +36,7 @@
 #endif
 
 #include <QCoreApplication>
+#include <QRegularExpression>
 
 #include <cstdio>
 #include <cstring>
@@ -59,7 +60,7 @@ int usage(FILE *to)
                  "  install-themes        install the staged theme trees onto the ESP\n"
                  "  efi-utility            install, update, remove, or query a managed EFI tool\n"
 #ifdef Q_OS_UNIX
-                 "  uki-refresh           re-point UKI boot stanzas at the current kernels\n"
+                 "  uki-refresh [<kver>]  re-point UKI boot stanzas at the current kernels\n"
 #endif
                  "  randomize-background  pick a random boot background (boot/logon service)\n"
                  "  randomize-theme       pick a random installed theme (boot/logon service)\n"
@@ -220,7 +221,8 @@ int main(int argc, char *argv[])
         return usage(stdout), 0;
 
     // Every subcommand takes no arguments except the logon-task toggles,
-    // which take exactly one (the managed task's helper subcommand).
+    // which take exactly one (the managed task's helper subcommand), and
+    // rEFInd_GUI's uki-refresh (an optional kernel version being removed).
     if (argc != 2 && argc != 3)
         return usage(stderr);
 
@@ -259,6 +261,24 @@ int main(int argc, char *argv[])
     }
 #endif
 
+    // rEFInd_GUI only, like efi-utility: run as root by the kernel-install
+    // plugin after every kernel add/remove (not a sudoers command). On a
+    // remove the plugin passes the kernel version being removed.
+    if (std::strcmp(sub, "uki-refresh") == 0) {
+#ifdef Q_OS_UNIX
+        QString removing;
+        if (argc == 3) {
+            removing = QString::fromLocal8Bit(argv[2]);
+            if (!QRegularExpression(QStringLiteral("^[A-Za-z0-9._+~-]{1,128}$"))
+                     .match(removing).hasMatch())
+                return usage(stderr);
+        }
+        return Uki::runHelperRefresh(false, removing);
+#else
+        return notPorted(sub);
+#endif
+    }
+
     if (argc != 2)
         return usage(stderr);
 
@@ -290,15 +310,6 @@ int main(int argc, char *argv[])
     if (std::strcmp(sub, "efi-utility") == 0) {
 #ifdef Q_OS_UNIX
         return EfiUtil::runEfiUtilityHelper();
-#else
-        return notPorted(sub);
-#endif
-    }
-    // rEFInd_GUI only, like efi-utility: run as root by the kernel-install
-    // plugin after every kernel add/remove (not a sudoers command).
-    if (std::strcmp(sub, "uki-refresh") == 0) {
-#ifdef Q_OS_UNIX
-        return Uki::runHelperRefresh(false);
 #else
         return notPorted(sub);
 #endif

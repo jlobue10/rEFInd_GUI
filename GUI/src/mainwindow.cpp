@@ -967,7 +967,7 @@ QString MainWindow::generateConfigText(const QList<Selection> &selections)
             out << createBootStanza(extra, stockIconFor(extra));
     }
     if (!ui->Theme_comboBox->currentData().toString().isEmpty()) {
-        // Stable footer, always the very last lines of the config: rEFInd
+        // Stable footer, the last lines of the config: rEFInd
         // applies the last occurrence of a setting, so the included theme
         // intentionally supersedes the directives above. The include target
         // never varies -- choosing a different theme replaces
@@ -977,6 +977,11 @@ QString MainWindow::generateConfigText(const QList<Selection> &selections)
         // before Install Themes has populated the ESP.
         out << "\n# Theme include — theme settings intentionally supersede the settings above\n";
         out << "include themes/active_theme.conf\n";
+        // ...except scanfor: the boot menu is these manual stanzas, never
+        // rEFInd's auto-scan, and a theme.conf (user-editable, randomized
+        // per boot) carrying its own scanfor line would otherwise switch
+        // auto-detection back on beside them (seen on real hardware, #115).
+        out << "scanfor manual\n";
     }
     return text;
 }

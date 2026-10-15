@@ -138,6 +138,34 @@ struct MarkedStanza
 };
 QList<MarkedStanza> markedStanzas(const QString &conf);
 
+// --- Kernels that are no longer installed --------------------------------
+//
+// kernel-install is supposed to delete a UKI when its kernel is removed, but
+// Fedora's kernel package removes with --entry-type=type1 and
+// 90-uki-copy.install then skips UKIs entirely, leaving the image (and, for
+// us, a submenu entry that boots a kernel without modules) behind. This
+// machine's own images are therefore checked against the installed kernels.
+
+// True when kernel `version` is installed under `modulesRoot`
+// (/usr/lib/modules/<version> with its package-owned modules.builtin or
+// modules.order). An empty version counts as installed (nothing to check).
+bool kernelInstalled(const QString &version,
+                     const QString &modulesRoot = QStringLiteral("/usr/lib/modules"));
+
+// True when `modulesRoot` looks like a populated kernel tree at all; when it
+// does not, nothing is pruned.
+bool modulesTreeUsable(const QString &modulesRoot = QStringLiteral("/usr/lib/modules"));
+
+// Whether a family is the running system's own kernels: its entry token is
+// this machine's machine-id, or it is tokenless with this OS's os-release ID.
+bool isThisMachinesFamily(const QString &token, const QString &osId, const QString &machineId,
+                          const QString &runningOsId);
+
+// Drops the images whose kernel `installed()` rejects, newest-first order
+// kept, but never the last one. Returns the dropped loader paths.
+QStringList dropUninstalledKernels(QStringList *loaders, QStringList *versions,
+                                   const std::function<bool(const QString &version)> &installed);
+
 // --- Boot priority after kernel updates ---------------------------------
 //
 // Fedora's uki-direct gives every newly installed UKI its own firmware boot

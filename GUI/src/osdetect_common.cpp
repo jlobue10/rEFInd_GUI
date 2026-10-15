@@ -532,6 +532,20 @@ void OSDetector::adoptRunningOsForUkis(QList<BootEntry> &entries)
         entries.removeAt(bare);
         entries = mergeUkiEntries(entries); // re-sorts the family newest first
     }
+
+    // This machine's kernels whose /usr/lib/modules tree is gone stay out of
+    // the menu, exactly as uki-refresh decides (Fedora's type1 kernel removal
+    // leaves their UKIs on the ESP).
+    if (Uki::modulesTreeUsable()) {
+        for (BootEntry &e : entries) {
+            if (e.ukiToken.isEmpty()
+                || !Uki::isThisMachinesFamily(e.ukiToken, e.ukiOsId, machineId, id))
+                continue;
+            Uki::dropUninstalledKernels(&e.ukiLoaders, &e.ukiVersions,
+                                        [](const QString &v) { return Uki::kernelInstalled(v); });
+            e.loaderPath = e.ukiLoaders.value(0, e.loaderPath);
+        }
+    }
 }
 
 bool OSDetector::espRootUnreadable(const QString &rootPath)

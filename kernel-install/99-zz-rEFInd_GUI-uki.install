@@ -38,7 +38,17 @@ esac
 HELPER=/etc/rEFInd/rEFInd_GUI_helper
 [ -x "$HELPER" ] || exit 0
 
-if ! "$HELPER" uki-refresh; then
+# On a remove, name the kernel going away: its modules are still on disk
+# while kernel-install runs, and Fedora's kernel package removes with
+# --entry-type=type1, which makes 90-uki-copy.install leave its UKI behind.
+KERNEL_VERSION="${2:-}"
+if [ "$COMMAND" = "remove" ] && [ -n "$KERNEL_VERSION" ]; then
+    set -- uki-refresh "$KERNEL_VERSION"
+else
+    set -- uki-refresh
+fi
+
+if ! "$HELPER" "$@"; then
     echo "rEFInd_GUI: could not re-point the rEFInd UKI boot entries;" \
          "use Create Config and Install Config in rEFInd_GUI." >&2
 fi
