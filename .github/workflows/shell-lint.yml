@@ -40,8 +40,8 @@ jobs:
 
       - name: kernel-install plugin must run under POSIX sh
         run: |
-          dash -n kernel-install/95-rEFInd_GUI-uki.install
-          shellcheck --shell=sh kernel-install/95-rEFInd_GUI-uki.install
+          dash -n kernel-install/99-zz-rEFInd_GUI-uki.install
+          shellcheck --shell=sh kernel-install/99-zz-rEFInd_GUI-uki.install
 
       - name: Syntax-check the bash scripts
         run: |

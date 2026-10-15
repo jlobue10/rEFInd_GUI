@@ -601,6 +601,72 @@ QString refreshConf(const QString &conf, const FamilyLookup &lookup, bool *chang
     return lines.join(QLatin1Char('\n'));
 }
 
+QString ukiBootedBy(const BootVar &var)
+{
+    QString loader = var.loaderPath;
+    loader.replace(QLatin1Char('\\'), QLatin1Char('/'));
+    Image img;
+    if (imageFromLoaderPath(loader, &img))
+        return img.loaderPath;
+    const QByteArray &raw = var.optionalData;
+    if (raw.size() < 4)
+        return {};
+    QString arg = QString::fromUtf16(reinterpret_cast<const char16_t *>(raw.constData()),
+                                     raw.size() / 2);
+    const int nul = arg.indexOf(QChar(0));
+    if (nul >= 0)
+        arg.truncate(nul);
+    arg = arg.trimmed();
+    arg.replace(QLatin1Char('\\'), QLatin1Char('/'));
+    if (imageFromLoaderPath(arg, &img))
+        return img.loaderPath;
+    return {};
+}
+
+PriorityPlan planRefindPriority(const QList<quint16> &bootOrder, int bootNext,
+                                const QList<BootVar> &vars, bool (*isRefindLoader)(const QString &))
+{
+    PriorityPlan plan;
+    const auto find = [&vars](quint16 num) -> const BootVar * {
+        for (const BootVar &v : vars) {
+            if (v.num == num)
+                return &v;
+        }
+        return nullptr;
+    };
+    // rEFInd's entry: the first active one in BootOrder.
+    int refindPos = -1;
+    for (int i = 0; i < bootOrder.size(); ++i) {
+        const BootVar *v = find(bootOrder.at(i));
+        if (v && v->active && isRefindLoader && isRefindLoader(v->loaderPath)) {
+            refindPos = i;
+            break;
+        }
+    }
+    if (refindPos < 0)
+        return plan; // no rEFInd in BootOrder: the user's choice, not ours
+    plan.haveRefind = true;
+    plan.refindNum = bootOrder.at(refindPos);
+
+    if (bootNext >= 0 && quint16(bootNext) != plan.refindNum) {
+        const BootVar *next = find(quint16(bootNext));
+        if (next && !ukiBootedBy(*next).isEmpty())
+            plan.clearBootNext = true;
+    }
+    bool ukiAhead = false;
+    for (int i = 0; i < refindPos; ++i) {
+        const BootVar *v = find(bootOrder.at(i));
+        if (v && !ukiBootedBy(*v).isEmpty())
+            ukiAhead = true;
+    }
+    if (ukiAhead) {
+        plan.bootOrder = bootOrder;
+        plan.bootOrder.removeAt(refindPos);
+        plan.bootOrder.prepend(plan.refindNum);
+    }
+    return plan;
+}
+
 QList<MarkedStanza> markedStanzas(const QString &conf)
 {
     QList<MarkedStanza> out;

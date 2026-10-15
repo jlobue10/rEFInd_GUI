@@ -9,8 +9,19 @@
 # refind.conf at the images that exist now (newest as the loader, older
 # ones as submenu entries). Nothing else in refind.conf is touched.
 #
-# Runs after 90-uki-copy.install, which has already copied or removed the
-# image. It must never fail a kernel install: every problem is a warning.
+# Fedora's uki-direct also gives every new UKI its own firmware entry and
+# points BootNext at it (and its boot-success service then moves that entry
+# to the front of BootOrder), so the firmware would boot the new kernel
+# directly and skip rEFInd. After an update the helper hands the boot
+# priority back: it clears a BootNext that targets a UKI entry and moves
+# rEFInd's entry back to the front when a UKI entry was put ahead of it.
+# Nothing else in NVRAM is touched, and only when refind.conf has UKI
+# stanzas written by rEFInd_GUI.
+#
+# The "99-zz" name makes this run last -- after 90-uki-copy.install has
+# copied or removed the image and after uki-direct's 99-uki-uefi-setup.install
+# has moved it to the ESP and set BootNext. It must never fail a kernel
+# install: every problem is a warning.
 
 COMMAND="${1:-}"
 

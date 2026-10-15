@@ -429,6 +429,69 @@ private slots:
         QVERIFY(out.contains(QStringLiteral("-7.0.1-100.fc44.x86_64.efi\n")));
     }
 
+    void ukiBootEntriesAreRecognized()
+    {
+        Uki::BootVar direct;
+        direct.loaderPath = QStringLiteral("\\EFI\\Linux\\") + kMid + QStringLiteral("-7.2.10.efi");
+        QCOMPARE(Uki::ukiBootedBy(direct), QStringLiteral("/EFI/Linux/") + kMid + QStringLiteral("-7.2.10.efi"));
+
+        // uki-direct: shim with the UKI path as UTF-16LE optional data.
+        Uki::BootVar viaShim;
+        viaShim.loaderPath = QStringLiteral("\\EFI\\fedora\\shimx64.efi");
+        const QString arg = QStringLiteral("\\EFI\\Linux\\6.19.10-300.fc44.x86_64.efi ");
+        viaShim.optionalData = QByteArray(reinterpret_cast<const char *>(arg.utf16()), arg.size() * 2)
+                               + QByteArray(2, '\0');
+        QCOMPARE(Uki::ukiBootedBy(viaShim), QStringLiteral("/EFI/Linux/6.19.10-300.fc44.x86_64.efi"));
+
+        Uki::BootVar windows;
+        windows.loaderPath = QStringLiteral("\\EFI\\Microsoft\\Boot\\bootmgfw.efi");
+        windows.optionalData = QByteArray("WINDOWS\0\x01\0\0\0", 12);
+        QVERIFY(Uki::ukiBootedBy(windows).isEmpty());
+    }
+
+    void refindReclaimsPriorityFromUkiEntries()
+    {
+        const auto isRefind = [](const QString &p) {
+            return p.contains(QLatin1String("refind_x64"), Qt::CaseInsensitive);
+        };
+        Uki::BootVar refind;
+        refind.num = 4;
+        refind.loaderPath = QStringLiteral("\\EFI\\refind\\refind_x64.efi");
+        refind.active = true;
+        Uki::BootVar uki;
+        uki.num = 5;
+        uki.loaderPath = QStringLiteral("\\EFI\\Linux\\") + kMid + QStringLiteral("-7.2.10.efi");
+        uki.active = true;
+        Uki::BootVar windows;
+        windows.num = 0;
+        windows.loaderPath = QStringLiteral("\\EFI\\Microsoft\\Boot\\bootmgfw.efi");
+        windows.active = true;
+        const QList<Uki::BootVar> vars{refind, uki, windows};
+
+        // Kernel just installed: BootNext -> the UKI entry.
+        Uki::PriorityPlan p = Uki::planRefindPriority({4, 0}, 5, vars, isRefind);
+        QVERIFY(p.clearBootNext);
+        QVERIFY(p.bootOrder.isEmpty());
+
+        // After the boot-success service moved the UKI entry first.
+        p = Uki::planRefindPriority({5, 4, 0}, -1, vars, isRefind);
+        QVERIFY(!p.clearBootNext);
+        QCOMPARE(p.bootOrder, QList<quint16>({4, 5, 0}));
+
+        // The user put Windows first on purpose: not ours to undo.
+        p = Uki::planRefindPriority({0, 4, 5}, -1, vars, isRefind);
+        QVERIFY(p.bootOrder.isEmpty());
+        // ...nor a BootNext that targets Windows (e.g. a one-time reboot).
+        p = Uki::planRefindPriority({0, 4, 5}, 0, vars, isRefind);
+        QVERIFY(!p.clearBootNext);
+
+        // rEFInd removed from BootOrder: leave NVRAM alone entirely.
+        p = Uki::planRefindPriority({5, 0}, 5, vars, isRefind);
+        QVERIFY(!p.haveRefind);
+        QVERIFY(!p.clearBootNext);
+        QVERIFY(p.bootOrder.isEmpty());
+    }
+
     void markedStanzasReportsLoaders()
     {
         const QString conf = QStringLiteral(

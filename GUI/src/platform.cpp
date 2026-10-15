@@ -498,8 +498,8 @@ bool firmwareBootnumSupported()
 bool ukiRefreshHookInstalled()
 {
     // Packages ship it under /usr/lib; /etc is the admin override location.
-    return QFile::exists(QStringLiteral("/usr/lib/kernel/install.d/95-rEFInd_GUI-uki.install"))
-           || QFile::exists(QStringLiteral("/etc/kernel/install.d/95-rEFInd_GUI-uki.install"));
+    return QFile::exists(QStringLiteral("/usr/lib/kernel/install.d/99-zz-rEFInd_GUI-uki.install"))
+           || QFile::exists(QStringLiteral("/etc/kernel/install.d/99-zz-rEFInd_GUI-uki.install"));
 }
 
 bool preferWindowsAsDefault()

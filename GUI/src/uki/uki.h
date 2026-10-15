@@ -138,6 +138,45 @@ struct MarkedStanza
 };
 QList<MarkedStanza> markedStanzas(const QString &conf);
 
+// --- Boot priority after kernel updates ---------------------------------
+//
+// Fedora's uki-direct gives every newly installed UKI its own firmware boot
+// entry: kernel-install sets BootNext to it, and after that boot succeeds
+// kernel-bootcfg-boot-successful.service moves it to the front of
+// BootOrder -- so each kernel update silently demotes rEFInd and the
+// firmware boots the UKI directly. The kernel-install plugin hands the
+// priority back to rEFInd right after uki-direct's own plugin has run.
+
+// One Boot#### variable, as far as the decision below needs it.
+struct BootVar
+{
+    quint16 num = 0;
+    QString loaderPath;     // as stored, e.g. "\\EFI\\fedora\\shimx64.efi"
+    QByteArray optionalData;
+    bool active = false;
+};
+
+// The UKI a load option boots, "/EFI/Linux/<file>.efi", or empty: either its
+// loader is an /EFI/Linux image, or (uki-direct) its loader is shim with the
+// UKI path as UTF-16LE optional data.
+QString ukiBootedBy(const BootVar &var);
+
+struct PriorityPlan
+{
+    bool clearBootNext = false;
+    QList<quint16> bootOrder; // empty: leave BootOrder alone
+    quint16 refindNum = 0;
+    bool haveRefind = false;
+};
+
+// What to change so rEFInd boots next and stays first. BootNext is cleared
+// only when it points at a UKI entry; rEFInd's entry moves to the front of
+// BootOrder only when a UKI entry sits ahead of it -- anything else the
+// user deliberately put first is left alone, as is an rEFInd entry that is
+// not in BootOrder at all.
+PriorityPlan planRefindPriority(const QList<quint16> &bootOrder, int bootNext,
+                                const QList<BootVar> &vars, bool (*isRefindLoader)(const QString &));
+
 } // namespace Uki
 
 #endif // UKI_UKI_H
