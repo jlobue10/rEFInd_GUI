@@ -190,7 +190,17 @@ if(WIN32)
     # are NOT in libuuid); uuid still supplies the generic COM IIDs.
     target_link_libraries(espops PUBLIC advapi32 ole32 oleaut32 taskschd uuid)
 endif()
-target_link_libraries(rEFInd_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network espops efiutil)
+# Unified Kernel Image families for manual stanzas (see uki/uki.h). QtCore
+# only; linked by the GUI (detection + Create Config) and the helper
+# (uki-refresh). Not parity-locked, but the osdetect_* files use it.
+add_library(uki STATIC
+    uki/uki.cpp
+    uki/uki.h
+)
+target_link_libraries(uki PUBLIC Qt${QT_VERSION_MAJOR}::Core)
+target_include_directories(uki PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_link_libraries(rEFInd_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network espops efiutil uki)
 
 # The privileged helper (console app on both platforms — deliberately not
 # WIN32_EXECUTABLE and not qt_add_executable: no plugins, no deployment
@@ -198,7 +208,11 @@ target_link_libraries(rEFInd_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_V
 # install-rEFInd-GUI.sh, target of the sudoers NOPASSWD lines and the
 # systemd randomizer units. Windows: the Scheduled Tasks' action.
 add_executable(rEFInd_GUI_helper helper/main.cpp)
-target_link_libraries(rEFInd_GUI_helper PRIVATE efiutil)
+target_link_libraries(rEFInd_GUI_helper PRIVATE efiutil uki)
+if(NOT WIN32)
+    # uki-refresh, run as root by the kernel-install plugin.
+    target_sources(rEFInd_GUI_helper PRIVATE uki/ukirefresh.cpp uki/ukirefresh.h)
+endif()
 
 if(WIN32)
     # shell32: SHGetKnownFolderPath; ole32: CoTaskMemFree; uuid: the
@@ -261,11 +275,15 @@ if(BUILD_GUI_TESTS)
         EFIUTIL_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
     add_test(NAME efiutil COMMAND tst_efiutil)
 
+    add_executable(tst_uki tests/tst_uki.cpp)
+    target_link_libraries(tst_uki PRIVATE uki Qt${QT_VERSION_MAJOR}::Test)
+    add_test(NAME uki COMMAND tst_uki)
+
     if(NOT WIN32)
         add_executable(tst_osdetect tests/tst_osdetect.cpp osdetect_common.cpp osdetect_linux.cpp platform.cpp)
         target_include_directories(tst_osdetect PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
         target_link_libraries(tst_osdetect PRIVATE
-            Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Widgets efiutil)
+            Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Widgets efiutil uki)
         add_test(NAME osdetect COMMAND tst_osdetect)
 
         # Includes espresolve_linux.cpp directly (anonymous-namespace helpers),

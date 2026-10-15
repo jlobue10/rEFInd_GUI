@@ -61,6 +61,18 @@ Windows notes:
 
 The GUI scans **every reachable EFI System Partition** at startup (and via the **Rescan OSes** button) to detect what is actually installed: Windows, SteamOS, and any Linux distro with a vendor directory under `EFI/` (shim, GRUB, or systemd-boot). The Boot Option boxes are populated with the detected OSes, and the generated `refind.conf` uses the real loader paths and volumes found on disk — multi-ESP machines (e.g. Windows and Linux each with their own ESP) are fully covered. Since 2.2.0 the Windows build also mounts and scans letterless Linux ESPs, so a distro like CachyOS booting via systemd-boot is detected from the Windows side and named after its boot entries rather than a generic "systemd-boot". **Install Config** and the background randomizer write to the ESP that the firmware's rEFInd boot entry actually points at, so a stale rEFInd copy on another ESP can't swallow your config.
 
+## Unified Kernel Images
+
+Systems that boot Unified Kernel Images (UKIs) from `EFI/Linux` — systemd `kernel-install` with `layout=uki`, Fedora's UKI images, or any ukify/mkinitcpio UKI there — are detected too. Each distro's UKIs appear as **one** Boot Option. Its menu entry boots the newest kernel, and the older kernels sit in that entry's submenu (open it with F2, Insert or Tab in the boot menu) as rollback options. The boot menu stays fully manual (`scanfor manual`): the order, icons and default are still the ones you pick in the GUI.
+
+UKI file names change with every kernel update, so the rpm, deb and Arch packages install a `kernel-install` hook (`/usr/lib/kernel/install.d/99-zz-rEFInd_GUI-uki.install`). After every kernel install or removal it re-points the UKI entries in the installed `refind.conf` at the kernels that are there now, and it changes nothing else in the file. On Fedora systems with `uki-direct` it also keeps rEFInd first in the firmware boot order, because each kernel update would otherwise make the firmware boot the new kernel directly. Without the hook (for example a hand-built copy), the GUI warns you, and after a kernel update you need to run Create Config and Install Config again.
+
+Notes:
+
+- **On Fedora, remove a kernel through its `kernel-core` package** (`sudo dnf remove kernel-core-<version>`). Removing only the `kernel-<version>` meta package doesn't run kernel-install, so nothing changes in the boot menu.
+- Fedora's kernel removal leaves the removed kernel's UKI file on the ESP. rEFInd_GUI leaves that kernel out of the menu and names the leftover file, but never deletes it. Remove the file yourself to free ESP space.
+- UKIs on a separate XBOOTLDR `/boot` partition are not scanned yet. Under Secure Boot, rEFInd must be able to verify the UKI (signed with keys your firmware or shim trusts).
+
 ## Hand-editing the staged files
 
 Everything the GUI installs to the ESP is first staged as plain files in its data folder (`~/.local/rEFInd_GUI` on Linux, `%LOCALAPPDATA%\rEFInd_GUI` on Windows). Editing those files by hand is supported — the install buttons copy whatever is there:

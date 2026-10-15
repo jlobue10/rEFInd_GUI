@@ -78,6 +78,7 @@ private:
     void browsePng(QLineEdit *edit, const QString &title);
     void checkPNGFile(QLineEdit *edit);
     bool copyPng(QLineEdit *edit, const QString &destPath);
+    void warnIfUkiConfigStale();
     QString createBootStanza(const BootEntry &entry, const QString &iconPath);
     QList<BootEntry> extraEntries(const QList<Selection> &selections) const;
     static QString stockIconFor(const BootEntry &entry);

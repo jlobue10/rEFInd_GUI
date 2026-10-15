@@ -12,5 +12,6 @@ override_dh_auto_install:
 	install -D -m 0755 build-deb/rEFInd_GUI_helper debian/refind-gui/etc/rEFInd/rEFInd_GUI_helper
 	install -D -m 0644 rEFInd_bg_randomizer.service debian/refind-gui/etc/systemd/system/rEFInd_bg_randomizer.service
 	install -D -m 0644 rEFInd_theme_randomizer.service debian/refind-gui/etc/systemd/system/rEFInd_theme_randomizer.service
+	install -D -m 0755 kernel-install/99-zz-rEFInd_GUI-uki.install debian/refind-gui/usr/lib/kernel/install.d/99-zz-rEFInd_GUI-uki.install
 	install -D -m 0644 rEFInd_GUI.desktop debian/refind-gui/usr/share/applications/rEFInd_GUI.desktop
 	install -D -m 0644 GUI/UEFI_icon.png debian/refind-gui/usr/share/pixmaps/rEFInd_GUI.png

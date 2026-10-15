@@ -726,7 +726,7 @@ Replace it?</source>
     </message>
     <message>
         <location filename="mainwindow.ui" line="464"/>
-        <location filename="mainwindow.cpp" line="1701"/>
+        <location filename="mainwindow.cpp" line="1808"/>
         <source>Open Folder</source>
         <translation>फ़ोल्डर खोलें</translation>
     </message>
@@ -827,9 +827,9 @@ Replace it?</source>
     </message>
     <message>
         <location filename="mainwindow.ui" line="932"/>
-        <location filename="mainwindow.cpp" line="1134"/>
-        <location filename="mainwindow.cpp" line="1147"/>
-        <location filename="mainwindow.cpp" line="1152"/>
+        <location filename="mainwindow.cpp" line="1241"/>
+        <location filename="mainwindow.cpp" line="1254"/>
+        <location filename="mainwindow.cpp" line="1259"/>
         <source>Install Config</source>
         <translation>कॉन्फ़िग इंस्टॉल करें</translation>
     </message>
@@ -845,7 +845,7 @@ Replace it?</source>
     </message>
     <message>
         <location filename="mainwindow.ui" line="965"/>
-        <location filename="mainwindow.cpp" line="942"/>
+        <location filename="mainwindow.cpp" line="1021"/>
         <source>Showtools</source>
         <translation>Showtools</translation>
     </message>
@@ -871,15 +871,17 @@ Replace it?</source>
     </message>
     <message>
         <location filename="mainwindow.ui" line="910"/>
-        <location filename="mainwindow.cpp" line="974"/>
-        <location filename="mainwindow.cpp" line="985"/>
-        <location filename="mainwindow.cpp" line="1226"/>
+        <location filename="mainwindow.cpp" line="1053"/>
+        <location filename="mainwindow.cpp" line="1067"/>
+        <location filename="mainwindow.cpp" line="1078"/>
+        <location filename="mainwindow.cpp" line="1089"/>
+        <location filename="mainwindow.cpp" line="1333"/>
         <source>Create Config</source>
         <translation>कॉन्फ़िग बनाएँ</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="888"/>
-        <location filename="mainwindow.cpp" line="590"/>
+        <location filename="mainwindow.cpp" line="651"/>
         <source>Install rEFInd</source>
         <translation>rEFInd इंस्टॉल करें</translation>
     </message>
@@ -954,9 +956,9 @@ Replace it?</source>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1171"/>
-        <location filename="mainwindow.cpp" line="1672"/>
-        <location filename="mainwindow.cpp" line="1685"/>
-        <location filename="mainwindow.cpp" line="1690"/>
+        <location filename="mainwindow.cpp" line="1779"/>
+        <location filename="mainwindow.cpp" line="1792"/>
+        <location filename="mainwindow.cpp" line="1797"/>
         <source>Install Themes</source>
         <translation>थीम इंस्टॉल करें</translation>
     </message>
@@ -966,103 +968,115 @@ Replace it?</source>
         <translation>rEFInd पृष्ठभूमि चयन</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="46"/>
-        <location filename="mainwindow.cpp" line="226"/>
+        <location filename="mainwindow.cpp" line="47"/>
+        <location filename="mainwindow.cpp" line="227"/>
         <source>None</source>
         <translation>कोई नहीं</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="138"/>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>Small (96)</source>
         <translation>छोटा (96)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="139"/>
+        <location filename="mainwindow.cpp" line="140"/>
         <source>Default (128)</source>
         <translation>डिफ़ॉल्ट (128)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="140"/>
+        <location filename="mainwindow.cpp" line="141"/>
         <source>Medium (160)</source>
         <translation>मध्यम (160)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.cpp" line="142"/>
         <source>Large (192)</source>
         <translation>बड़ा (192)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="142"/>
+        <location filename="mainwindow.cpp" line="143"/>
         <source>Extra Large (256)</source>
         <translation>बहुत बड़ा (256)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="143"/>
+        <location filename="mainwindow.cpp" line="144"/>
         <source>XXL (512)</source>
         <translation>XXL (512)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="145"/>
+        <location filename="mainwindow.cpp" line="146"/>
         <source>Requires efibootmgr (Linux only)</source>
         <translation>efibootmgr आवश्यक (केवल Linux)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="149"/>
+        <location filename="mainwindow.cpp" line="150"/>
         <source>Not needed: no unreadable EFI System Partition was found</source>
         <translation>आवश्यक नहीं: कोई अपठनीय EFI सिस्टम विभाजन नहीं मिला</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="181"/>
+        <location filename="mainwindow.cpp" line="182"/>
         <source>System default</source>
         <translation>सिस्टम डिफ़ॉल्ट</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="231"/>
+        <location filename="mainwindow.cpp" line="232"/>
         <source>Random</source>
         <translation>यादृच्छिक</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="339"/>
+        <location filename="mainwindow.cpp" line="368"/>
+        <source>Kernel images changed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="369"/>
+        <source>Your rEFInd config boots %1 from a Unified Kernel Image that is no longer on the EFI System Partition (a kernel update replaced it).
+
+Use Create Config and Install Config to point it at the current kernels. Installing rEFInd_GUI&apos;s package on this system adds a kernel-install hook that does this automatically after every kernel update.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="385"/>
         <source>Scanning…</source>
         <translation>स्कैन हो रहा है…</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="548"/>
+        <location filename="mainwindow.cpp" line="609"/>
         <source>Image (*.png)</source>
         <translation>छवि (*.png)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="564"/>
+        <location filename="mainwindow.cpp" line="625"/>
         <source>Select Background PNG</source>
         <translation>पृष्ठभूमि PNG चुनें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="569"/>
+        <location filename="mainwindow.cpp" line="630"/>
         <source>Select OS Icon 1 PNG</source>
         <translation>OS आइकन 1 PNG चुनें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="574"/>
+        <location filename="mainwindow.cpp" line="635"/>
         <source>Select OS Icon 2 PNG</source>
         <translation>OS आइकन 2 PNG चुनें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="579"/>
+        <location filename="mainwindow.cpp" line="640"/>
         <source>Select OS Icon 3 PNG</source>
         <translation>OS आइकन 3 PNG चुनें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="584"/>
+        <location filename="mainwindow.cpp" line="645"/>
         <source>Select OS Icon 4 PNG</source>
         <translation>OS आइकन 4 PNG चुनें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="591"/>
+        <location filename="mainwindow.cpp" line="652"/>
         <source>Failed to launch the installation script.</source>
         <translation>इंस्टॉलेशन स्क्रिप्ट शुरू नहीं हो सकी।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="943"/>
+        <location filename="mainwindow.cpp" line="1022"/>
         <source>These showtools entries are not recognized: %1
 
 Valid entries: %2</source>
@@ -1071,18 +1085,32 @@ Valid entries: %2</source>
 मान्य प्रविष्टियाँ: %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="975"/>
+        <location filename="mainwindow.cpp" line="1054"/>
         <source>Could not write %1</source>
         <translation>%1 लिखा नहीं जा सका</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="986"/>
+        <location filename="mainwindow.cpp" line="1068"/>
+        <source>No OS entries were detected or selected.
+
+The generated config would contain no boot stanzas, so it was not written. Use Deep Scan to look for more bootloaders, or pick an OS in the Boot Option boxes, then create the config again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1079"/>
         <source>Could not write %1 completely — the disk may be full. The config was not updated.</source>
         <translation>%1 पूरी तरह नहीं लिखा जा सका — डिस्क भरी हो सकती है। कॉन्फ़िगरेशन अपडेट नहीं हुआ।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1135"/>
-        <location filename="mainwindow.cpp" line="1673"/>
+        <location filename="mainwindow.cpp" line="1090"/>
+        <source>This config boots Unified Kernel Images, whose file names change with every kernel update.
+
+rEFInd_GUI&apos;s kernel-install hook was not found on this system, so after a kernel update use Create Config and Install Config again to point the menu at the new kernel. Installing rEFInd_GUI&apos;s package on the Linux system that owns these kernels adds the hook, which does this automatically.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1242"/>
+        <location filename="mainwindow.cpp" line="1780"/>
         <source>The privileged install helper was NOT run:
 
 %1
@@ -1106,12 +1134,12 @@ Reinstall the GUI to restore the original script, then try again.</oldsource>
 मूल स्क्रिप्ट बहाल करने के लिए GUI फिर से इंस्टॉल करें, फिर पुनः प्रयास करें।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1149"/>
+        <location filename="mainwindow.cpp" line="1256"/>
         <source>The config was installed successfully.</source>
         <translation>कॉन्फ़िगरेशन सफलतापूर्वक इंस्टॉल हो गया।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1150"/>
+        <location filename="mainwindow.cpp" line="1257"/>
         <source>The config was installed successfully.
 
 %1</source>
@@ -1120,12 +1148,12 @@ Reinstall the GUI to restore the original script, then try again.</oldsource>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1154"/>
+        <location filename="mainwindow.cpp" line="1261"/>
         <source>Installing the config failed (code %1).</source>
         <translation>कॉन्फ़िगरेशन इंस्टॉल विफल रहा (कोड %1)।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1155"/>
+        <location filename="mainwindow.cpp" line="1262"/>
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -1134,31 +1162,31 @@ Reinstall the GUI to restore the original script, then try again.</oldsource>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1227"/>
+        <location filename="mainwindow.cpp" line="1334"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
         <translation>थीम फ़ाइल %1 तैयार नहीं की जा सकी — कॉन्फ़िगरेशन अपडेट नहीं हुआ।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1254"/>
-        <location filename="mainwindow.cpp" line="1264"/>
-        <location filename="mainwindow.cpp" line="1271"/>
+        <location filename="mainwindow.cpp" line="1361"/>
+        <location filename="mainwindow.cpp" line="1371"/>
+        <location filename="mainwindow.cpp" line="1378"/>
         <source>Copy PNG</source>
         <translation>PNG कॉपी करें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1255"/>
-        <location filename="mainwindow.cpp" line="1265"/>
-        <location filename="mainwindow.cpp" line="1272"/>
+        <location filename="mainwindow.cpp" line="1362"/>
+        <location filename="mainwindow.cpp" line="1372"/>
+        <location filename="mainwindow.cpp" line="1379"/>
         <source>Could not copy %1 to %2</source>
         <translation>%1 को %2 में कॉपी नहीं किया जा सका</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1297"/>
+        <location filename="mainwindow.cpp" line="1404"/>
         <source>Invalid PNG</source>
         <translation>अमान्य PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1298"/>
+        <location filename="mainwindow.cpp" line="1405"/>
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -1167,43 +1195,43 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 पृष्ठभूमि और OS आइकन असली PNG छवियाँ होनी चाहिए (केवल .png एक्सटेंशन वाली फ़ाइलें नहीं)।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1567"/>
+        <location filename="mainwindow.cpp" line="1674"/>
         <source>Check For Update</source>
         <translation>अपडेट जाँचें</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1570"/>
+        <location filename="mainwindow.cpp" line="1677"/>
         <source>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;मूल GUI निर्माता: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;परीक्षण और गुणवत्ता जाँच के लिए Deck Wizard का विशेष धन्यवाद&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard डुअल बूट ट्यूटोरियल&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1617"/>
+        <location filename="mainwindow.cpp" line="1724"/>
         <source>&lt;p align=&apos;center&apos;&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;अपडेट जाँच विफल रही। कृपया अपना इंटरनेट कनेक्शन जाँचें और फिर से प्रयास करें।&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1620"/>
+        <location filename="mainwindow.cpp" line="1727"/>
         <source>&lt;p align=&apos;center&apos;&gt;An update is available &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;अपडेट &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;यहाँ&lt;/a&gt; उपलब्ध है&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1624"/>
+        <location filename="mainwindow.cpp" line="1731"/>
         <source>&lt;p align=&apos;center&apos;&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;कोई अपडेट नहीं मिला। आप नवीनतम संस्करण उपयोग कर रहे हैं।&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1634"/>
+        <location filename="mainwindow.cpp" line="1741"/>
         <source>Background Randomizer</source>
         <translation>यादृच्छिक पृष्ठभूमि</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1635"/>
-        <location filename="mainwindow.cpp" line="1652"/>
+        <location filename="mainwindow.cpp" line="1742"/>
+        <location filename="mainwindow.cpp" line="1759"/>
         <source>Failed to launch the randomizer setup.</source>
         <translation>यादृच्छिक पृष्ठभूमि सेटअप शुरू नहीं हो सका।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1651"/>
+        <location filename="mainwindow.cpp" line="1758"/>
         <source>Theme Randomizer</source>
         <translation>यादृच्छिक थीम</translation>
     </message>
@@ -1224,12 +1252,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 मूल स्क्रिप्ट बहाल करने के लिए GUI फिर से इंस्टॉल करें, फिर पुनः प्रयास करें।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1687"/>
+        <location filename="mainwindow.cpp" line="1794"/>
         <source>The themes were installed successfully.</source>
         <translation>थीमें सफलतापूर्वक इंस्टॉल हो गईं।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1688"/>
+        <location filename="mainwindow.cpp" line="1795"/>
         <source>The themes were installed successfully.
 
 %1</source>
@@ -1238,12 +1266,12 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1692"/>
+        <location filename="mainwindow.cpp" line="1799"/>
         <source>Installing the themes failed (code %1).</source>
         <translation>थीम इंस्टॉल विफल रहा (कोड %1)।</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1693"/>
+        <location filename="mainwindow.cpp" line="1800"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
@@ -1252,7 +1280,7 @@ Reinstall the GUI to restore the original script, then try again.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1702"/>
+        <location filename="mainwindow.cpp" line="1809"/>
         <source>Failed to open %1 in the file manager.</source>
         <translation>फ़ाइल प्रबंधक में %1 खोला नहीं जा सका।</translation>
     </message>
@@ -1284,22 +1312,22 @@ Install rEFInd first, then install the %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="338"/>
+        <location filename="platform.cpp" line="343"/>
         <source>sudo could not be started.</source>
         <translation>sudo शुरू नहीं हो सका।</translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="369"/>
+        <location filename="platform.cpp" line="374"/>
         <source>missing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="383"/>
+        <location filename="platform.cpp" line="388"/>
         <source>%1 (expected version %2, found: %3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="413"/>
+        <location filename="platform.cpp" line="418"/>
         <source>%1 does not provide the efi-utility operation (expected version %2). Reinstall rEFInd_GUI to repair.</source>
         <translation type="unfinished"></translation>
     </message>
