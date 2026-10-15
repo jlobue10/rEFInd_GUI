@@ -51,7 +51,6 @@ make
 mkdir -p %{buildroot}/etc/rEFInd
 cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI %{buildroot}/etc/rEFInd/rEFInd_GUI
 cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI_helper %{buildroot}/etc/rEFInd/rEFInd_GUI_helper
-/usr/lib/kernel/install.d/99-zz-rEFInd_GUI-uki.install
 
 mkdir -p %{buildroot}/etc/systemd/system
 
@@ -71,6 +70,7 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /etc/systemd/system/rEFInd_theme_randomizer.service
 /etc/rEFInd/rEFInd_GUI
 /etc/rEFInd/rEFInd_GUI_helper
+/usr/lib/kernel/install.d/99-zz-rEFInd_GUI-uki.install
 /usr/share/applications/rEFInd_GUI.desktop
 /usr/share/pixmaps/rEFInd_GUI.png
 
