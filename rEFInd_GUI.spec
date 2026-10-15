@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.4.7
+Version:        3.5.0
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -75,6 +75,21 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
+* Thu Oct 15 2026 Jon LoBue <jlobue10@gmail.com> [3.5.0-1]
+- Unified Kernel Images (UKIs) in EFI/Linux are detected as one Boot Option
+  per distro. The menu entry boots the newest kernel, and older kernels are
+  rollback entries in its submenu. The menu stays manual (scanfor manual),
+  and a slot keeps its place across kernel updates.
+- New kernel-install hook (/usr/lib/kernel/install.d/
+  99-zz-rEFInd_GUI-uki.install): after every kernel install or removal it
+  re-points the UKI entries in the installed refind.conf. On Fedora
+  uki-direct systems it also keeps rEFInd first in the firmware boot order.
+  Removed kernels leave the menu even when Fedora leaves their UKI file on
+  the ESP.
+- Create Config refuses to write a config with no boot entries (PR #114 by
+  jreyes138), and every config repeats scanfor manual after the theme
+  include, so a theme can no longer turn auto-scan back on.
+
 * Tue Oct 13 2026 Jon LoBue <jlobue10@gmail.com> [3.4.7-1]
 - New EFI Utilities dialog, opened from the button beside Showtools (PR #109
   by zany130): install, update or remove netboot.xyz, the UEFI shell,
