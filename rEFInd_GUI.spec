@@ -51,11 +51,15 @@ make
 mkdir -p %{buildroot}/etc/rEFInd
 cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI %{buildroot}/etc/rEFInd/rEFInd_GUI
 cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI_helper %{buildroot}/etc/rEFInd/rEFInd_GUI_helper
+/usr/lib/kernel/install.d/95-rEFInd_GUI-uki.install
 
 mkdir -p %{buildroot}/etc/systemd/system
 
 install -m 644 %{SOURCE0} %{buildroot}/etc/systemd/system
 install -m 644 %{SOURCE1} %{buildroot}/etc/systemd/system
+
+# Re-points UKI boot stanzas after kernel updates (kernel-install layout=uki).
+install -D -m 755 %{_builddir}/rEFInd_GUI/kernel-install/95-rEFInd_GUI-uki.install %{buildroot}/usr/lib/kernel/install.d/95-rEFInd_GUI-uki.install
 
 # Menu entry and icon, so a bare rpm install gets a launcher (issue #104).
 mkdir -p %{buildroot}/usr/share/applications %{buildroot}/usr/share/pixmaps

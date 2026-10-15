@@ -31,6 +31,9 @@
 #include "espops/userio.h"
 #include "espops/wintasks.h"
 #include "efiutil/helpercmd.h"
+#ifdef Q_OS_UNIX
+#include "uki/ukirefresh.h"
+#endif
 
 #include <QCoreApplication>
 
@@ -55,6 +58,9 @@ int usage(FILE *to)
                  "  install-config        install the generated refind.conf set onto the ESP\n"
                  "  install-themes        install the staged theme trees onto the ESP\n"
                  "  efi-utility            install, update, remove, or query a managed EFI tool\n"
+#ifdef Q_OS_UNIX
+                 "  uki-refresh           re-point UKI boot stanzas at the current kernels\n"
+#endif
                  "  randomize-background  pick a random boot background (boot/logon service)\n"
                  "  randomize-theme       pick a random installed theme (boot/logon service)\n"
 #ifdef Q_OS_WIN
@@ -258,7 +264,12 @@ int main(int argc, char *argv[])
 
     if (std::strcmp(sub, "install-config") == 0) {
 #ifdef Q_OS_UNIX
-        return runInstallConfig();
+        const int code = runInstallConfig();
+        // rEFInd_GUI only: a config staged before a kernel update must not
+        // publish a UKI loader kernel-install has since deleted.
+        if (code == 0)
+            Uki::runHelperRefresh(true);
+        return code;
 #else
         // Windows never routes install-config through the helper: the GUI
         // is already elevated and runs espops in-process.
@@ -279,6 +290,15 @@ int main(int argc, char *argv[])
     if (std::strcmp(sub, "efi-utility") == 0) {
 #ifdef Q_OS_UNIX
         return EfiUtil::runEfiUtilityHelper();
+#else
+        return notPorted(sub);
+#endif
+    }
+    // rEFInd_GUI only, like efi-utility: run as root by the kernel-install
+    // plugin after every kernel add/remove (not a sudoers command).
+    if (std::strcmp(sub, "uki-refresh") == 0) {
+#ifdef Q_OS_UNIX
+        return Uki::runHelperRefresh(false);
 #else
         return notPorted(sub);
 #endif

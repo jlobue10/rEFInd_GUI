@@ -8,10 +8,12 @@ on:
   push:
     paths:
       - '**.sh'
+      - 'kernel-install/**'
       - '.github/workflows/shell-lint.yml'
   pull_request:
     paths:
       - '**.sh'
+      - 'kernel-install/**'
       - '.github/workflows/shell-lint.yml'
 
 permissions:
@@ -35,6 +37,11 @@ jobs:
           # of the #!/bin/bash shebang. SC3043: `local` is not POSIX but every
           # sh this script targets (dash, bash, busybox ash) supports it.
           shellcheck --shell=sh --exclude=SC3043 install-rEFInd-GUI.sh
+
+      - name: kernel-install plugin must run under POSIX sh
+        run: |
+          dash -n kernel-install/95-rEFInd_GUI-uki.install
+          shellcheck --shell=sh kernel-install/95-rEFInd_GUI-uki.install
 
       - name: Syntax-check the bash scripts
         run: |

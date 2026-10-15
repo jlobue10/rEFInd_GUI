@@ -80,6 +80,11 @@ bool setThemeRandomizer(bool enable);
 // SteamOS firmware_bootnum lookup needs efibootmgr (Linux only).
 bool firmwareBootnumSupported();
 
+// True when this system has rEFInd_GUI's kernel-install plugin, which
+// re-points UKI stanzas after kernel updates. Always false on Windows (the
+// plugin runs on the Linux side, where a UKI's kernels are installed).
+bool ukiRefreshHookInstalled();
+
 // Which OS should lead the auto-selection (slot 1 + default boot):
 // Windows on the Windows build, the running Linux distro on Linux.
 bool preferWindowsAsDefault();

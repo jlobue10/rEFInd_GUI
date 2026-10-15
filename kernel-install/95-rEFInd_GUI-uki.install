@@ -1,0 +1,34 @@
+#!/bin/sh
+# kernel-install plugin shipped by rEFInd_GUI.
+#
+# rEFInd_GUI writes manual boot stanzas only (`scanfor manual`), so a Boot
+# Option slot that boots a Unified Kernel Image names the image by path --
+# and kernel-install names UKIs <entry-token>-<kernel-version>.efi and
+# deletes old ones as kernels rotate. After every kernel add/remove this
+# plugin has the root helper re-point the marked UKI stanzas in the live
+# refind.conf at the images that exist now (newest as the loader, older
+# ones as submenu entries). Nothing else in refind.conf is touched.
+#
+# Runs after 90-uki-copy.install, which has already copied or removed the
+# image. It must never fail a kernel install: every problem is a warning.
+
+COMMAND="${1:-}"
+
+case "$COMMAND" in
+    # Only kernel-install's UKI layout adds versioned /EFI/Linux images.
+    add) [ "${KERNEL_INSTALL_LAYOUT:-}" = "uki" ] || exit 0 ;;
+    # A remove carries no layout (kernel-install reports "other" there), and
+    # a removed UKI must leave the menu either way; the helper returns at
+    # once when refind.conf has no UKI stanzas.
+    remove) ;;
+    *) exit 0 ;;
+esac
+
+HELPER=/etc/rEFInd/rEFInd_GUI_helper
+[ -x "$HELPER" ] || exit 0
+
+if ! "$HELPER" uki-refresh; then
+    echo "rEFInd_GUI: could not re-point the rEFInd UKI boot entries;" \
+         "use Create Config and Install Config in rEFInd_GUI." >&2
+fi
+exit 0

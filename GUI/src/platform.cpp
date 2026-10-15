@@ -290,6 +290,11 @@ bool firmwareBootnumSupported()
     return false;
 }
 
+bool ukiRefreshHookInstalled()
+{
+    return false;
+}
+
 bool preferWindowsAsDefault()
 {
     return true;
@@ -488,6 +493,13 @@ bool setThemeRandomizer(bool enable)
 bool firmwareBootnumSupported()
 {
     return true;
+}
+
+bool ukiRefreshHookInstalled()
+{
+    // Packages ship it under /usr/lib; /etc is the admin override location.
+    return QFile::exists(QStringLiteral("/usr/lib/kernel/install.d/95-rEFInd_GUI-uki.install"))
+           || QFile::exists(QStringLiteral("/etc/kernel/install.d/95-rEFInd_GUI-uki.install"));
 }
 
 bool preferWindowsAsDefault()

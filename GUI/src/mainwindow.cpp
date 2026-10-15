@@ -6,6 +6,7 @@
 #include "previewdialog.h"
 #include "uitranslation.h"
 #include "espops/themeconf.h"
+#include "uki/uki.h"
 
 #include <QDateTime>
 #include <QDesktopServices>
@@ -327,6 +328,51 @@ void MainWindow::detectionFinished(const QList<BootEntry> &result, bool resetToD
         names << e.displayName;
     appendLog(QStringLiteral("detect: %1 entries [%2]")
                   .arg(detected.size()).arg(names.join(QStringLiteral(", "))));
+    for (const BootEntry &e : detected) {
+        if (!e.ukiToken.isEmpty())
+            appendLog(QStringLiteral("detect: UKI family '%1' token=%2 images=[%3]")
+                          .arg(e.displayName, e.ukiToken,
+                               e.ukiLoaders.join(QStringLiteral(", "))));
+    }
+    warnIfUkiConfigStale();
+}
+
+// The staged refind.conf names UKI images by version; without the
+// kernel-install plugin nothing re-points it when kernels rotate, so say so
+// once a stanza's loader is gone (an image detection no longer sees in a
+// family it still sees). With the plugin installed the ESP's copy is kept
+// current and Install Config re-points the staged one, so stay quiet.
+void MainWindow::warnIfUkiConfigStale()
+{
+    if (Platform::ukiRefreshHookInstalled())
+        return;
+    QFile staged(guiConfigDir + QStringLiteral("/refind.conf"));
+    if (!staged.open(QIODevice::ReadOnly))
+        return;
+    const QString text = QString::fromUtf8(staged.read(4 << 20));
+    QStringList stale;
+    for (const Uki::MarkedStanza &m : Uki::markedStanzas(text)) {
+        for (const BootEntry &e : detected) {
+            if ((e.ukiToken == m.token || (!m.osId.isEmpty() && e.ukiOsId == m.osId))
+                && e.volume.compare(m.volume, Qt::CaseInsensitive) == 0
+                && !e.ukiLoaders.contains(m.loader)) {
+                stale << e.displayName;
+                break;
+            }
+        }
+    }
+    if (stale.isEmpty())
+        return;
+    appendLog(QStringLiteral("uki: staged config points at removed images for [%1]")
+                  .arg(stale.join(QStringLiteral(", "))));
+    QMessageBox::warning(this, tr("Kernel images changed"),
+        tr("Your rEFInd config boots %1 from a Unified Kernel Image that is no "
+           "longer on the EFI System Partition (a kernel update replaced it).\n\n"
+           "Use Create Config and Install Config to point it at the current "
+           "kernels. Installing rEFInd_GUI's package on this system adds a "
+           "kernel-install hook that does this automatically after every "
+           "kernel update.")
+            .arg(stale.join(QStringLiteral(", "))));
 }
 
 void MainWindow::setScanningUi(bool scanning)
@@ -426,6 +472,10 @@ void MainWindow::setComboText(QComboBox *combo, const QString &text)
 // so the key is preferred and text kept as the legacy fallback.
 QString MainWindow::entryKey(const BootEntry &entry)
 {
+    // A UKI family's newest image changes with every kernel update; key the
+    // slot by its entry token so the saved arrangement survives that.
+    if (!entry.ukiToken.isEmpty())
+        return entry.volume + QLatin1String("|uki:") + entry.ukiToken;
     return entry.volume + QLatin1Char('|') + entry.loaderPath;
 }
 
@@ -455,7 +505,18 @@ void MainWindow::applyAutoSelection()
             break;
         }
     }
+    // A UKI family boots its kernel directly; a vendor loader next to it on
+    // a UKI system is often only a launcher (Fedora uki-direct's shim
+    // chainloads a GRUB that has no config), so the family leads.
     for (const BootEntry &e : detected) {
+        if (!e.ukiToken.isEmpty()) {
+            linuxPick = e.displayName;
+            break;
+        }
+    }
+    for (const BootEntry &e : detected) {
+        if (!linuxPick.isEmpty())
+            break;
         if (!e.supportsFirmwareBootnum && !e.loaderPath.contains(QLatin1String("Microsoft"))) {
             linuxPick = e.displayName;
             break;
@@ -673,6 +734,24 @@ QString MainWindow::createBootStanza(const BootEntry &entry, const QString &icon
 {
     QString stanza;
     QTextStream out(&stanza);
+    if (!entry.ukiToken.isEmpty()) {
+        // A UKI family: newest image as the loader, older ones as
+        // submenuentries, under a marker that lets `rEFInd_GUI_helper
+        // uki-refresh` (kernel-install plugin) re-point exactly these lines
+        // when kernels rotate. Slot order and icons stay manual.
+        out << "\n" << Uki::markerLine(entry.ukiToken, entry.ukiOsId) << "\n";
+        out << "menuentry " << confQuote(entry.menuName) << " {\n";
+        out << "\ticon " << confSanitize(iconPath) << "\n";
+        if (!entry.volume.isEmpty())
+            out << "\tvolume " << confQuote(entry.volume) << "\n";
+        const QString lines = Uki::renderLoaderLines(entry.ukiLoaders, entry.ukiVersions);
+        const int firstNl = lines.indexOf(QLatin1Char('\n'));
+        out << lines.left(firstNl + 1);
+        out << "\tgraphics on\n";
+        out << lines.mid(firstNl + 1);
+        out << "}\n";
+        return stanza;
+    }
     out << "\nmenuentry " << confQuote(entry.menuName) << " {\n";
     out << "\ticon " << confSanitize(iconPath) << "\n";
     if (entry.supportsFirmwareBootnum && ui->Firmware_bootnum_CheckBox->isChecked()) {
@@ -1001,6 +1080,20 @@ void MainWindow::on_Create_Config_clicked()
                                  "The config was not updated.")
                                   .arg(conf.fileName()));
         return;
+    }
+
+    // UKI stanzas name versioned images. Without the kernel-install plugin
+    // they go stale at the next kernel update, so say so up front.
+    if (!Platform::ukiRefreshHookInstalled()
+        && !Uki::markedStanzas(QString::fromUtf8(payload)).isEmpty()) {
+        QMessageBox::information(this, tr("Create Config"),
+            tr("This config boots Unified Kernel Images, whose file names change "
+               "with every kernel update.\n\n"
+               "rEFInd_GUI's kernel-install hook was not found on this system, so "
+               "after a kernel update use Create Config and Install Config again "
+               "to point the menu at the new kernel. Installing rEFInd_GUI's "
+               "package on the Linux system that owns these kernels adds the hook, "
+               "which does this automatically."));
     }
 }
 
