@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QMap>
 #include <QProcess>
+#include <QRegularExpression>
 
 // GPT partition type GUID for EFI System Partitions (lowercase, no braces).
 static const QString ESP_PARTTYPE_GPT = QStringLiteral("c12a7328-f81f-11d2-ba4b-00a0c93ec93b");
@@ -177,6 +178,35 @@ QList<BootEntry> OSDetector::scanEspRoot(const QString &rootPath, const QString 
         linuxEntries.append(e);
     }
 
+    // Unified Kernel Images in /EFI/Linux — systemd's kernel-install uki layout,
+    // and the one location rEFInd auto-detects UKIs in. Each .efi is a
+    // self-contained kernel+initrd+cmdline image: no vendor dir, no loader to
+    // chainload. kernel-install names them <entry-token>-<version>.efi, where
+    // the token is usually a 32-hex machine-id (rename to the running distro,
+    // as the bare systemd-boot case above does) or already a distro name.
+    const QDir ukiDir(efiDir.filePath(QStringLiteral("Linux")));
+    if (ukiDir.exists()) {
+        const QStringList ukis = ukiDir.entryList(
+            {QStringLiteral("*.efi"), QStringLiteral("*.EFI")}, QDir::Files, QDir::Name);
+        for (const QString &uki : ukis) {
+            QString version = uki;
+            version.chop(4); // trailing ".efi"
+            static const QRegularExpression machineIdToken(
+                QStringLiteral("^[0-9a-f]{32}[-_+]"),
+                QRegularExpression::CaseInsensitiveOption);
+            version.remove(machineIdToken);
+            if (version.isEmpty())
+                continue;
+            BootEntry e;
+            const QString distro = !runningDistroName.isEmpty()
+                                       ? runningDistroName : QStringLiteral("Linux");
+            e.displayName = distro + QStringLiteral(" (") + version + QStringLiteral(")");
+            e.menuName = e.displayName;
+            e.loaderPath = QStringLiteral("/EFI/Linux/") + uki;
+            linuxEntries.append(e);
+        }
+    }
+
     if (!windows.loaderPath.isEmpty())
         entries.append(windows);
     entries.append(linuxEntries);
@@ -294,6 +324,27 @@ bool OSDetector::classifyLoaderPath(const QString &loaderPath, BootEntry &entry)
     // surfaces a bogus "Microsoft" entry next to the real "Windows" one.
     if (lower.startsWith(QLatin1String("/efi/microsoft/")))
         return false;
+
+    // Unified Kernel Images sit directly in /EFI/Linux/<file>.efi — no vendor
+    // dir and a filename ending in .efi, both of which the vendor-dir logic
+    // below would reject. Name them exactly like scanEspRoot() does so deep
+    // scan and firmware-recovered entries stay consistent with scanned ones.
+    if (lower.startsWith(QLatin1String("/efi/linux/")) && lower.endsWith(QLatin1String(".efi"))) {
+        QString version = loaderPath.section('/', -1);
+        version.chop(4);
+        static const QRegularExpression machineIdToken(
+            QStringLiteral("^[0-9a-f]{32}[-_+]"),
+            QRegularExpression::CaseInsensitiveOption);
+        version.remove(machineIdToken);
+        if (version.isEmpty())
+            return false;
+        const QString distro = !runningOsName().isEmpty() ? runningOsName()
+                                                          : QStringLiteral("Linux");
+        entry.displayName = distro + QStringLiteral(" (") + version + QStringLiteral(")");
+        entry.menuName = entry.displayName;
+        entry.loaderPath = loaderPath;
+        return true;
+    }
 
     // /EFI/<vendor>/<loader>.efi — a loader with no vendor dir is not an OS.
     const QString vendorLower = lower.section('/', 2, 2);
