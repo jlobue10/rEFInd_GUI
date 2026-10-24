@@ -7,6 +7,7 @@
 #include "espops/themesinstall.h"
 #include "espops/userio.h"
 #include "espops/wintasks.h"
+#include "scripttrust.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -82,15 +83,6 @@ void prepareDataDir()
     copySeedDir(shipped + "/themes", root + "/themes");
 }
 
-static bool isBelow(const QString &path, const QString &root)
-{
-    const QString cleanPath = QDir::cleanPath(path);
-    QString cleanRoot = QDir::cleanPath(root);
-    if (!cleanRoot.endsWith('/'))
-        cleanRoot += '/';
-    return cleanPath.startsWith(cleanRoot, Qt::CaseInsensitive);
-}
-
 static QString knownFolderPath(REFKNOWNFOLDERID folderId)
 {
     PWSTR nativePath = nullptr;
@@ -101,23 +93,22 @@ static QString knownFolderPath(REFKNOWNFOLDERID folderId)
     return path;
 }
 
-static QString trustedScriptPath(const QString &name)
+// The elevated GUI runs the shipped PowerShell scripts, so they are trusted
+// only from beneath Program Files (where standard users cannot replace them).
+// ScriptTrust holds the decision, expands 8.3 short launch paths before the
+// comparison, and explains a refusal in *detail.
+static QString trustedScriptPath(const QString &name, QString *detail = nullptr)
 {
-    const QString appDir = QFileInfo(QCoreApplication::applicationDirPath()).canonicalFilePath();
-    const QString script = QFileInfo(appDir + "/windows/" + name).canonicalFilePath();
-    if (appDir.isEmpty() || script.isEmpty() || !isBelow(script, appDir))
-        return {};
-
     const QStringList protectedRoots = {
         knownFolderPath(FOLDERID_ProgramFiles),
         knownFolderPath(FOLDERID_ProgramFilesX64),
         knownFolderPath(FOLDERID_ProgramFilesX86)
     };
-    for (const QString &root : protectedRoots) {
-        if (!root.isEmpty() && isBelow(appDir, QDir::fromNativeSeparators(root)))
-            return script;
-    }
-    return {};
+    const ScriptTrust::Verdict verdict = ScriptTrust::evaluate(
+        QCoreApplication::applicationDirPath(), name, protectedRoots);
+    if (detail)
+        *detail = verdict.detail;
+    return verdict.scriptPath;
 }
 
 QString windowsSystemExecutable(const QString &relativePath)
@@ -141,24 +132,40 @@ QString windowsSystemExecutable(const QString &relativePath)
         QDir(QDir::fromNativeSeparators(systemDirectory)).filePath(relativePath));
 }
 
-static bool runScriptInWindow(const QString &scriptName, const QStringList &scriptArgs = {})
+static bool runScriptInWindow(const QString &scriptName, QString *detail = nullptr,
+                              const QStringList &scriptArgs = {})
 {
-    const QString scriptPath = trustedScriptPath(scriptName);
+    const QString scriptPath = trustedScriptPath(scriptName, detail);
+    if (scriptPath.isEmpty())
+        return false;
     const QString powershell = windowsSystemExecutable(
         QStringLiteral("WindowsPowerShell/v1.0/powershell.exe"));
-    if (scriptPath.isEmpty() || powershell.isEmpty())
+    if (powershell.isEmpty() || !QFileInfo::exists(powershell)) {
+        if (detail)
+            *detail = QCoreApplication::translate(
+                          "Platform", "Windows PowerShell was not found at %1.")
+                          .arg(powershell.isEmpty() ? QStringLiteral("System32\\WindowsPowerShell\\v1.0")
+                                                    : powershell);
         return false;
+    }
     QStringList args = {QStringLiteral("-NoProfile"), QStringLiteral("-ExecutionPolicy"),
                         QStringLiteral("Bypass"), QStringLiteral("-NoExit"),
                         QStringLiteral("-File"), QDir::toNativeSeparators(scriptPath)};
     args += scriptArgs;
-    return QProcess::startDetached(powershell, args);
+    if (!QProcess::startDetached(powershell, args)) {
+        if (detail)
+            *detail = QCoreApplication::translate(
+                          "Platform", "Windows refused to start %1 for %2.")
+                          .arg(powershell, QDir::toNativeSeparators(scriptPath));
+        return false;
+    }
+    return true;
 }
 
-bool runInstallerScript(const QString &installSource)
+bool runInstallerScript(const QString &installSource, QString *detail)
 {
     Q_UNUSED(installSource); // only the SourceForge download exists on Windows
-    return runScriptInWindow(QStringLiteral("install_rEFInd.ps1"));
+    return runScriptInWindow(QStringLiteral("install_rEFInd.ps1"), detail);
 }
 
 // The GUI itself runs elevated (requireAdministrator manifest), so the
@@ -316,13 +323,20 @@ void prepareDataDir()
 {
 }
 
-bool runInstallerScript(const QString &installSource)
+bool runInstallerScript(const QString &installSource, QString *detail)
 {
     const QString script = dataDir()
         + (installSource == QLatin1String("Sourceforge")
                ? QStringLiteral("/refind_install_Sourceforge.sh")
                : QStringLiteral("/refind_install_package_mgr.sh"));
-    return QProcess::startDetached(QStringLiteral("xterm"), {QStringLiteral("-e"), script});
+    if (!QProcess::startDetached(QStringLiteral("xterm"), {QStringLiteral("-e"), script})) {
+        if (detail)
+            *detail = QCoreApplication::translate(
+                          "Platform", "xterm could not be started to run %1. Is xterm installed?")
+                          .arg(script);
+        return false;
+    }
+    return true;
 }
 
 // Runs one subcommand of the root-owned /etc/rEFInd helper binary

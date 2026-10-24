@@ -23,8 +23,9 @@ QString windowsSystemExecutable(const QString &relativePath);
 void prepareDataDir();
 
 // Launches the rEFInd installer for the chosen source in a new terminal
-// window. Returns false if the launch itself failed.
-bool runInstallerScript(const QString &installSource);
+// window. Returns false if the launch itself failed; *detail then says why
+// (on Windows: the script is only run from beneath Program Files).
+bool runInstallerScript(const QString &installSource, QString *detail = nullptr);
 
 // Installs the generated config + PNGs onto the ESP (blocking, no visible
 // window). Returns the process exit code (0 = success) and captures the

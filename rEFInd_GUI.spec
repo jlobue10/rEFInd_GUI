@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.5.0
+Version:        3.5.1
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -75,6 +75,14 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
+* Fri Oct 24 2026 Jon LoBue <jlobue10@gmail.com> [3.5.1-1]
+- Windows: when Install rEFInd refuses to start the installer script, the
+  dialog now says why (the application is outside Program Files, the script
+  is missing, or PowerShell could not be started) instead of only "Failed to
+  launch the installation script."
+- Windows: an installation reached through an 8.3 short path (C:\PROGRA~1\...)
+  was refused by that check; short names are expanded before the comparison.
+
 * Thu Oct 15 2026 Jon LoBue <jlobue10@gmail.com> [3.5.0-1]
 - Unified Kernel Images (UKIs) in EFI/Linux are detected as one Boot Option
   per distro. The menu entry boots the newest kernel, and older kernels are

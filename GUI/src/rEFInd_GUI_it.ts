@@ -726,7 +726,7 @@ Replace it?</source>
     </message>
     <message>
         <location filename="mainwindow.ui" line="464"/>
-        <location filename="mainwindow.cpp" line="1808"/>
+        <location filename="mainwindow.cpp" line="1817"/>
         <source>Open Folder</source>
         <translation>Apri cartella</translation>
     </message>
@@ -827,9 +827,9 @@ Replace it?</source>
     </message>
     <message>
         <location filename="mainwindow.ui" line="932"/>
-        <location filename="mainwindow.cpp" line="1241"/>
-        <location filename="mainwindow.cpp" line="1254"/>
-        <location filename="mainwindow.cpp" line="1259"/>
+        <location filename="mainwindow.cpp" line="1250"/>
+        <location filename="mainwindow.cpp" line="1263"/>
+        <location filename="mainwindow.cpp" line="1268"/>
         <source>Install Config</source>
         <translation>Installa config</translation>
     </message>
@@ -845,7 +845,7 @@ Replace it?</source>
     </message>
     <message>
         <location filename="mainwindow.ui" line="965"/>
-        <location filename="mainwindow.cpp" line="1021"/>
+        <location filename="mainwindow.cpp" line="1030"/>
         <source>Showtools</source>
         <translation>Showtools</translation>
     </message>
@@ -871,17 +871,17 @@ Replace it?</source>
     </message>
     <message>
         <location filename="mainwindow.ui" line="910"/>
-        <location filename="mainwindow.cpp" line="1053"/>
-        <location filename="mainwindow.cpp" line="1067"/>
-        <location filename="mainwindow.cpp" line="1078"/>
-        <location filename="mainwindow.cpp" line="1089"/>
-        <location filename="mainwindow.cpp" line="1333"/>
+        <location filename="mainwindow.cpp" line="1062"/>
+        <location filename="mainwindow.cpp" line="1076"/>
+        <location filename="mainwindow.cpp" line="1087"/>
+        <location filename="mainwindow.cpp" line="1098"/>
+        <location filename="mainwindow.cpp" line="1342"/>
         <source>Create Config</source>
         <translation>Crea config</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="888"/>
-        <location filename="mainwindow.cpp" line="651"/>
+        <location filename="mainwindow.cpp" line="655"/>
         <source>Install rEFInd</source>
         <translation>Installa rEFInd</translation>
     </message>
@@ -956,9 +956,9 @@ Replace it?</source>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1171"/>
-        <location filename="mainwindow.cpp" line="1779"/>
-        <location filename="mainwindow.cpp" line="1792"/>
-        <location filename="mainwindow.cpp" line="1797"/>
+        <location filename="mainwindow.cpp" line="1788"/>
+        <location filename="mainwindow.cpp" line="1801"/>
+        <location filename="mainwindow.cpp" line="1806"/>
         <source>Install Themes</source>
         <translation>Installa temi</translation>
     </message>
@@ -1076,7 +1076,7 @@ Use Create Config and Install Config to point it at the current kernels. Install
         <translation>Impossibile avviare lo script di installazione.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1022"/>
+        <location filename="mainwindow.cpp" line="1031"/>
         <source>These showtools entries are not recognized: %1
 
 Valid entries: %2</source>
@@ -1085,32 +1085,32 @@ Valid entries: %2</source>
 Voci valide: %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1054"/>
+        <location filename="mainwindow.cpp" line="1063"/>
         <source>Could not write %1</source>
         <translation>Impossibile scrivere %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1068"/>
+        <location filename="mainwindow.cpp" line="1077"/>
         <source>No OS entries were detected or selected.
 
 The generated config would contain no boot stanzas, so it was not written. Use Deep Scan to look for more bootloaders, or pick an OS in the Boot Option boxes, then create the config again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1079"/>
+        <location filename="mainwindow.cpp" line="1088"/>
         <source>Could not write %1 completely — the disk may be full. The config was not updated.</source>
         <translation>Impossibile scrivere %1 completamente — il disco potrebbe essere pieno. La configurazione non è stata aggiornata.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1090"/>
+        <location filename="mainwindow.cpp" line="1099"/>
         <source>This config boots Unified Kernel Images, whose file names change with every kernel update.
 
 rEFInd_GUI&apos;s kernel-install hook was not found on this system, so after a kernel update use Create Config and Install Config again to point the menu at the new kernel. Installing rEFInd_GUI&apos;s package on the Linux system that owns these kernels adds the hook, which does this automatically.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1242"/>
-        <location filename="mainwindow.cpp" line="1780"/>
+        <location filename="mainwindow.cpp" line="1251"/>
+        <location filename="mainwindow.cpp" line="1789"/>
         <source>The privileged install helper was NOT run:
 
 %1
@@ -1134,12 +1134,12 @@ Non corrisponde alla copia fornita con questa versione dell&apos;app. Poiché vi
 Reinstalla la GUI per ripristinare lo script originale, poi riprova.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1256"/>
+        <location filename="mainwindow.cpp" line="1265"/>
         <source>The config was installed successfully.</source>
         <translation>La configurazione è stata installata correttamente.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1257"/>
+        <location filename="mainwindow.cpp" line="1266"/>
         <source>The config was installed successfully.
 
 %1</source>
@@ -1148,12 +1148,12 @@ Reinstalla la GUI per ripristinare lo script originale, poi riprova.</translatio
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1261"/>
+        <location filename="mainwindow.cpp" line="1270"/>
         <source>Installing the config failed (code %1).</source>
         <translation>Installazione della configurazione non riuscita (codice %1).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1262"/>
+        <location filename="mainwindow.cpp" line="1271"/>
         <source>Installing the config failed (code %1).
 
 %2</source>
@@ -1162,31 +1162,31 @@ Reinstalla la GUI per ripristinare lo script originale, poi riprova.</translatio
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1334"/>
+        <location filename="mainwindow.cpp" line="1343"/>
         <source>Could not stage the theme file %1 — the config was not updated.</source>
         <translation>Impossibile preparare il file del tema %1 — la configurazione non è stata aggiornata.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1361"/>
-        <location filename="mainwindow.cpp" line="1371"/>
-        <location filename="mainwindow.cpp" line="1378"/>
+        <location filename="mainwindow.cpp" line="1370"/>
+        <location filename="mainwindow.cpp" line="1380"/>
+        <location filename="mainwindow.cpp" line="1387"/>
         <source>Copy PNG</source>
         <translation>Copia PNG</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1362"/>
-        <location filename="mainwindow.cpp" line="1372"/>
-        <location filename="mainwindow.cpp" line="1379"/>
+        <location filename="mainwindow.cpp" line="1371"/>
+        <location filename="mainwindow.cpp" line="1381"/>
+        <location filename="mainwindow.cpp" line="1388"/>
         <source>Could not copy %1 to %2</source>
         <translation>Impossibile copiare %1 in %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1404"/>
+        <location filename="mainwindow.cpp" line="1413"/>
         <source>Invalid PNG</source>
         <translation>PNG non valido</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1405"/>
+        <location filename="mainwindow.cpp" line="1414"/>
         <source>%1 is not a valid PNG file.
 
 Backgrounds and OS icons must be real PNG images (not just files with a .png extension).</source>
@@ -1195,43 +1195,43 @@ Backgrounds and OS icons must be real PNG images (not just files with a .png ext
 Gli sfondi e le icone di sistema devono essere vere immagini PNG (non semplici file con estensione .png).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1674"/>
+        <location filename="mainwindow.cpp" line="1683"/>
         <source>Check For Update</source>
         <translation>Controlla aggiornamenti</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1677"/>
+        <location filename="mainwindow.cpp" line="1686"/>
         <source>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Original GUI Creator: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Special Thanks to Deck Wizard for testing and QA&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Deck Wizard Dual Boot Tutorial&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;rEFInd Customization GUI v%1&lt;br&gt;&lt;br&gt;Creatore originale della GUI: &lt;a href=&apos;https://github.com/jlobue10&apos;&gt;jlobue10&lt;/a&gt;&lt;br&gt;&lt;br&gt;Un ringraziamento speciale a Deck Wizard per i test e il controllo qualità&lt;br&gt;&lt;br&gt;&lt;a href=&apos;https://www.youtube.com/watch?v=ubWPIf2DbvE&apos;&gt;Tutorial dual boot di Deck Wizard&lt;/a&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1724"/>
+        <location filename="mainwindow.cpp" line="1733"/>
         <source>&lt;p align=&apos;center&apos;&gt;Update check failed. Please check your internet connection and try again.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;Controllo aggiornamenti non riuscito. Verifica la connessione a Internet e riprova.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1727"/>
+        <location filename="mainwindow.cpp" line="1736"/>
         <source>&lt;p align=&apos;center&apos;&gt;An update is available &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;here&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;È disponibile un aggiornamento &lt;a href=&apos;https://github.com/jlobue10/rEFInd_GUI/releases&apos;&gt;qui&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1731"/>
+        <location filename="mainwindow.cpp" line="1740"/>
         <source>&lt;p align=&apos;center&apos;&gt;No update found. You are using the latest version.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&apos;center&apos;&gt;Nessun aggiornamento trovato. Stai usando la versione più recente.&lt;br&gt;&lt;br&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1741"/>
+        <location filename="mainwindow.cpp" line="1750"/>
         <source>Background Randomizer</source>
         <translation>Sfondo casuale</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1742"/>
-        <location filename="mainwindow.cpp" line="1759"/>
+        <location filename="mainwindow.cpp" line="1751"/>
+        <location filename="mainwindow.cpp" line="1768"/>
         <source>Failed to launch the randomizer setup.</source>
         <translation>Impossibile avviare la configurazione dello sfondo casuale.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1758"/>
+        <location filename="mainwindow.cpp" line="1767"/>
         <source>Theme Randomizer</source>
         <translation>Tema casuale</translation>
     </message>
@@ -1252,12 +1252,12 @@ Non corrisponde alla copia fornita con questa versione dell&apos;app. Poiché vi
 Reinstalla la GUI per ripristinare lo script originale, poi riprova.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1794"/>
+        <location filename="mainwindow.cpp" line="1803"/>
         <source>The themes were installed successfully.</source>
         <translation>I temi sono stati installati correttamente.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1795"/>
+        <location filename="mainwindow.cpp" line="1804"/>
         <source>The themes were installed successfully.
 
 %1</source>
@@ -1266,12 +1266,12 @@ Reinstalla la GUI per ripristinare lo script originale, poi riprova.</translatio
 %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1799"/>
+        <location filename="mainwindow.cpp" line="1808"/>
         <source>Installing the themes failed (code %1).</source>
         <translation>Installazione dei temi non riuscita (codice %1).</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1800"/>
+        <location filename="mainwindow.cpp" line="1809"/>
         <source>Installing the themes failed (code %1).
 
 %2</source>
@@ -1280,7 +1280,7 @@ Reinstalla la GUI per ripristinare lo script originale, poi riprova.</translatio
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1809"/>
+        <location filename="mainwindow.cpp" line="1818"/>
         <source>Failed to open %1 in the file manager.</source>
         <translation>Impossibile aprire %1 nel gestore file.</translation>
     </message>
@@ -1296,38 +1296,53 @@ Reinstalla la GUI per ripristinare lo script originale, poi riprova.</translatio
         <translation type="vanished">Impossibile avviare powershell.exe.</translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="178"/>
+        <location filename="platform.cpp" line="145"/>
+        <source>Windows PowerShell was not found at %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="platform.cpp" line="157"/>
+        <source>Windows refused to start %1 for %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="platform.cpp" line="185"/>
         <source>No EFI System Partition with rEFInd on it could be found.
 Install rEFInd first, then install the %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="200"/>
+        <location filename="platform.cpp" line="207"/>
         <source>EFI\refind\themes on the target ESP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="204"/>
+        <location filename="platform.cpp" line="211"/>
         <source>EFI\refind on the target ESP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="343"/>
+        <location filename="platform.cpp" line="334"/>
+        <source>xterm could not be started to run %1. Is xterm installed?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="platform.cpp" line="357"/>
         <source>sudo could not be started.</source>
         <translation>Impossibile avviare sudo.</translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="374"/>
+        <location filename="platform.cpp" line="388"/>
         <source>missing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="388"/>
+        <location filename="platform.cpp" line="402"/>
         <source>%1 (expected version %2, found: %3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="platform.cpp" line="418"/>
+        <location filename="platform.cpp" line="432"/>
         <source>%1 does not provide the efi-utility operation (expected version %2). Reinstall rEFInd_GUI to repair.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1371,6 +1386,36 @@ Install rEFInd first, then install the %1.</source>
         <location filename="main.cpp" line="24"/>
         <source>QT_LAYOUT_DIRECTION</source>
         <translation>LTR</translation>
+    </message>
+</context>
+<context>
+    <name>ScriptTrust</name>
+    <message>
+        <location filename="scripttrust.cpp" line="63"/>
+        <source>The application directory could not be resolved (%1).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scripttrust.cpp" line="71"/>
+        <source>The script %1 is missing from %2. Reinstall the application to restore it.</source>
+        <oldsource>The script %1 is missing from %2. Reinstall rEFInd GUI to restore it.</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scripttrust.cpp" line="76"/>
+        <source>The script %1 resolves to %2, outside the application directory, so it is not run.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scripttrust.cpp" line="95"/>
+        <source>The application is running from %1, which is not inside a protected program directory (%2). The installer script runs with administrator rights, so it is only started from a location standard users cannot modify. Reinstall with the setup program to its default location.</source>
+        <oldsource>rEFInd GUI is running from %1, which is not inside a protected program directory (%2). The installer script runs with administrator rights, so it is only started from a location standard users cannot modify. Reinstall with the setup program to its default location.</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scripttrust.cpp" line="100"/>
+        <source>none found</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
