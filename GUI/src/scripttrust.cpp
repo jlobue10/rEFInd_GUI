@@ -68,7 +68,7 @@ Verdict evaluate(const QString &appDir, const QString &scriptName,
     const QString expected = app + QLatin1String("/windows/") + scriptName;
     const QString script = canonicalize(expected);
     if (script.isEmpty()) {
-        verdict.detail = tr("The script %1 is missing from %2. Reinstall rEFInd GUI to restore it.")
+        verdict.detail = tr("The script %1 is missing from %2. Reinstall the application to restore it.")
                              .arg(scriptName, QDir::toNativeSeparators(app + QLatin1String("/windows")));
         return verdict;
     }
@@ -92,7 +92,7 @@ Verdict evaluate(const QString &appDir, const QString &scriptName,
             return verdict;
         }
     }
-    verdict.detail = tr("rEFInd GUI is running from %1, which is not inside a protected program "
+    verdict.detail = tr("The application is running from %1, which is not inside a protected program "
                         "directory (%2). The installer script runs with administrator rights, so it "
                         "is only started from a location standard users cannot modify. Reinstall "
                         "with the setup program to its default location.")

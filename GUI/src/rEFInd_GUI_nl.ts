@@ -1393,7 +1393,8 @@ Install rEFInd first, then install the %1.</source>
     </message>
     <message>
         <location filename="scripttrust.cpp" line="71"/>
-        <source>The script %1 is missing from %2. Reinstall rEFInd GUI to restore it.</source>
+        <source>The script %1 is missing from %2. Reinstall the application to restore it.</source>
+        <oldsource>The script %1 is missing from %2. Reinstall rEFInd GUI to restore it.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1403,7 +1404,8 @@ Install rEFInd first, then install the %1.</source>
     </message>
     <message>
         <location filename="scripttrust.cpp" line="95"/>
-        <source>rEFInd GUI is running from %1, which is not inside a protected program directory (%2). The installer script runs with administrator rights, so it is only started from a location standard users cannot modify. Reinstall with the setup program to its default location.</source>
+        <source>The application is running from %1, which is not inside a protected program directory (%2). The installer script runs with administrator rights, so it is only started from a location standard users cannot modify. Reinstall with the setup program to its default location.</source>
+        <oldsource>rEFInd GUI is running from %1, which is not inside a protected program directory (%2). The installer script runs with administrator rights, so it is only started from a location standard users cannot modify. Reinstall with the setup program to its default location.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
