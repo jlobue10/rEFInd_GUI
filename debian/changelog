@@ -1,3 +1,15 @@
+refind-gui (3.5.1) unstable; urgency=medium
+
+  * Windows: when Install rEFInd refuses to start the installer script,
+    the dialog now says why (the application is outside Program Files,
+    the script is missing, or PowerShell could not be started) instead of
+    only "Failed to launch the installation script."
+  * Windows: an installation reached through an 8.3 short path
+    (C:\PROGRA~1\...) was refused by that check; short names are expanded
+    before the comparison.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Fri, 24 Oct 2026 14:30:00 -0700
+
 refind-gui (3.5.0) unstable; urgency=medium
 
   * Unified Kernel Images (UKIs) in EFI/Linux are detected as one Boot
