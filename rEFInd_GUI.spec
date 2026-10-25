@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.5.1
+Version:        3.5.2
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -75,6 +75,16 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
+* Sat Oct 25 2026 Jon LoBue <jlobue10@gmail.com> [3.5.2-1]
+- Windows: installing or uninstalling with a one-entry BootOrder picked a
+  malformed Boot#### id (a one-element array was unrolled into a string).
+- Linux: re-running install-rEFInd-GUI.sh no longer aborts with "uncommitted
+  changes"; substitutions go into a temporary copy instead of the clone.
+- Linux installers only delete old rEFInd boot entries that point at this ESP;
+  the uninstaller keeps rEFInd's files when it could not resolve the ESP's
+  PARTUUID, so no dangling boot entry is left behind.
+- EFI utilities: curl is run from the system directories only; Qt 5 build fix;
+  the preview dialog follows resizes.
 * Fri Oct 24 2026 Jon LoBue <jlobue10@gmail.com> [3.5.1-1]
 - Windows: when Install rEFInd refuses to start the installer script, the
   dialog now says why (the application is outside Program Files, the script
