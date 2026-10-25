@@ -374,9 +374,13 @@ private slots:
         const QByteArray payload("hello");
         const FileOutcome refused = installPayload(root, payload, recordFor(payload), false);
         QCOMPARE(refused.exitCode, kExitRefused);
-        QFile still(root + QStringLiteral("/EFI/tools/ipxe.efi"));
-        QVERIFY(still.open(QIODevice::ReadOnly));
-        QCOMPARE(still.readAll(), existing);
+        {
+            // Scoped: Windows cannot rename over a file with an open handle,
+            // so this must be closed before the confirmed replacement below.
+            QFile still(root + QStringLiteral("/EFI/tools/ipxe.efi"));
+            QVERIFY(still.open(QIODevice::ReadOnly));
+            QCOMPARE(still.readAll(), existing);
+        }
         QVERIFY(!QFile::exists(root + QStringLiteral("/EFI/tools/rEFInd_GUI-netboot.xyz")));
 
         const FileOutcome replaced = installPayload(root, payload, recordFor(payload), true);
@@ -484,6 +488,10 @@ private slots:
             QVERIFY(shell.open(QIODevice::WriteOnly));
             QCOMPARE(shell.write("shell"), 5);
         }
+#ifdef Q_OS_WIN
+        // QFile::link makes a .lnk shortcut on Windows, not a symlink.
+        QSKIP("symlink refusal needs a real symlink; covered on Linux");
+#endif
         QVERIFY(QFile::link(root + QStringLiteral("/EFI/tools/shell.efi"),
                             root + QStringLiteral("/EFI/tools/ipxe.efi")));
         QVERIFY(QFileInfo(root + QStringLiteral("/EFI/tools/ipxe.efi")).isSymLink());

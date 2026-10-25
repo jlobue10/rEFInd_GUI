@@ -127,7 +127,9 @@ fi
 
 # 3. Remove rEFInd's files (and the Xbox 360 driver's config dir) from the
 # ESP, plus the kernel-options file refind-install drops in /boot.
-if [ "$KEEP_ESP_FILES" -eq 0 ] && [ -n "$ESP_MP" ]; then
+# Gated like step 1: without a PARTUUID the boot entries were left in place,
+# and deleting the loader they point at would leave them dangling.
+if [ "$KEEP_ESP_FILES" -eq 0 ] && [ -n "$ESP_MP" ] && [ -n "$ESP_PARTUUID" ]; then
 	for d in "$ESP_MP/EFI/refind" "$ESP_MP/EFI/Xbox360"; do
 		if [ -d "$d" ]; then
 			rm -rf "$d"

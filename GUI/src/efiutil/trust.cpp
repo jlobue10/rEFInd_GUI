@@ -3,11 +3,13 @@
 #include "netbootxyz.h"
 #include "zipmember.h"
 
+#include <QDir>
 #include <QFile>
 #include <QFileDevice>
 #include <QFileInfo>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QStandardPaths>
 #include <QUrl>
 
 namespace EfiUtil {
@@ -303,8 +305,23 @@ QByteArray CurlPublisherFetch::get(const QString &url, QString *error)
             *error = QStringLiteral("That download URL is not one this helper fetches.");
         return {};
     }
+    // Absolute system locations only, never a PATH lookup: this runs as root
+    // (the Linux helper) or elevated (the Windows GUI).
+#ifdef Q_OS_WIN
+    const QStringList curlDirs = {QDir::fromNativeSeparators(
+        QString::fromLocal8Bit(qgetenv("SystemRoot")) + QLatin1String("/System32"))};
+#else
+    const QStringList curlDirs = {QStringLiteral("/usr/bin"), QStringLiteral("/usr/sbin"),
+                                  QStringLiteral("/bin"), QStringLiteral("/sbin")};
+#endif
+    const QString curlExe = QStandardPaths::findExecutable(QStringLiteral("curl"), curlDirs);
+    if (curlExe.isEmpty()) {
+        if (error)
+            *error = QStringLiteral("curl was not found in the system directories.");
+        return {};
+    }
     QProcess curl;
-    curl.start(QStringLiteral("curl"),
+    curl.start(curlExe,
                {QStringLiteral("--fail"), QStringLiteral("--silent"), QStringLiteral("--show-error"),
                 QStringLiteral("--location"), QStringLiteral("--proto"), QStringLiteral("=https"),
                 QStringLiteral("--max-redirs"), QStringLiteral("3"), QStringLiteral("--max-time"),
