@@ -1,3 +1,18 @@
+refind-gui (3.5.2) unstable; urgency=medium
+
+  * Windows: installing or uninstalling with a one-entry BootOrder picked a
+    malformed Boot#### id (a one-element array was unrolled into a string).
+  * Linux: re-running install-rEFInd-GUI.sh no longer aborts with
+    "uncommitted changes"; substitutions go into a temporary copy instead of
+    the clone.
+  * Linux installers only delete old rEFInd boot entries that point at this
+    ESP; the uninstaller keeps rEFInd's files when it could not resolve the
+    ESP's PARTUUID, so no dangling boot entry is left behind.
+  * EFI utilities: curl is run from the system directories only; Qt 5 build
+    fix; the preview dialog follows resizes.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Sat, 25 Oct 2026 08:00:00 -0700
+
 refind-gui (3.5.1) unstable; urgency=medium
 
   * Windows: when Install rEFInd refuses to start the installer script,
