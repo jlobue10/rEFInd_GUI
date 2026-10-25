@@ -242,7 +242,10 @@
 					echo "Deleting old rEFInd entry Boot$_num..." >&2
 					sudo efibootmgr -b "$_num" -B >/dev/null 2>&1 \
 						|| echo "Warning: could not delete Boot$_num." >&2
-				done < <(efibootmgr | sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd.*/\1/p')
+				# Only entries on this ESP: a rEFInd entry pointing at another
+				# ESP (e.g. a Windows-side install) belongs to that install.
+				done < <(efibootmgr -v | grep -iF "GPT,${ESP_PARTUUID}," \
+					| sed -nE 's/^Boot([0-9A-Fa-f]{4})\*? +rEFInd.*/\1/p')
 			else
 				fail_install "The new rEFInd entry or its installed files could not be verified; old entries and Windows were left active."
 			fi

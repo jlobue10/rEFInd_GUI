@@ -105,14 +105,17 @@ EfiUtilitiesDialog::EfiUtilitiesDialog(const QString &showtoolsText,
     connect(updateButton, &QPushButton::clicked, this, &EfiUtilitiesDialog::beginInstall);
     connect(removeButton, &QPushButton::clicked, this, &EfiUtilitiesDialog::beginRemove);
     connect(closeButton, &QPushButton::clicked, this, &QDialog::reject);
-    connect(espCombo, &QComboBox::currentIndexChanged, this, [this](int) { refreshStatus(); });
-    connect(utilityCombo, &QComboBox::currentIndexChanged, this, [this](int) {
+    // QOverload: Qt 5 also declares currentIndexChanged(const QString &), so
+    // the bare member pointer is ambiguous there.
+    connect(espCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+            [this](int) { refreshStatus(); });
+    connect(utilityCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this](int) {
         applyUtilityChrome();
         populateVariants();
         refreshRelease();
         refreshStatus();
     });
-    connect(variantCombo, &QComboBox::currentIndexChanged, this, [this](int) {
+    connect(variantCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this](int) {
         if (currentUtility() != QLatin1String(EfiUtil::kUtilityId) || !checksums.ok)
             return;
         pendingAsset = selectedAsset();

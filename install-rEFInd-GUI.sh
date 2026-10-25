@@ -84,8 +84,8 @@ verify_release_asset() {
 	fi
 	expected="$(awk 'NR == 1 { print $1 }' "$sidecar")"
 	rm -f "$sidecar"
-	# grep rather than a case pattern: dash never matches *[!...]* after a
-	# leading *, so a shell pattern cannot reject non-hex input there.
+	# Exactly 64 hex digits: grep -E states the length and the character
+	# class in one anchored pattern, which a case pattern cannot.
 	if ! printf '%s\n' "$expected" | grep -qE '^[0-9A-Fa-f]{64}$'; then
 		echo "Error: malformed checksum sidecar for $artifact. Aborting." >&2
 		rm -f "$artifact"
@@ -161,6 +161,9 @@ if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 		verify_release_asset "$RPM_URL" "$INSTALL_RPM" || exit 1
 		printf '\nInstalling the prebuilt release rpm.\n\n'
 	else
+		# A download that failed partway leaves a truncated rpm behind, which
+		# the rEFInd_GUI-[0-9]*.rpm install glob below would pick up too.
+		rm -f rEFInd_GUI*.rpm
 		printf '\nNo release rpm available; building locally with rpmbuild.\n\n'
 		sudo dnf install -y rpm-build cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel
 		mkdir -p "$HOME/rpmbuild/SPECS" "$HOME/rpmbuild/SOURCES"
@@ -294,10 +297,17 @@ case "$USER" in
 		echo "Fix your account name or edit /etc/sudoers.d/zz_install_config_from_GUI by hand." >&2
 		exit 1 ;;
 esac
-sed -i "s@USER@$USER@g" "$CURRENT_WD/zz_install_config_from_GUI"
+# Substitute into private copies, never into the clone itself: editing its
+# tracked files in place left ~/rEFInd_GUI with uncommitted changes, which
+# made the clean-clone check at the top abort every later run of this script.
+STAGE_DIR="$(mktemp -d)" || exit 1
+trap 'rm -rf "$STAGE_DIR"' EXIT
+SUDOERS_FILE="$STAGE_DIR/zz_install_config_from_GUI"
+DESKTOP_FILE="$STAGE_DIR/rEFInd_GUI.desktop"
+sed "s@USER@$USER@g" "$CURRENT_WD/zz_install_config_from_GUI" > "$SUDOERS_FILE" || exit 1
 # The desktop file of releases before 3.4.6 points Icon= at HOME/.local/...;
 # from 3.4.6 it names the packaged icon and this is a no-op.
-sed -i "s@HOME@$HOME@g" "$CURRENT_WD/rEFInd_GUI.desktop"
+sed "s@HOME@$HOME@g" "$CURRENT_WD/rEFInd_GUI.desktop" > "$DESKTOP_FILE" || exit 1
 
 sudo mkdir -p /etc/rEFInd
 sudo cp -f "$CURRENT_WD/GUI/UEFI_icon.png" /etc/rEFInd/UEFI_icon.png
@@ -325,8 +335,8 @@ sudo chmod 644 /etc/rEFInd/background-dir
 # drop-in sorting later (e.g. SteamOS's /etc/sudoers.d/wheel) would override
 # a rule named install_config_from_GUI -- which is also why the old-name rule
 # from previous versions is removed.
-if sudo visudo -cf "$CURRENT_WD/zz_install_config_from_GUI" > /dev/null 2>&1; then
-	sudo cp -f "$CURRENT_WD/zz_install_config_from_GUI" /etc/sudoers.d/zz_install_config_from_GUI
+if sudo visudo -cf "$SUDOERS_FILE" > /dev/null 2>&1; then
+	sudo cp -f "$SUDOERS_FILE" /etc/sudoers.d/zz_install_config_from_GUI
 	sudo chown root:root /etc/sudoers.d/zz_install_config_from_GUI
 	sudo chmod 440 /etc/sudoers.d/zz_install_config_from_GUI
 	sudo rm -f /etc/sudoers.d/install_config_from_GUI
@@ -336,7 +346,7 @@ else
 fi
 
 if [ "$BAZZITE" = 0 ]; then
-	sudo cp -f "$CURRENT_WD/rEFInd_GUI.desktop" /etc/rEFInd/rEFInd_GUI.desktop
+	sudo cp -f "$DESKTOP_FILE" /etc/rEFInd/rEFInd_GUI.desktop
 	sudo chmod +x /etc/rEFInd/rEFInd_GUI.desktop
 	# ~/.Xresources configures every X client, not just the xterm this app
 	# uses, so back up whatever the user already had before replacing it.
@@ -352,11 +362,11 @@ if [ "$BAZZITE" = 0 ]; then
 elif [ ! -e /usr/share/applications/rEFInd_GUI.desktop ]; then
 	# Packages from 3.4.6 ship the menu entry themselves; this only serves a
 	# package that predates that.
-	sudo cp -f "$CURRENT_WD/rEFInd_GUI.desktop" /usr/share/applications/rEFInd_GUI.desktop
+	sudo cp -f "$DESKTOP_FILE" /usr/share/applications/rEFInd_GUI.desktop
 fi
 
 if [ -d "$HOME/Desktop" ]; then
-	cp -f "$CURRENT_WD/rEFInd_GUI.desktop" "$HOME/Desktop/refind_GUI.desktop"
+	cp -f "$DESKTOP_FILE" "$HOME/Desktop/refind_GUI.desktop"
 	chmod +x "$HOME/Desktop/refind_GUI.desktop"
 fi
 
