@@ -25,6 +25,16 @@ pause_before_exit() {
 }
 trap pause_before_exit EXIT
 
+# rEFInd's binaries, driver and tool directories carry an EFI architecture
+# suffix (refind_x64.efi, drivers_aa64, ...). The zip ships all three; pick
+# the running CPU's, as refind-install itself does.
+case "$(uname -m)" in
+	x86_64) EFI_ARCH="x64" ;;
+	aarch64) EFI_ARCH="aa64" ;;
+	i?86) EFI_ARCH="ia32" ;;
+	*) fail_install "Unsupported CPU architecture '$(uname -m)'." ;;
+esac
+
 echo "Installation started..."
 echo "Downloading rEFInd zip file..."
 
@@ -96,15 +106,18 @@ if [ ! -x "$REFIND_BIN/refind-install" ]; then
 	fail_install "rEFInd download or unzip failed ($REFIND_BIN is missing)."
 fi
 DEST="$ESP_MP/EFI/refind"
-[ -s "$REFIND_BIN/refind/refind_x64.efi" ] \
-	|| fail_install "The extracted rEFInd loader is missing or empty."
+[ -s "$REFIND_BIN/refind/refind_${EFI_ARCH}.efi" ] \
+	|| fail_install "The extracted rEFInd loader (refind_${EFI_ARCH}.efi) is missing or empty."
 sudo mkdir -p "$DEST" \
 	|| fail_install "Could not create $DEST; the ESP may be read-only."
-sudo cp -f "$REFIND_BIN/refind/refind_x64.efi" "$DEST/" \
-	&& sudo cp -rf "$REFIND_BIN/refind/drivers_x64/" "$DEST" \
-	&& sudo cp -rf "$REFIND_BIN/refind/tools_x64/" "$DEST" \
+sudo cp -f "$REFIND_BIN/refind/refind_${EFI_ARCH}.efi" "$DEST/" \
+	&& sudo cp -rf "$REFIND_BIN/refind/drivers_${EFI_ARCH}/" "$DEST" \
+	&& sudo cp -rf "$REFIND_BIN/refind/tools_${EFI_ARCH}/" "$DEST" \
 	|| fail_install "Could not copy the core rEFInd files to the ESP."
 
+# The handheld UEFI drivers below are x86-64 builds only (no ARM64 handheld
+# runs them); on any other architecture they are skipped.
+if [ "$EFI_ARCH" = "x64" ]; then
 # SkorionOS Xbox 360 USB controller UEFI driver: dropping it into rEFInd's
 # drivers_x64 folder makes wired/handheld gamepads (ROG Ally, Legion Go, etc.)
 # usable in the boot menu. The driver auto-creates its own config at
@@ -154,6 +167,9 @@ if [ -n "$TOUCH_DEVICE" ]; then
 		echo "Warning: failed to download TouchI2cDxe.efi; skipping touchscreen driver." >&2
 	fi
 fi
+else
+	echo "Skipping the handheld controller/touchscreen UEFI drivers (x86-64 builds only)."
+fi
 echo "Installing rEFInd files..."
 sudo "$REFIND_BIN/refind-install" \
 	|| fail_install "refind-install failed; Windows was not changed."
@@ -183,7 +199,7 @@ if ! sudo cp -f "$GUI_CONF" "$CONF_STAGE" \
 	sudo rm -f "$CONF_STAGE" 2>/dev/null
 	fail_install "Could not install refind.conf completely; the previous config was preserved."
 fi
-sudo test -s "$DEST/refind_x64.efi" && sudo test -s "$DEST/refind.conf" \
+sudo test -s "$DEST/refind_${EFI_ARCH}.efi" && sudo test -s "$DEST/refind.conf" \
 	|| fail_install "The installed rEFInd loader or config is missing or empty."
 
 # Sign before publishing the new NVRAM entry or changing Windows. With Secure
@@ -238,15 +254,15 @@ else
 	# Keep refind-install's fallback entry and every old rEFInd entry until
 	# the replacement has been created and verified end to end.
 	echo "Creating rEFInd boot entry ($ESP_DISK partition $ESP_PARTNUM)..."
-	if CREATE_OUT="$(sudo efibootmgr -c -d "$ESP_DISK" -p "$ESP_PARTNUM" -L "rEFInd" -l '\EFI\refind\refind_x64.efi' 2>&1)"; then
+	if CREATE_OUT="$(sudo efibootmgr -c -d "$ESP_DISK" -p "$ESP_PARTNUM" -L "rEFInd" -l "\\EFI\\refind\\refind_${EFI_ARCH}.efi" 2>&1)"; then
 		# efibootmgr -c puts the new entry first in BootOrder; use that
 		# to identify it. Verify both the exact label/path and the live
 		# loader/config before disabling any fallback boot entry.
 		CANDIDATE_BOOTNUM="$(efibootmgr | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{4}).*/\1/p')"
 		NVRAM_VERBOSE="$(efibootmgr -v 2>/dev/null)"
 		if [ -n "$CANDIDATE_BOOTNUM" ] \
-			&& printf '%s\n' "$NVRAM_VERBOSE" | grep -qiE "^Boot${CANDIDATE_BOOTNUM}\\*?[[:space:]]+rEFInd[[:space:]]+HD\\([0-9]+,GPT,${ESP_PARTUUID},[^)]*\\)/(File\\()?\\\\EFI\\\\refind\\\\refind_x64\\.efi" \
-			&& sudo test -s "$ESP_MP/EFI/refind/refind_x64.efi" \
+			&& printf '%s\n' "$NVRAM_VERBOSE" | grep -qiE "^Boot${CANDIDATE_BOOTNUM}\\*?[[:space:]]+rEFInd[[:space:]]+HD\\([0-9]+,GPT,${ESP_PARTUUID},[^)]*\\)/(File\\()?\\\\EFI\\\\refind\\\\refind_${EFI_ARCH}\\.efi" \
+			&& sudo test -s "$ESP_MP/EFI/refind/refind_${EFI_ARCH}.efi" \
 			&& sudo test -s "$ESP_MP/EFI/refind/refind.conf"; then
 			NEW_BOOTNUM="$CANDIDATE_BOOTNUM"
 			REFIND_READY=1

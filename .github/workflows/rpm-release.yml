@@ -72,7 +72,7 @@ jobs:
           cp rEFInd_bg_randomizer.service rEFInd_theme_randomizer.service ~/rpmbuild/SOURCES/
           rpmbuild -ba ~/rpmbuild/SPECS/rEFInd_GUI.spec
           mkdir out
-          cp ~/rpmbuild/RPMS/x86_64/rEFInd_GUI-*.rpm out/
+          cp ~/rpmbuild/RPMS/*/rEFInd_GUI-*.rpm out/
           cp ~/rpmbuild/SRPMS/rEFInd_GUI-*.src.rpm out/
           ls -l out
 

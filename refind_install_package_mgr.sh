@@ -14,6 +14,16 @@
 		exit 1
 	}
 
+	# rEFInd's binary and driver directory carry an EFI architecture suffix
+	# (refind_x64.efi, drivers_aa64, ...); refind-install installs the running
+	# CPU's, so verify and register the same one.
+	case "$(uname -m)" in
+		x86_64) EFI_ARCH="x64" ;;
+		aarch64) EFI_ARCH="aa64" ;;
+		i?86) EFI_ARCH="ia32" ;;
+		*) fail_install "Unsupported CPU architecture '$(uname -m)'." ;;
+	esac
+
 	echo 0
 	echo "# Installation started: Password prompt..."
 	PASSWD="$(zenity --password --title="Enter sudo password" 2>/dev/null)"
@@ -47,11 +57,18 @@
 		fi
 	elif command -v pacman >/dev/null 2>&1; then
 		echo -e '\nArch based installation starting.\n'
+		# `--populate` with no keyring name imports every keyring the distro
+		# installed (archlinux, archlinuxarm, cachyos, ...); naming only
+		# `archlinux` failed on Arch Linux ARM.
 		if ! { sudo pacman-key --init \
-			&& sudo pacman-key --populate archlinux \
+			&& sudo pacman-key --populate \
 			&& sudo pacman -Sy --noconfirm --needed refind; }; then
-			command -v refind-install >/dev/null 2>&1 \
-				|| fail_install "The rEFInd package could not be installed with pacman."
+			if ! command -v refind-install >/dev/null 2>&1; then
+				# Arch Linux ARM carries no refind package at all.
+				[ "$EFI_ARCH" = "aa64" ] \
+					&& fail_install "The rEFInd package could not be installed with pacman (Arch Linux ARM ships none); use the Sourceforge install source instead."
+				fail_install "The rEFInd package could not be installed with pacman."
+			fi
 			echo "Warning: pacman could not refresh/install refind; using the already-installed copy." >&2
 		fi
 	else
@@ -115,9 +132,12 @@
 		sudo cp -rf "$HOME/.local/rEFInd_GUI/themes/" "$DEST" 2>/dev/null \
 			|| echo "# Warning: could not copy the themes to the ESP; use Install Themes in the GUI."
 	fi
-	sudo test -s "$DEST/refind_x64.efi" && sudo test -s "$DEST/refind.conf" \
+	sudo test -s "$DEST/refind_${EFI_ARCH}.efi" && sudo test -s "$DEST/refind.conf" \
 		|| fail_install "The installed rEFInd loader or config is missing or empty."
 	echo 90
+	# The handheld UEFI drivers below are x86-64 builds only (no ARM64
+	# handheld runs them); on any other architecture they are skipped.
+	if [ "$EFI_ARCH" = "x64" ]; then
 	echo "# Installing Xbox 360 controller driver..."
 	# SkorionOS Xbox 360 USB controller UEFI driver: dropping it into rEFInd's
 	# drivers_x64 folder makes wired/handheld gamepads (ROG Ally, Legion Go, etc.)
@@ -172,6 +192,9 @@
 		fi
 		rm -f "$TOUCH_DRV_TMP"
 	fi
+	else
+		echo "# Skipping the handheld controller/touchscreen drivers (x86-64 builds only)."
+	fi
 	# CachyOS manages Secure Boot with sbctl. Signing is a prerequisite for
 	# publishing the new NVRAM entry or changing any fallback entry: an
 	# unsigned loader is not a usable replacement while Secure Boot enforces.
@@ -225,15 +248,15 @@
 			|| fail_install "The ESP has no GPT PARTUUID (MBR-partitioned disk?). Automatic verification of the new boot entry requires a GPT ESP with a PARTUUID; no new rEFInd entry was created and Windows was left active."
 		# Keep refind-install's fallback entry and every old rEFInd entry until
 		# the replacement has been created and verified end to end.
-		if CREATE_OUT="$(sudo efibootmgr -c -d "$ESP_DISK" -p "$ESP_PARTNUM" -L "rEFInd" -l '\EFI\refind\refind_x64.efi' 2>&1)"; then
+		if CREATE_OUT="$(sudo efibootmgr -c -d "$ESP_DISK" -p "$ESP_PARTNUM" -L "rEFInd" -l "\\EFI\\refind\\refind_${EFI_ARCH}.efi" 2>&1)"; then
 			# efibootmgr -c puts the new entry first in BootOrder; use that
 			# to identify it. Verify both the exact label/path and the live
 			# loader/config before disabling any fallback boot entry.
 			CANDIDATE_BOOTNUM="$(efibootmgr | sed -nE 's/^BootOrder: ([0-9A-Fa-f]{4}).*/\1/p')"
 			NVRAM_VERBOSE="$(efibootmgr -v 2>/dev/null)"
 			if [ -n "$CANDIDATE_BOOTNUM" ] \
-				&& printf '%s\n' "$NVRAM_VERBOSE" | grep -qiE "^Boot${CANDIDATE_BOOTNUM}\\*?[[:space:]]+rEFInd[[:space:]]+HD\\([0-9]+,GPT,${ESP_PARTUUID},[^)]*\\)/(File\\()?\\\\EFI\\\\refind\\\\refind_x64\\.efi" \
-				&& sudo test -s "$ESP_MP/EFI/refind/refind_x64.efi" \
+				&& printf '%s\n' "$NVRAM_VERBOSE" | grep -qiE "^Boot${CANDIDATE_BOOTNUM}\\*?[[:space:]]+rEFInd[[:space:]]+HD\\([0-9]+,GPT,${ESP_PARTUUID},[^)]*\\)/(File\\()?\\\\EFI\\\\refind\\\\refind_${EFI_ARCH}\\.efi" \
+				&& sudo test -s "$ESP_MP/EFI/refind/refind_${EFI_ARCH}.efi" \
 				&& sudo test -s "$ESP_MP/EFI/refind/refind.conf"; then
 				NEW_BOOTNUM="$CANDIDATE_BOOTNUM"
 				REFIND_READY=1

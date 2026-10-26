@@ -129,6 +129,17 @@ if [ "$FEDORA_BASE" != 0 ] && [ "$BAZZITE" != 0 ] && [ "$ARCH_BASE" != 0 ] && [ 
 	exit 1
 fi
 
+# Release packages are published per CPU architecture under each package
+# format's own name for it; pick this machine's.
+MACHINE="$(uname -m)"
+case "$MACHINE" in
+	x86_64) PKG_ARCH_PACMAN=x86_64; PKG_ARCH_DEB=amd64; PKG_ARCH_RPM=x86_64 ;;
+	aarch64) PKG_ARCH_PACMAN=aarch64; PKG_ARCH_DEB=arm64; PKG_ARCH_RPM=aarch64 ;;
+	*)
+		echo "Error: unsupported CPU architecture '$MACHINE' (x86_64 and aarch64 are supported). Aborting." >&2
+		exit 1 ;;
+esac
+
 mkdir -p "$HOME/.local/rEFInd_GUI"
 cp -rf "$CURRENT_WD/GUI/" "$HOME/.local/rEFInd_GUI"
 cp -rf "$CURRENT_WD/icons/" "$HOME/.local/rEFInd_GUI"
@@ -155,7 +166,7 @@ if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 	mkdir -p "$HOME/Downloads"
 	cd "$HOME/Downloads" || exit 1
 	rm -f rEFInd_GUI*.rpm
-	RPM_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*\.rpm" | grep -vE "\.src\.rpm|debuginfo|debugsource" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
+	RPM_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*\.${PKG_ARCH_RPM}\.rpm" | grep -vE "\.src\.rpm|debuginfo|debugsource" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
 	if [ -n "$RPM_URL" ] && wget "$RPM_URL"; then
 		INSTALL_RPM="$(basename "$RPM_URL")"
 		verify_release_asset "$RPM_URL" "$INSTALL_RPM" || exit 1
@@ -171,12 +182,12 @@ if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 		cp -f "$CURRENT_WD/rEFInd_bg_randomizer.service" "$CURRENT_WD/rEFInd_theme_randomizer.service" "$HOME/rpmbuild/SOURCES"
 		# Fresh output dir so the copy below can't pick up stale rpms from a
 		# previous build.
-		rm -f "$HOME"/rpmbuild/RPMS/x86_64/rEFInd_GUI*.rpm
+		rm -f "$HOME/rpmbuild/RPMS/$PKG_ARCH_RPM"/rEFInd_GUI*.rpm
 		if ! rpmbuild -bb "$HOME/rpmbuild/SPECS/rEFInd_GUI.spec"; then
 			echo "Error: rpmbuild failed. Aborting." >&2
 			exit 1
 		fi
-		cp -f "$HOME"/rpmbuild/RPMS/x86_64/rEFInd_GUI-[0-9]*.rpm "$HOME/Downloads/"
+		cp -f "$HOME/rpmbuild/RPMS/$PKG_ARCH_RPM"/rEFInd_GUI-[0-9]*.rpm "$HOME/Downloads/"
 	fi
 	# rEFInd_GUI-[0-9]* skips src/debug rpms and anything stale
 	if ! sudo dnf install -y "$HOME"/Downloads/rEFInd_GUI-[0-9]*.rpm; then
@@ -196,7 +207,7 @@ if [ "$BAZZITE" = 0 ]; then
 	cd "$HOME/Downloads" || exit 1
 	rm -f rEFInd_GUI*.rpm
 	# Thanks to Maclay74 steam-patch for the following syntax
-	RPM_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*\.rpm" | grep -vE "\.src\.rpm|debuginfo|debugsource" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
+	RPM_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*\.${PKG_ARCH_RPM}\.rpm" | grep -vE "\.src\.rpm|debuginfo|debugsource" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
 	if [ -z "$RPM_URL" ]; then
 		echo "Error: the latest GitHub release has no .rpm asset. Aborting." >&2
 		exit 1
@@ -233,7 +244,7 @@ if [ "$ARCH_BASE" = 0 ]; then
 			sudo rm -f "$f"
 		fi
 	done
-	PKG_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*x86_64\.pkg\.tar\.zst" | grep -v "debug" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
+	PKG_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*-${PKG_ARCH_PACMAN}\.pkg\.tar\.zst" | grep -v "debug" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
 	if [ -n "$PKG_URL" ] && wget "$PKG_URL"; then
 		printf '\nInstalling the prebuilt release package.\n\n'
 		INSTALL_PKG="$(basename "$PKG_URL")"
@@ -261,7 +272,7 @@ if [ "$DEB_BASE" = 0 ]; then
 	mkdir -p "$HOME/Downloads"
 	cd "$HOME/Downloads" || exit 1
 	rm -f refind-gui*.deb
-	DEB_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*_amd64\.deb" | grep -v "dbgsym" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
+	DEB_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*_${PKG_ARCH_DEB}\.deb" | grep -v "dbgsym" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
 	if [ -n "$DEB_URL" ] && wget "$DEB_URL"; then
 		printf '\nInstalling the prebuilt release package.\n\n'
 		INSTALL_DEB="$(basename "$DEB_URL")"

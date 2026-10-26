@@ -15,6 +15,7 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QProcessEnvironment>
+#include <QSysInfo>
 
 #ifdef Q_OS_WIN
 #include <qt_windows.h> // CREATE_NO_WINDOW
@@ -523,6 +524,13 @@ bool preferWindowsAsDefault()
 
 QStringList installSourceOptions()
 {
+    // Arch Linux ARM carries no refind package, so on an ARM64 pacman system
+    // the package-manager installer can only fail; the SourceForge zip ships
+    // refind_aa64.efi and is the one working source there.
+    const QString cpu = QSysInfo::currentCpuArchitecture();
+    if ((cpu == QLatin1String("arm64") || cpu == QLatin1String("aarch64"))
+        && QFile::exists(QStringLiteral("/usr/bin/pacman")))
+        return {QStringLiteral("Sourceforge")};
     return {QStringLiteral("Package Mgr"), QStringLiteral("Sourceforge")};
 }
 

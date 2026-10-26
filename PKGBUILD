@@ -3,7 +3,7 @@ pkgname=rEFInd_GUI
 pkgver=3.5.2
 pkgrel=1
 pkgdesc="Small GUI for customizing and installing rEFInd bootloader"
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 url="https://github.com/jlobue10/rEFInd_GUI"
 license=('GPL3')
 # No debug split package; install scripts glob the built package by name
