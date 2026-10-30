@@ -135,65 +135,78 @@
 	sudo test -s "$DEST/refind_${EFI_ARCH}.efi" && sudo test -s "$DEST/refind.conf" \
 		|| fail_install "The installed rEFInd loader or config is missing or empty."
 	echo 90
-	# The handheld UEFI drivers below are x86-64 builds only (no ARM64
-	# handheld runs them); on any other architecture they are skipped.
-	if [ "$EFI_ARCH" = "x64" ]; then
-	echo "# Installing Xbox 360 controller driver..."
-	# SkorionOS Xbox 360 USB controller UEFI driver: dropping it into rEFInd's
-	# drivers_x64 folder makes wired/handheld gamepads (ROG Ally, Legion Go, etc.)
-	# usable in the boot menu. The driver auto-creates its own config at
+	# SkorionOS Xbox 360 USB controller UEFI driver (x86-64 build only; no
+	# ARM64 handheld runs it): dropping it into rEFInd's drivers_x64 folder
+	# makes wired/handheld gamepads (ROG Ally, Legion Go, etc.) usable in the
+	# boot menu. The driver auto-creates its own config at
 	# \EFI\Xbox360\config.ini on first boot, so only the .efi is needed here.
 	# NOTE: temporarily fetched from the jlobue10 fork (adds Legion Go 2 PIDs +
 	# Ally lockup fix); revert to SkorionOS once upstream PR #7 is merged/released.
-	XBOX360_DRV_URL="https://github.com/jlobue10/UsbXbox360Dxe/releases/latest/download/UsbXbox360Dxe.efi"
-	XBOX360_DRV_TMP="$(mktemp)"
-	sudo mkdir -p "$ESP_MP/EFI/refind/drivers_x64"
-	# A truncated or HTML error-page download must not reach the ESP:
-	# require a non-empty file with the PE "MZ" signature before copying.
-	if { curl -fsSL "$XBOX360_DRV_URL" -o "$XBOX360_DRV_TMP" 2>/dev/null \
-		|| wget -q -O "$XBOX360_DRV_TMP" "$XBOX360_DRV_URL"; } \
-		&& [ -s "$XBOX360_DRV_TMP" ] && [ "$(head -c2 "$XBOX360_DRV_TMP")" = "MZ" ]; then
-		sudo cp -f "$XBOX360_DRV_TMP" "$ESP_MP/EFI/refind/drivers_x64/UsbXbox360Dxe.efi"
+	if [ "$EFI_ARCH" = "x64" ]; then
+		echo "# Installing Xbox 360 controller driver..."
+		XBOX360_DRV_URL="https://github.com/jlobue10/UsbXbox360Dxe/releases/latest/download/UsbXbox360Dxe.efi"
+		XBOX360_DRV_TMP="$(mktemp)"
+		sudo mkdir -p "$ESP_MP/EFI/refind/drivers_x64"
+		# A truncated or HTML error-page download must not reach the ESP:
+		# require a non-empty file with the PE "MZ" signature before copying.
+		if { curl -fsSL "$XBOX360_DRV_URL" -o "$XBOX360_DRV_TMP" 2>/dev/null \
+			|| wget -q -O "$XBOX360_DRV_TMP" "$XBOX360_DRV_URL"; } \
+			&& [ -s "$XBOX360_DRV_TMP" ] && [ "$(head -c2 "$XBOX360_DRV_TMP")" = "MZ" ]; then
+			sudo cp -f "$XBOX360_DRV_TMP" "$ESP_MP/EFI/refind/drivers_x64/UsbXbox360Dxe.efi"
+		else
+			echo "# Warning: failed to download UsbXbox360Dxe.efi; skipping controller driver."
+		fi
+		rm -f "$XBOX360_DRV_TMP"
 	else
-		echo "# Warning: failed to download UsbXbox360Dxe.efi; skipping controller driver."
+		echo "# Skipping the Xbox 360 controller driver (x86-64 build only)."
 	fi
-	rm -f "$XBOX360_DRV_TMP"
 	# TouchI2cDxe touchscreen UEFI driver (successor of AllyTouchI2cDxe):
 	# built-in HID-over-I2C touchscreens -- ROG Xbox Ally / Ally X (DMI board
 	# RC73YA / RC73XA, Novatek), Steam Deck OLED/LCD (DMI product Galileo /
 	# Jupiter, FocalTech), ASUS Zenbook Pro 14 Duo (DMI board UX8402VV,
-	# ELAN, driver v1.3.0) and GPD WIN 5 (DMI product G1618-05, Novatek,
-	# driver v1.4.0) -- are structurally invisible to a USB driver; this
-	# driver produces AbsolutePointer so the rEFInd menu is touch-usable.
-	# Only these devices get it. Like the controller driver, download failure
-	# is non-fatal.
+	# ELAN, driver v1.3.0), GPD WIN 5 (DMI product G1618-05, Novatek,
+	# driver v1.4.0) and the ARM64 ASUS ProArt P16 (DMI board H7607BA,
+	# Ilitek on NVIDIA N1X, driver v1.4.2) -- are structurally invisible to
+	# a USB driver; this driver produces AbsolutePointer so the rEFInd menu
+	# is touch-usable. Only these devices get it. Like the controller driver,
+	# download failure is non-fatal. The release ships one build per EFI
+	# architecture (TouchI2cDxe.efi for x86-64, TouchI2cDxe_aa64.efi for
+	# ARM64); on the ESP both are installed as TouchI2cDxe.efi inside that
+	# architecture's drivers folder.
 	TOUCH_DEVICE=""
 	case "$(cat /sys/class/dmi/id/board_name 2>/dev/null)" in
-	RC73XA*|RC73YA*|UX8402VV*) TOUCH_DEVICE=1 ;;
+	RC73XA*|RC73YA*|UX8402VV*|H7607BA*) TOUCH_DEVICE=1 ;;
 	esac
 	case "$(cat /sys/class/dmi/id/product_name 2>/dev/null)" in
 	Galileo|Jupiter|G1618-05) TOUCH_DEVICE=1 ;;
 	esac
+	TOUCH_DRV_ASSET=""
 	if [ -n "$TOUCH_DEVICE" ]; then
+		case "$EFI_ARCH" in
+			x64) TOUCH_DRV_ASSET="TouchI2cDxe.efi" ;;
+			aa64) TOUCH_DRV_ASSET="TouchI2cDxe_aa64.efi" ;;
+			*) echo "# Skipping the touchscreen driver (no ${EFI_ARCH} build)." ;;
+		esac
+	fi
+	if [ -n "$TOUCH_DRV_ASSET" ]; then
 		echo "# Installing touchscreen driver..."
-		TOUCH_DRV_URL="https://github.com/jlobue10/TouchI2cDxe/releases/latest/download/TouchI2cDxe.efi"
+		TOUCH_DRV_URL="https://github.com/jlobue10/TouchI2cDxe/releases/latest/download/${TOUCH_DRV_ASSET}"
+		TOUCH_DRV_DIR="$ESP_MP/EFI/refind/drivers_${EFI_ARCH}"
 		TOUCH_DRV_TMP="$(mktemp)"
+		sudo mkdir -p "$TOUCH_DRV_DIR"
 		# A truncated or HTML error-page download must not reach the ESP:
 		# require a non-empty file with the PE "MZ" signature before copying.
 		if { curl -fsSL "$TOUCH_DRV_URL" -o "$TOUCH_DRV_TMP" 2>/dev/null \
 			|| wget -q -O "$TOUCH_DRV_TMP" "$TOUCH_DRV_URL"; } \
 			&& [ -s "$TOUCH_DRV_TMP" ] && [ "$(head -c2 "$TOUCH_DRV_TMP")" = "MZ" ]; then
-			sudo cp -f "$TOUCH_DRV_TMP" "$ESP_MP/EFI/refind/drivers_x64/TouchI2cDxe.efi"
+			sudo cp -f "$TOUCH_DRV_TMP" "$TOUCH_DRV_DIR/TouchI2cDxe.efi"
 			# TouchI2cDxe supersedes AllyTouchI2cDxe; leaving both would load
 			# two AbsolutePointer producers for the same panel.
-			sudo rm -f "$ESP_MP/EFI/refind/drivers_x64/AllyTouchI2cDxe.efi"
+			sudo rm -f "$TOUCH_DRV_DIR/AllyTouchI2cDxe.efi"
 		else
-			echo "# Warning: failed to download TouchI2cDxe.efi; skipping touchscreen driver."
+			echo "# Warning: failed to download ${TOUCH_DRV_ASSET}; skipping touchscreen driver."
 		fi
 		rm -f "$TOUCH_DRV_TMP"
-	fi
-	else
-		echo "# Skipping the handheld controller/touchscreen drivers (x86-64 builds only)."
 	fi
 	# CachyOS manages Secure Boot with sbctl. Signing is a prerequisite for
 	# publishing the new NVRAM entry or changing any fallback entry: an
