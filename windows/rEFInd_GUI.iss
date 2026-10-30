@@ -6,7 +6,7 @@
 ; Files; mutable user configuration remains under %LOCALAPPDATA%\rEFInd_GUI.
 
 #define AppName "rEFInd GUI"
-#define AppVersion "3.5.4"
+#define AppVersion "3.5.5"
 #define AppExe "rEFInd_GUI.exe"
 ; Target CPU architecture of the exe in deploy\: "x64" (default) or "arm64"
 ; (Windows on Arm, built in MSYS2's CLANGARM64 environment). The build passes

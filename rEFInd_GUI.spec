@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.5.4
+Version:        3.5.5
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -75,6 +75,13 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
+* Thu Oct 30 2026 Jon LoBue <jlobue10@gmail.com> [3.5.5-1]
+- Windows on Arm: install_rEFInd.ps1 derives the EFI architecture from the OS
+  and installs refind_aa64.efi, drivers_aa64/tools_aa64 and the ARM64 builds
+  of the controller and touchscreen UEFI drivers on ARM64 machines (previously
+  an x64 rEFInd the firmware could not run); uninstall_rEFInd.ps1 recognises
+  either architecture's loader. Releases now also ship
+  rEFInd_GUI-<ver>-arm64-setup.exe, built natively on an ARM64 runner.
 * Thu Oct 30 2026 Jon LoBue <jlobue10@gmail.com> [3.5.4-1]
 - The Xbox 360 controller UEFI driver (UsbXbox360Dxe v1.8.1+, which now ships
   an aarch64 build) is installed on ARM64 machines too, into drivers_aa64;

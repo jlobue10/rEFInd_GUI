@@ -1,3 +1,15 @@
+refind-gui (3.5.5) unstable; urgency=medium
+
+  * Windows on Arm: install_rEFInd.ps1 derives the EFI architecture from the
+    OS and installs refind_aa64.efi, drivers_aa64/tools_aa64 and the ARM64
+    builds of the controller and touchscreen UEFI drivers on ARM64 machines
+    (previously an x64 rEFInd the firmware could not run);
+    uninstall_rEFInd.ps1 recognises either architecture's loader. Releases
+    now also ship rEFInd_GUI-<ver>-arm64-setup.exe, built natively on an
+    ARM64 runner. Linux packages are unchanged apart from the version.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Thu, 30 Oct 2026 12:30:00 -0700
+
 refind-gui (3.5.4) unstable; urgency=medium
 
   * The Xbox 360 controller UEFI driver (UsbXbox360Dxe v1.8.1+, which now
