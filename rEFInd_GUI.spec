@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.5.5
+Version:        3.5.6
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -79,6 +79,12 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
+* Thu Oct 30 2026 Jon LoBue <jlobue10@gmail.com> [3.5.6-1]
+- Secure Boot signing on every sbctl-managed distro: the package installs
+  CachyOS' sbctl-batch-sign as /etc/rEFInd/sbctl-batch-sign and the rEFInd
+  install scripts run it (or the distro's own copy) whenever Secure Boot is
+  enabled and sbctl reports keys installed, instead of only on CachyOS.
+  shim/MOK-managed Secure Boot now gets a warning instead of silence.
 * Thu Oct 30 2026 Jon LoBue <jlobue10@gmail.com> [3.5.5-1]
 - Windows on Arm: install_rEFInd.ps1 derives the EFI architecture from the OS
   and installs refind_aa64.efi, drivers_aa64/tools_aa64 and the ARM64 builds

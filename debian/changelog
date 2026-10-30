@@ -1,3 +1,13 @@
+refind-gui (3.5.6) unstable; urgency=medium
+
+  * Secure Boot signing on every sbctl-managed distro: the package installs
+    CachyOS' sbctl-batch-sign as /etc/rEFInd/sbctl-batch-sign and the rEFInd
+    install scripts run it (or the distro's own copy) whenever Secure Boot is
+    enabled and sbctl reports keys installed, instead of only on CachyOS.
+    shim/MOK-managed Secure Boot now gets a warning instead of silence.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Thu, 30 Oct 2026 13:30:00 -0700
+
 refind-gui (3.5.5) unstable; urgency=medium
 
   * Windows on Arm: install_rEFInd.ps1 derives the EFI architecture from the
