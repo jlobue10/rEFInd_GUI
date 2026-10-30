@@ -186,10 +186,13 @@ target_include_directories(efiutil PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 if(WIN32)
     # advapi32: OpenProcessToken/AdjustTokenPrivileges for the
     # SeSystemEnvironmentPrivilege enable in espresolve_win.cpp.
-    # ole32/oleaut32: Task Scheduler COM in wintasks.cpp; taskschd carries
-    # CLSID_TaskScheduler/IID_ITaskService/IID_IExecAction on MinGW (they
-    # are NOT in libuuid); uuid still supplies the generic COM IIDs.
-    target_link_libraries(espops PUBLIC advapi32 ole32 oleaut32 taskschd uuid)
+    # ole32/oleaut32: Task Scheduler COM in wintasks.cpp. The Task Scheduler
+    # GUIDs (CLSID_TaskScheduler/IID_ITaskService/IID_IExecAction) are NOT in
+    # libuuid and MinGW's libtaskschd.a exists for x86 only (no ARM64 import
+    # library), so wintaskguids.cpp defines them via <initguid.h> instead of
+    # linking -ltaskschd; uuid still supplies the generic COM IIDs.
+    target_sources(espops PRIVATE wintaskguids.cpp)
+    target_link_libraries(espops PUBLIC advapi32 ole32 oleaut32 uuid)
 endif()
 # Unified Kernel Image families for manual stanzas (see uki/uki.h). QtCore
 # only; linked by the GUI (detection + Create Config) and the helper
