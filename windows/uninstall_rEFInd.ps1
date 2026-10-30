@@ -13,7 +13,10 @@ param([switch]$KeepEspFiles)
 $ErrorActionPreference = 'Stop'
 
 $EspGuid = '{c12a7328-f81f-11d2-ba4b-00a0c93ec93b}'
-$RefindLoader = '\EFI\refind\refind_x64.efi'
+# Both EFI architectures' loaders: an install made by this script on Windows
+# on Arm targets refind_aa64.efi, on x86-64 refind_x64.efi; match either so
+# an uninstall after a firmware/OS architecture mismatch still cleans up.
+$RefindLoaders = @('\EFI\refind\refind_x64.efi', '\EFI\refind\refind_aa64.efi')
 $EfiGlobalGuid = '{8BE4DF61-93CA-11D2-AA0D-00E098032B8C}'
 # Optional-data signature of Windows Boot Manager's own Boot#### entry; any
 # entry carrying it belongs to {bootmgr} and must never be deleted here.
@@ -168,7 +171,7 @@ Enable-UefiPrivilege
 $bootmgr = Invoke-Bcdedit '/enum', '{bootmgr}'
 if ($bootmgr.Ok) {
     $m = $bootmgr.Output | Select-String -Pattern '^\s*path\s+(\S+)\s*$' | Select-Object -First 1
-    if ($m -and $m.Matches[0].Groups[1].Value -ieq $RefindLoader) {
+    if ($m -and ($RefindLoaders -contains $m.Matches[0].Groups[1].Value)) {
         Write-Host 'Restoring the Windows Boot Manager entry (was repointed at rEFInd)...'
         $r = Invoke-Bcdedit '/set', '{bootmgr}', 'path', '\EFI\Microsoft\Boot\bootmgfw.efi'
         if (-not $r.Ok) { Write-Warning "Could not restore {bootmgr} path: $($r.Output -join ' ')" }
@@ -192,7 +195,8 @@ try {
 if ($esp -and $esp.Part) {
     try {
         $espGuidHex = ConvertTo-HexString (([guid]$esp.Part.Guid).ToByteArray())
-        $loaderHex = ConvertTo-HexString ([System.Text.Encoding]::Unicode.GetBytes($RefindLoader))
+        $loaderHexes = @($RefindLoaders | ForEach-Object {
+            ConvertTo-HexString ([System.Text.Encoding]::Unicode.GetBytes($_)) })
         # @() around the call is load-bearing: a one-entry BootOrder comes back
         # as a bare string, and string + array would concatenate into one id.
         $candidateIds = @(@(Get-BootOrderIds) + @(0..255 | ForEach-Object { '{0:X4}' -f $_ }) |
@@ -201,7 +205,9 @@ if ($esp -and $esp.Part) {
             $bytes = Get-UefiVar "Boot$id"
             if (-not $bytes) { continue }
             $hex = ConvertTo-HexString $bytes
-            if (-not $hex.Contains($loaderHex)) { continue }
+            $isRefind = $false
+            foreach ($loaderHex in $loaderHexes) { if ($hex.Contains($loaderHex)) { $isRefind = $true } }
+            if (-not $isRefind) { continue }
             if ($hex.Contains($BootmgrBlobHex)) { continue }  # {bootmgr}'s own entry; restored above
             $desc = Get-LoadOptionDescription $bytes
             if ($hex.Contains($espGuidHex)) {

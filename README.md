@@ -32,7 +32,7 @@ rEFInd_GUI also builds and runs on Windows (Qt 6), so you can configure and inst
 
 ### Installing (recommended)
 
-Download **`rEFInd_GUI-<version>-setup.exe`** from the [Releases](https://github.com/jlobue10/rEFInd_GUI/releases) page and run it. The installer requests Administrator access so executable code and privileged PowerShell helpers can be protected under Program Files; mutable configuration stays in `%LOCALAPPDATA%\rEFInd_GUI`. It creates Start Menu and optional Desktop shortcuts.
+Download **`rEFInd_GUI-<version>-setup.exe`** (x86-64) or **`rEFInd_GUI-<version>-arm64-setup.exe`** (Windows on Arm, e.g. NVIDIA N1X or Snapdragon laptops; since 3.5.5) from the [Releases](https://github.com/jlobue10/rEFInd_GUI/releases) page and run it. On an ARM64 machine the installer and the Install rEFInd step use rEFInd's `refind_aa64.efi`, `drivers_aa64` and the ARM64 builds of the controller and touchscreen UEFI drivers automatically. The installer requests Administrator access so executable code and privileged PowerShell helpers can be protected under Program Files; mutable configuration stays in `%LOCALAPPDATA%\rEFInd_GUI`. It creates Start Menu and optional Desktop shortcuts.
 
 ### Building from source
 
@@ -45,7 +45,7 @@ cmake --build build-win
 bash windows/assemble-deploy.sh build-win/rEFInd_GUI.exe deploy   # gathers the exe + all runtime DLLs + data into deploy/
 ```
 
-To produce the installer, compile `windows/rEFInd_GUI.iss` with [Inno Setup](https://jrsoftware.org/isinfo.php) (`ISCC.exe windows\rEFInd_GUI.iss`) — the output lands in `windows/Output/`. Pushing a `v*` tag builds the installer automatically via GitHub Actions and attaches it to the release. A portable elevated build is intentionally not published because its executable and helpers could be modified by an unprivileged user.
+To produce the installer, compile `windows/rEFInd_GUI.iss` with [Inno Setup](https://jrsoftware.org/isinfo.php) (`ISCC.exe windows\rEFInd_GUI.iss`, or `ISCC.exe /DArch=arm64 windows\rEFInd_GUI.iss` for an ARM64 build made in MSYS2's CLANGARM64 environment) — the output lands in `windows/Output/`. Pushing a `v*` tag builds the installer automatically via GitHub Actions and attaches it to the release. A portable elevated build is intentionally not published because its executable and helpers could be modified by an unprivileged user.
 
 Release builds are Authenticode-signed (executable, installer, and PowerShell scripts) through [SignPath Foundation](https://signpath.org/)'s free OSS code-signing program; see [windows/SIGNING.md](windows/SIGNING.md) for the one-time setup. Until that's configured, CI still produces working but unsigned artifacts, and Windows will show an "unknown publisher" prompt.
 

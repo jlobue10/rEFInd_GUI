@@ -15,15 +15,32 @@ $ErrorActionPreference = 'Stop'
 
 # Visual feedback: numbered, colored step banners plus an overall progress bar
 # so the elevated console shows at a glance how far the install has gotten.
+# EFI architecture of the running Windows: rEFInd's loader, its drivers/tools
+# folders and the UEFI driver release assets all carry it (x64 on x86-64,
+# aa64 on Windows on Arm). RuntimeInformation reports the OS architecture
+# even from an x64 PowerShell running emulated on an ARM64 machine; the
+# environment variables are the fallback for hosts without it.
+$osArch = $null
+try { $osArch = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString() } catch {}
+if (-not $osArch) {
+    $osArch = if ($env:PROCESSOR_ARCHITEW6432) { $env:PROCESSOR_ARCHITEW6432 } else { $env:PROCESSOR_ARCHITECTURE }
+}
+$EfiArch = switch -Regex ($osArch) {
+    '^(X64|AMD64)$' { 'x64' }
+    '^ARM64$'       { 'aa64' }
+    default { throw "Unsupported CPU architecture '$osArch' (x86-64 and ARM64 are supported)." }
+}
+
 # Devices with a supported HID-over-I2C touchscreen -- ROG Xbox Ally / Ally X
 # (baseboard RC73YA / RC73XA), Steam Deck OLED/LCD (product Galileo /
-# Jupiter), ASUS Zenbook Pro 14 Duo (baseboard UX8402VV) and GPD WIN 5
-# (product G1618-05) -- get one extra step: downloading the touchscreen
-# driver (TouchI2cDxe block below).
+# Jupiter), ASUS Zenbook Pro 14 Duo (baseboard UX8402VV), GPD WIN 5
+# (product G1618-05) and, on ARM64, the ASUS ProArt P16 (baseboard H7607BA)
+# -- get one extra step: downloading the touchscreen driver (TouchI2cDxe
+# block below).
 $board = (Get-CimInstance Win32_BaseBoard -ErrorAction SilentlyContinue).Product
 $product = (Get-CimInstance Win32_ComputerSystemProduct -ErrorAction SilentlyContinue).Name
 $IsTouchDevice = ($board -like 'RC73XA*' -or $board -like 'RC73YA*' -or
-    $board -like 'UX8402VV*' -or
+    $board -like 'UX8402VV*' -or $board -like 'H7607BA*' -or
     $product -eq 'Galileo' -or $product -eq 'Jupiter' -or $product -eq 'G1618-05')
 $TotalSteps = if ($IsTouchDevice) { 7 } else { 6 }
 $script:StepNum = 0
@@ -39,7 +56,7 @@ try { $Host.UI.RawUI.WindowTitle = 'rEFInd installation' } catch {}
 
 $RefindVer = '0.14.2'
 $EspGuid = '{c12a7328-f81f-11d2-ba4b-00a0c93ec93b}'
-$RefindLoader = '\EFI\refind\refind_x64.efi'
+$RefindLoader = "\EFI\refind\refind_${EfiArch}.efi"
 $EfiGlobalGuid = '{8BE4DF61-93CA-11D2-AA0D-00E098032B8C}'
 # Optional-data signature of Windows Boot Manager's own Boot#### entry; any
 # entry carrying it belongs to {bootmgr} and must never be overwritten.
@@ -325,7 +342,7 @@ try {
     $extract = Join-Path $workDir 'extract'
     Expand-Archive -Path $zip -DestinationPath $extract -Force
     $bin = Join-Path $extract "refind-bin-$RefindVer"
-    $extractedLoader = Join-Path $bin 'refind\refind_x64.efi'
+    $extractedLoader = Join-Path $bin "refind\refind_${EfiArch}.efi"
     if (-not (Test-Path -LiteralPath $bin -PathType Container) -or
         -not (Test-Path -LiteralPath $extractedLoader -PathType Leaf) -or
         (Get-Item -LiteralPath $extractedLoader).Length -le 0) {
@@ -336,21 +353,25 @@ try {
     $dest = Join-Path $esp.Root 'EFI\refind'
     Write-Step "Installing rEFInd files to $dest ..."
     New-Item -ItemType Directory -Force $dest | Out-Null
-    Publish-FileAtomically $extractedLoader (Join-Path $dest 'refind_x64.efi')
-    foreach ($d in 'drivers_x64','tools_x64','icons') {
+    Publish-FileAtomically $extractedLoader (Join-Path $dest "refind_${EfiArch}.efi")
+    foreach ($d in "drivers_${EfiArch}","tools_${EfiArch}",'icons') {
         Copy-Item -Recurse -Force (Join-Path $bin "refind\$d") $dest
     }
     Copy-Item -Recurse -Force (Join-Path $bin 'fonts') $dest
 
     # SkorionOS Xbox 360 USB controller UEFI driver: dropping it into rEFInd's
-    # drivers_x64 folder makes wired/handheld gamepads (ROG Ally, Legion Go,
+    # drivers folder makes wired/handheld gamepads (ROG Ally, Legion Go,
     # etc.) usable in the boot menu. The driver auto-creates its own config at
     # \EFI\Xbox360\config.ini on first boot, so only the .efi is needed here.
+    # The release ships one build per EFI architecture (UsbXbox360Dxe.efi for
+    # x86-64, UsbXbox360Dxe_aa64.efi for ARM64, driver v1.8.1+); on the ESP
+    # both are installed as UsbXbox360Dxe.efi in that architecture's folder.
     # NOTE: temporarily fetched from the jlobue10 fork (adds Legion Go 2 PIDs +
     # Ally lockup fix); revert to SkorionOS once upstream PR #7 is merged/released.
-    Write-Step 'Downloading UsbXbox360Dxe.efi controller driver...'
-    $driverDest = Join-Path $dest 'drivers_x64\UsbXbox360Dxe.efi'
-    $driverUrl = 'https://github.com/jlobue10/UsbXbox360Dxe/releases/latest/download/UsbXbox360Dxe.efi'
+    $driverAsset = if ($EfiArch -eq 'aa64') { 'UsbXbox360Dxe_aa64.efi' } else { 'UsbXbox360Dxe.efi' }
+    Write-Step "Downloading $driverAsset controller driver..."
+    $driverDest = Join-Path $dest "drivers_${EfiArch}\UsbXbox360Dxe.efi"
+    $driverUrl = "https://github.com/jlobue10/UsbXbox360Dxe/releases/latest/download/$driverAsset"
     try {
         $driverDownload = Join-Path $workDir 'UsbXbox360Dxe.efi'
         Invoke-WebRequest -Uri $driverUrl -OutFile $driverDownload -MaximumRedirection 10
@@ -364,19 +385,22 @@ try {
         # success when the driver never made it to the ESP (issue #23 -- the
         # only sign was a warning that had long scrolled off screen).
         $driverError = "$($_.Exception.Message)"
-        Write-Warning "Failed to download UsbXbox360Dxe.efi; skipping controller driver. $_"
+        Write-Warning "Failed to download ${driverAsset}; skipping controller driver. $_"
     }
 
     # TouchI2cDxe touchscreen UEFI driver (successor of AllyTouchI2cDxe): the
-    # ROG Xbox Ally / Ally X (Novatek) and Steam Deck OLED/LCD (FocalTech)
-    # built-in touchscreens are HID-over-I2C, which a USB driver structurally
-    # cannot see; this driver produces AbsolutePointer so the rEFInd menu is
-    # touch-usable. Only these devices get it (detected above, where
-    # $TotalSteps is set).
+    # ROG Xbox Ally / Ally X (Novatek), Steam Deck OLED/LCD (FocalTech), Zenbook
+    # (ELAN), GPD WIN 5 and ProArt P16 (Ilitek, ARM64) built-in touchscreens
+    # are HID-over-I2C, which a USB driver structurally cannot see; this driver
+    # produces AbsolutePointer so the rEFInd menu is touch-usable. Only these
+    # devices get it (detected above, where $TotalSteps is set). Like the
+    # controller driver, the release carries one build per EFI architecture
+    # (TouchI2cDxe.efi / TouchI2cDxe_aa64.efi, v1.4.2+).
     if ($IsTouchDevice) {
-        Write-Step 'Downloading TouchI2cDxe.efi touchscreen driver...'
-        $touchDest = Join-Path $dest 'drivers_x64\TouchI2cDxe.efi'
-        $touchUrl = 'https://github.com/jlobue10/TouchI2cDxe/releases/latest/download/TouchI2cDxe.efi'
+        $touchAsset = if ($EfiArch -eq 'aa64') { 'TouchI2cDxe_aa64.efi' } else { 'TouchI2cDxe.efi' }
+        Write-Step "Downloading $touchAsset touchscreen driver..."
+        $touchDest = Join-Path $dest "drivers_${EfiArch}\TouchI2cDxe.efi"
+        $touchUrl = "https://github.com/jlobue10/TouchI2cDxe/releases/latest/download/$touchAsset"
         try {
             $touchDownload = Join-Path $workDir 'TouchI2cDxe.efi'
             Invoke-WebRequest -Uri $touchUrl -OutFile $touchDownload -MaximumRedirection 10
@@ -388,10 +412,10 @@ try {
             # TouchI2cDxe supersedes AllyTouchI2cDxe; leaving both would load
             # two AbsolutePointer producers for the same panel.
             Remove-Item -Force -ErrorAction SilentlyContinue `
-                (Join-Path $dest 'drivers_x64\AllyTouchI2cDxe.efi')
+                (Join-Path $dest "drivers_${EfiArch}\AllyTouchI2cDxe.efi")
         } catch {
             $touchError = "$($_.Exception.Message)"
-            Write-Warning "Failed to download TouchI2cDxe.efi; skipping touchscreen driver. $_"
+            Write-Warning "Failed to download ${touchAsset}; skipping touchscreen driver. $_"
         }
     }
 
@@ -439,7 +463,7 @@ try {
     # controller driver (a failed download silently keeps the old copy).
     $espFiles = [ordered]@{}
     foreach ($check in @(
-            @{ Name = 'rEFInd loader (refind_x64.efi)';          Path = (Join-Path $dest 'refind_x64.efi') },
+            @{ Name = "rEFInd loader (refind_${EfiArch}.efi)";   Path = (Join-Path $dest "refind_${EfiArch}.efi") },
             @{ Name = 'GUI config (refind.conf)';                Path = $conf },
             @{ Name = 'Controller driver (UsbXbox360Dxe.efi)';   Path = $driverDest })) {
         $espFiles[$check.Name] = Get-Item -LiteralPath $check.Path -ErrorAction SilentlyContinue
@@ -605,15 +629,15 @@ if ($installError) {
     Write-Host 'boot order, but the Xbox 360 controller driver was NOT updated (see' -ForegroundColor Yellow
     Write-Host 'above) -- gamepads may not work, or keep old behavior, in the boot menu.' -ForegroundColor Yellow
     Write-Host 'Fix: re-run Install rEFInd with a working network connection, or download' -ForegroundColor Yellow
-    Write-Host 'UsbXbox360Dxe.efi from github.com/jlobue10/UsbXbox360Dxe/releases and' -ForegroundColor Yellow
-    Write-Host 'copy it to EFI\refind\drivers_x64\ on the ESP.' -ForegroundColor Yellow
+    Write-Host "$driverAsset from github.com/jlobue10/UsbXbox360Dxe/releases and" -ForegroundColor Yellow
+    Write-Host "copy it to EFI\refind\drivers_${EfiArch}\UsbXbox360Dxe.efi on the ESP." -ForegroundColor Yellow
 } elseif ($touchError -or ($touchDest -and -not $touchOnEsp)) {
     Write-Host 'SUCCESS, with a warning: rEFInd is installed and first in the firmware' -ForegroundColor Yellow
     Write-Host 'boot order, but the touchscreen driver was NOT updated (see above)' -ForegroundColor Yellow
     Write-Host '-- touch may not work in the boot menu. Fix: re-run Install rEFInd with a' -ForegroundColor Yellow
-    Write-Host 'working network connection, or download TouchI2cDxe.efi from' -ForegroundColor Yellow
+    Write-Host "working network connection, or download $touchAsset from" -ForegroundColor Yellow
     Write-Host 'github.com/jlobue10/TouchI2cDxe/releases and copy it to' -ForegroundColor Yellow
-    Write-Host 'EFI\refind\drivers_x64\ on the ESP.' -ForegroundColor Yellow
+    Write-Host "EFI\refind\drivers_${EfiArch}\TouchI2cDxe.efi on the ESP." -ForegroundColor Yellow
 } else {
     Write-Host 'SUCCESS: rEFInd is installed and first in the firmware boot order.' -ForegroundColor Green
     Write-Host '(Windows Boot Manager was left untouched; rEFInd chainloads it.)'

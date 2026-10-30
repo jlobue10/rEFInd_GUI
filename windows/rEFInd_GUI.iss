@@ -8,6 +8,12 @@
 #define AppName "rEFInd GUI"
 #define AppVersion "3.5.4"
 #define AppExe "rEFInd_GUI.exe"
+; Target CPU architecture of the exe in deploy\: "x64" (default) or "arm64"
+; (Windows on Arm, built in MSYS2's CLANGARM64 environment). The build passes
+; it on the ISCC command line: ISCC /DArch=arm64 windows\rEFInd_GUI.iss
+#ifndef Arch
+  #define Arch "x64"
+#endif
 
 [Setup]
 AppId={{6F9C2E7A-1B4D-4E8F-9C3A-7D5E2F1A0B8C}
@@ -20,12 +26,26 @@ DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 DisableDirPage=yes
 PrivilegesRequired=admin
+#if Arch == "arm64"
+OutputBaseFilename=rEFInd_GUI-{#AppVersion}-arm64-setup
+#else
 OutputBaseFilename=rEFInd_GUI-{#AppVersion}-setup
+#endif
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
+#if Arch == "arm64"
+; Native ARM64 build: Windows on Arm only.
+ArchitecturesAllowed=arm64
+ArchitecturesInstallIn64BitMode=arm64
+#else
+; x64compatible also admits ARM64 machines (x64 emulation) on purpose: the
+; native arm64 installer is preferred there, but this one still works -- the
+; install scripts pick rEFInd's aa64 loader/drivers from the OS architecture,
+; not from the exe's.
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
+#endif
 UninstallDisplayIcon={app}\{#AppExe}
 
 [Languages]
