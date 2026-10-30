@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.5.2
+Version:        3.5.3
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -75,6 +75,17 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
+* Thu Oct 30 2026 Jon LoBue <jlobue10@gmail.com> [3.5.3-1]
+- ARM64 (aarch64) support: OS detection, the installers and the packaging use
+  the running CPU's EFI names (refind_aa64.efi, shimaa64.efi, BOOTAA64.CSV,
+  drivers_aa64); x86-64 behaviour is unchanged.
+- Releases now ship aarch64 packages (pacman, deb and rpm) built on ARM
+  runners; install-rEFInd-GUI.sh picks the asset for the running CPU.
+- The TouchI2cDxe touchscreen driver is installed on the ASUS ProArt P16
+  (ARM64, NVIDIA N1X) from its aarch64 build into drivers_aa64; the Xbox 360
+  controller driver stays x86-64 only.
+- The Package Mgr install source is hidden on Arch Linux ARM, which ships no
+  refind package; the Sourceforge source carries refind_aa64.efi.
 * Sat Oct 25 2026 Jon LoBue <jlobue10@gmail.com> [3.5.2-1]
 - Windows: installing or uninstalling with a one-entry BootOrder picked a
   malformed Boot#### id (a one-element array was unrolled into a string).

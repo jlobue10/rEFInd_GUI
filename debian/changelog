@@ -1,3 +1,18 @@
+refind-gui (3.5.3) unstable; urgency=medium
+
+  * ARM64 (aarch64) support: OS detection, the installers and the packaging
+    use the running CPU's EFI names (refind_aa64.efi, shimaa64.efi,
+    BOOTAA64.CSV, drivers_aa64); x86-64 behaviour is unchanged.
+  * Releases now ship aarch64 packages (pacman, deb and rpm) built on ARM
+    runners; install-rEFInd-GUI.sh picks the asset for the running CPU.
+  * The TouchI2cDxe touchscreen driver is installed on the ASUS ProArt P16
+    (ARM64, NVIDIA N1X) from its aarch64 build into drivers_aa64; the Xbox
+    360 controller driver stays x86-64 only.
+  * The Package Mgr install source is hidden on Arch Linux ARM, which ships
+    no refind package; the Sourceforge source carries refind_aa64.efi.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Thu, 30 Oct 2026 08:00:00 -0700
+
 refind-gui (3.5.2) unstable; urgency=medium
 
   * Windows: installing or uninstalling with a one-entry BootOrder picked a
