@@ -178,6 +178,9 @@ private slots:
         // Fedora uki-direct: EFI/fedora holds shim + an unconfigured GRUB and
         // a BOOTX64.CSV whose every line launches an \EFI\Linux UKI. Only the
         // UKI family is an OS; with a grub.cfg the vendor dir counts again.
+        // The fixture uses x64 names, so pin the suffix for ARM64 hosts.
+        const QString saved = OSDetector::efiArchSuffixOverride;
+        OSDetector::efiArchSuffixOverride = QStringLiteral("x64");
         QTemporaryDir dir;
         QVERIFY(dir.isValid());
         QVERIFY(QDir(dir.path()).mkpath(QStringLiteral("EFI/Linux")));
@@ -213,6 +216,7 @@ private slots:
         }
         entries = detector.scanEspRoot(dir.path(), QString());
         QCOMPARE(entries.size(), 2);
+        OSDetector::efiArchSuffixOverride = saved;
     }
 
     void archSuffixSelectsLoaderNames()
