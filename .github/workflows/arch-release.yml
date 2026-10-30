@@ -143,10 +143,14 @@ jobs:
           fi
 
       - name: Build package (makepkg)
+        # Arch Linux ARM's makepkg.conf still defaults to PKGEXT=.pkg.tar.xz;
+        # the installer and the x86-64 job expect the zstd name
+        # (rEFInd_GUI-<ver>-<rel>-aarch64.pkg.tar.zst).
         run: |
           useradd -m builder
           chown -R builder: .
-          su builder -c 'makepkg --noconfirm'
+          su builder -c 'PKGEXT=.pkg.tar.zst makepkg --noconfirm'
+          ls -l ./*.pkg.tar.zst
 
       - name: Upload package
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
