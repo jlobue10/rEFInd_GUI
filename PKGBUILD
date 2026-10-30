@@ -46,6 +46,9 @@ package() {
   install -d "$pkgdir/etc/rEFInd"
   install -m755 "$srcdir/rEFInd_GUI/GUI/src/build/rEFInd_GUI" "$pkgdir/etc/rEFInd/rEFInd_GUI"
   install -m755 "$srcdir/rEFInd_GUI/GUI/src/build/rEFInd_GUI_helper" "$pkgdir/etc/rEFInd/rEFInd_GUI_helper"
+  # Secure Boot: CachyOS' sbctl-batch-sign for every other sbctl-managed
+  # distro; the install scripts fall back to this root-owned copy.
+  install -m755 "$srcdir/rEFInd_GUI/sbctl-batch-sign" "$pkgdir/etc/rEFInd/sbctl-batch-sign"
 
   install -d "$pkgdir/etc/systemd/system"
   install -m644 "$srcdir/rEFInd_bg_randomizer.service" "$pkgdir/etc/systemd/system"

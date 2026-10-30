@@ -51,6 +51,9 @@ make
 mkdir -p %{buildroot}/etc/rEFInd
 cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI %{buildroot}/etc/rEFInd/rEFInd_GUI
 cp %{_builddir}/rEFInd_GUI/GUI/src/build/rEFInd_GUI_helper %{buildroot}/etc/rEFInd/rEFInd_GUI_helper
+# Secure Boot: CachyOS' sbctl-batch-sign for every other sbctl-managed distro;
+# the install scripts fall back to this root-owned copy.
+install -m 755 %{_builddir}/rEFInd_GUI/sbctl-batch-sign %{buildroot}/etc/rEFInd/sbctl-batch-sign
 
 mkdir -p %{buildroot}/etc/systemd/system
 
@@ -70,6 +73,7 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /etc/systemd/system/rEFInd_theme_randomizer.service
 /etc/rEFInd/rEFInd_GUI
 /etc/rEFInd/rEFInd_GUI_helper
+/etc/rEFInd/sbctl-batch-sign
 /usr/lib/kernel/install.d/99-zz-rEFInd_GUI-uki.install
 /usr/share/applications/rEFInd_GUI.desktop
 /usr/share/pixmaps/rEFInd_GUI.png

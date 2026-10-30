@@ -175,7 +175,7 @@ sudo sbctl sign -s /boot/efi/EFI/refind/drivers_x64/TouchI2cDxe.efi
 
 Re-enable secure boot in BIOS, and enjoy the benefits of being able to play anti-cheat games in Windows and a fully functioning Linux distro, side-by-side without toggling the secure boot setting in BIOS.
 
-On **CachyOS** (which manages Secure Boot with sbctl out of the box — see the [CachyOS Secure Boot setup guide](https://wiki.cachyos.org/configuration/secure_boot_setup/)) the rEFInd install scripts detect enabled Secure Boot and run `sbctl-batch-sign` automatically after installing, so the freshly written EFI binaries are signed without any manual steps.
+Since 3.5.6 the rEFInd install scripts do this signing for you on **any distro whose Secure Boot keys are managed by sbctl**: when Secure Boot is enabled and `sbctl status` reports keys installed, they run `sbctl-batch-sign` right after writing rEFInd and its drivers to the ESP — CachyOS' own script (see the [CachyOS Secure Boot setup guide](https://wiki.cachyos.org/configuration/secure_boot_setup/)) when it is on PATH, otherwise the identical copy the package installs at `/etc/rEFInd/sbctl-batch-sign`. That script signs every unsigned EFI binary on the ESP with `sbctl sign -s` (so sbctl's package hook keeps them signed across kernel and boot-loader updates) and skips Microsoft's own files, which are already signed. You can also run it by hand at any time: `sudo /etc/rEFInd/sbctl-batch-sign`. Secure Boot enforced by shim/MOK instead of sbctl is left alone with a warning.
 
 ## Troubleshooting
 

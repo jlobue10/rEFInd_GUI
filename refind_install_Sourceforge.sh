@@ -224,17 +224,35 @@ sudo test -s "$DEST/refind_${EFI_ARCH}.efi" && sudo test -s "$DEST/refind.conf" 
 	|| fail_install "The installed rEFInd loader or config is missing or empty."
 
 # Sign before publishing the new NVRAM entry or changing Windows. With Secure
-# Boot enforcing, an unsigned loader is not a usable replacement.
-if grep -qE '^ID="?cachyos"?$' /etc/os-release 2>/dev/null; then
-	SB_STATE="$(od -An -tu1 -j4 -N1 \
-		/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null \
-		| tr -d '[:space:]')"
-	if [ "$SB_STATE" = "1" ]; then
-		command -v sbctl-batch-sign >/dev/null 2>&1 \
-			|| fail_install "Secure Boot is enabled but sbctl-batch-sign was not found."
-		echo "Secure Boot is enabled: signing EFI binaries with sbctl-batch-sign..."
-		sudo sbctl-batch-sign \
-			|| fail_install "sbctl-batch-sign failed; Windows was left active."
+# Boot enforcing, an unsigned loader is not a usable replacement. Any distro
+# whose Secure Boot keys are managed by sbctl gets the CachyOS treatment:
+# CachyOS' own sbctl-batch-sign when it is on PATH, otherwise the identical
+# copy this package installs root-owned at /etc/rEFInd/sbctl-batch-sign.
+# Secure Boot enforced by something else (shim/MOK) is left alone with a
+# warning, as before.
+SB_STATE="$(od -An -tu1 -j4 -N1 \
+	/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null \
+	| tr -d '[:space:]')"
+if [ "$SB_STATE" = "1" ]; then
+	SB_SIGNER=""
+	if command -v sbctl-batch-sign >/dev/null 2>&1; then
+		SB_SIGNER="sbctl-batch-sign"
+	elif [ -x /etc/rEFInd/sbctl-batch-sign ]; then
+		SB_SIGNER="/etc/rEFInd/sbctl-batch-sign"
+	fi
+	SBCTL_MANAGED=""
+	if command -v sbctl >/dev/null 2>&1 \
+		&& sudo sbctl status --json 2>/dev/null | grep -qE '"installed":[[:space:]]*true'; then
+		SBCTL_MANAGED=1
+	fi
+	if [ -n "$SBCTL_MANAGED" ] || grep -qE '^ID="?cachyos"?$' /etc/os-release 2>/dev/null; then
+		[ -n "$SB_SIGNER" ] \
+			|| fail_install "Secure Boot is enabled and sbctl manages its keys, but no sbctl-batch-sign was found (not on PATH, not in /etc/rEFInd)."
+		echo "Secure Boot is enabled: signing EFI binaries with $SB_SIGNER..."
+		sudo "$SB_SIGNER" \
+			|| fail_install "$SB_SIGNER failed; Windows was left active."
+	else
+		echo "Warning: Secure Boot is enabled but sbctl is not managing its keys here; the new rEFInd files were NOT signed. Sign them with your own mechanism (shim/MOK or sbctl) before rebooting." >&2
 	fi
 fi
 

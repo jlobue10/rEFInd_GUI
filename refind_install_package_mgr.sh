@@ -216,20 +216,37 @@
 		fi
 		rm -f "$TOUCH_DRV_TMP"
 	fi
-	# CachyOS manages Secure Boot with sbctl. Signing is a prerequisite for
-	# publishing the new NVRAM entry or changing any fallback entry: an
-	# unsigned loader is not a usable replacement while Secure Boot enforces.
-	if grep -qE '^ID="?cachyos"?$' /etc/os-release 2>/dev/null; then
-		SB_STATE="$(od -An -tu1 -j4 -N1 \
-			/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null \
-			| tr -d '[:space:]')"
-		if [ "$SB_STATE" = "1" ]; then
+	# Signing is a prerequisite for publishing the new NVRAM entry or changing
+	# any fallback entry: an unsigned loader is not a usable replacement while
+	# Secure Boot enforces. Any distro whose Secure Boot keys are managed by
+	# sbctl gets the CachyOS treatment: CachyOS' own sbctl-batch-sign when it
+	# is on PATH, otherwise the identical copy this package installs
+	# root-owned at /etc/rEFInd/sbctl-batch-sign. Secure Boot enforced by
+	# something else (shim/MOK) is left alone with a warning, as before.
+	SB_STATE="$(od -An -tu1 -j4 -N1 \
+		/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null \
+		| tr -d '[:space:]')"
+	if [ "$SB_STATE" = "1" ]; then
+		SB_SIGNER=""
+		if command -v sbctl-batch-sign >/dev/null 2>&1; then
+			SB_SIGNER="sbctl-batch-sign"
+		elif [ -x /etc/rEFInd/sbctl-batch-sign ]; then
+			SB_SIGNER="/etc/rEFInd/sbctl-batch-sign"
+		fi
+		SBCTL_MANAGED=""
+		if command -v sbctl >/dev/null 2>&1 \
+			&& sudo sbctl status --json 2>/dev/null | grep -qE '"installed":[[:space:]]*true'; then
+			SBCTL_MANAGED=1
+		fi
+		if [ -n "$SBCTL_MANAGED" ] || grep -qE '^ID="?cachyos"?$' /etc/os-release 2>/dev/null; then
 			echo 93
 			echo "# Signing EFI binaries for Secure Boot (sbctl)..."
-			command -v sbctl-batch-sign >/dev/null 2>&1 \
-				|| fail_install "Secure Boot is enabled but sbctl-batch-sign was not found."
-			sudo sbctl-batch-sign >&2 \
-				|| fail_install "sbctl-batch-sign failed; Windows was left active."
+			[ -n "$SB_SIGNER" ] \
+				|| fail_install "Secure Boot is enabled and sbctl manages its keys, but no sbctl-batch-sign was found (not on PATH, not in /etc/rEFInd)."
+			sudo "$SB_SIGNER" >&2 \
+				|| fail_install "$SB_SIGNER failed; Windows was left active."
+		else
+			echo "# Warning: Secure Boot is enabled but sbctl is not managing its keys here; the new rEFInd files were NOT signed."
 		fi
 	fi
 	echo 95

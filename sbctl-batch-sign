@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# sbctl-batch-sign -- sign every unsigned EFI binary on the ESP with sbctl.
+#
+# Functional parity with CachyOS' /usr/bin/sbctl-batch-sign (cachyos-settings)
+# for every other distro that manages Secure Boot with sbctl (Fedora/Nobara
+# with the sbctl COPR, Arch and Arch Linux ARM, Debian/Ubuntu). rEFInd_GUI
+# installs this copy as /etc/rEFInd/sbctl-batch-sign; its rEFInd install
+# scripts run the distro's own sbctl-batch-sign when one is on PATH (CachyOS)
+# and fall back to this file otherwise, right after writing rEFInd and its
+# drivers to the ESP. It can also be run by hand at any time.
+#
+# Behaviour, same as CachyOS:
+#   - walks `sbctl verify` and signs (with -s, so sbctl's pacman hook re-signs
+#     them after every kernel/boot-loader update) every file it reports as
+#     unsigned under the ESP
+#   - skips Microsoft's own files (EFI/Microsoft, EFI/Windows, *.mui, *.dll):
+#     they are already signed by Microsoft, whose certificates are expected to
+#     be enrolled alongside your keys (sbctl enroll-keys -m)
+#   - skips /boot/grub (GRUB is signed by its own package hooks)
+#   - refuses to run on a Limine install (Limine signs itself)
+# Differences from CachyOS: the ESP path is taken from sbctl's own idea of it
+# (its ESP_PATH env or /boot) instead of hard-coding /boot, and it reports
+# what it did.
+set -euo pipefail
+
+if [ -f /boot/limine.conf ]; then
+    echo "Limine detected, please do not use this script."
+    exit 0
+fi
+
+if [ "$(id -u)" -ne 0 ]; then
+    echo "Error: This script must be run with root privileges." >&2
+    exit 1
+fi
+
+if ! command -v sbctl >/dev/null 2>&1; then
+    echo "Error: sbctl is not installed (pacman -S sbctl)." >&2
+    exit 1
+fi
+
+export ESP_PATH="${ESP_PATH:-/boot}"
+signed=0
+skipped=0
+while IFS= read -r entry; do
+    [ -n "$entry" ] || continue
+    if [[ "$entry" =~ ^.*/EFI/(Microsoft|Windows) || "$entry" == *.mui || "$entry" == *.dll \
+        || "$entry" =~ ^/boot/grub ]]; then
+        skipped=$((skipped + 1))
+        continue
+    fi
+    echo "Signing $entry"
+    sbctl sign -s "$entry"
+    signed=$((signed + 1))
+done < <(sbctl verify 2>/dev/null | awk '/✗/ {print $2}')
+
+echo "sbctl-batch-sign: signed $signed file(s), skipped $skipped Microsoft/GRUB file(s)."
