@@ -135,30 +135,38 @@
 	sudo test -s "$DEST/refind_${EFI_ARCH}.efi" && sudo test -s "$DEST/refind.conf" \
 		|| fail_install "The installed rEFInd loader or config is missing or empty."
 	echo 90
-	# SkorionOS Xbox 360 USB controller UEFI driver (x86-64 build only; no
-	# ARM64 handheld runs it): dropping it into rEFInd's drivers_x64 folder
-	# makes wired/handheld gamepads (ROG Ally, Legion Go, etc.) usable in the
-	# boot menu. The driver auto-creates its own config at
+	# SkorionOS Xbox 360 USB controller UEFI driver: dropping it into rEFInd's
+	# drivers folder makes wired/handheld gamepads (ROG Ally, Legion Go, etc.)
+	# usable in the boot menu. The driver auto-creates its own config at
 	# \EFI\Xbox360\config.ini on first boot, so only the .efi is needed here.
+	# The release ships one build per EFI architecture (UsbXbox360Dxe.efi for
+	# x86-64, UsbXbox360Dxe_aa64.efi for ARM64, driver v1.8.1+); on the ESP
+	# both are installed as UsbXbox360Dxe.efi inside that architecture's
+	# drivers folder.
 	# NOTE: temporarily fetched from the jlobue10 fork (adds Legion Go 2 PIDs +
 	# Ally lockup fix); revert to SkorionOS once upstream PR #7 is merged/released.
-	if [ "$EFI_ARCH" = "x64" ]; then
+	XBOX360_DRV_ASSET=""
+	case "$EFI_ARCH" in
+		x64) XBOX360_DRV_ASSET="UsbXbox360Dxe.efi" ;;
+		aa64) XBOX360_DRV_ASSET="UsbXbox360Dxe_aa64.efi" ;;
+		*) echo "# Skipping the Xbox 360 controller driver (no ${EFI_ARCH} build)." ;;
+	esac
+	if [ -n "$XBOX360_DRV_ASSET" ]; then
 		echo "# Installing Xbox 360 controller driver..."
-		XBOX360_DRV_URL="https://github.com/jlobue10/UsbXbox360Dxe/releases/latest/download/UsbXbox360Dxe.efi"
+		XBOX360_DRV_URL="https://github.com/jlobue10/UsbXbox360Dxe/releases/latest/download/${XBOX360_DRV_ASSET}"
+		XBOX360_DRV_DIR="$ESP_MP/EFI/refind/drivers_${EFI_ARCH}"
 		XBOX360_DRV_TMP="$(mktemp)"
-		sudo mkdir -p "$ESP_MP/EFI/refind/drivers_x64"
+		sudo mkdir -p "$XBOX360_DRV_DIR"
 		# A truncated or HTML error-page download must not reach the ESP:
 		# require a non-empty file with the PE "MZ" signature before copying.
 		if { curl -fsSL "$XBOX360_DRV_URL" -o "$XBOX360_DRV_TMP" 2>/dev/null \
 			|| wget -q -O "$XBOX360_DRV_TMP" "$XBOX360_DRV_URL"; } \
 			&& [ -s "$XBOX360_DRV_TMP" ] && [ "$(head -c2 "$XBOX360_DRV_TMP")" = "MZ" ]; then
-			sudo cp -f "$XBOX360_DRV_TMP" "$ESP_MP/EFI/refind/drivers_x64/UsbXbox360Dxe.efi"
+			sudo cp -f "$XBOX360_DRV_TMP" "$XBOX360_DRV_DIR/UsbXbox360Dxe.efi"
 		else
-			echo "# Warning: failed to download UsbXbox360Dxe.efi; skipping controller driver."
+			echo "# Warning: failed to download ${XBOX360_DRV_ASSET}; skipping controller driver."
 		fi
 		rm -f "$XBOX360_DRV_TMP"
-	else
-		echo "# Skipping the Xbox 360 controller driver (x86-64 build only)."
 	fi
 	# TouchI2cDxe touchscreen UEFI driver (successor of AllyTouchI2cDxe):
 	# built-in HID-over-I2C touchscreens -- ROG Xbox Ally / Ally X (DMI board
