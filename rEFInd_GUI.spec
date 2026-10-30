@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.5.3
+Version:        3.5.4
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -75,6 +75,10 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
+* Thu Oct 30 2026 Jon LoBue <jlobue10@gmail.com> [3.5.4-1]
+- The Xbox 360 controller UEFI driver (UsbXbox360Dxe v1.8.1+, which now ships
+  an aarch64 build) is installed on ARM64 machines too, into drivers_aa64;
+  previously only the touchscreen driver was. x86-64 installs are unchanged.
 * Thu Oct 30 2026 Jon LoBue <jlobue10@gmail.com> [3.5.3-1]
 - ARM64 (aarch64) support: OS detection, the installers and the packaging use
   the running CPU's EFI names (refind_aa64.efi, shimaa64.efi, BOOTAA64.CSV,
