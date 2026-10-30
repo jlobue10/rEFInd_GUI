@@ -97,10 +97,15 @@ jobs:
       # loudly here.
       - name: Install build dependencies
         # The Arch Linux ARM keyring is `archlinuxarm`, not `archlinux`.
+        # pacman >= 7 downloads inside a Landlock sandbox as user `alpm`,
+        # which the Actions container runtime refuses ("restricting
+        # filesystem access failed ... Operation not permitted"); turn the
+        # sandbox off for this throwaway container.
         run: |
           pacman-key --init
           pacman-key --populate archlinuxarm
-          pacman -Syu --noconfirm git cmake gcc make qt6-base qt6-tools mokutil sbsigntools xterm zenity
+          grep -q '^DisableSandbox' /etc/pacman.conf || sed -i '/^\[options\]/a DisableSandbox' /etc/pacman.conf
+          pacman -Syu --noconfirm --disable-sandbox git cmake gcc make qt6-base qt6-tools mokutil sbsigntools xterm zenity
 
       # Default checkout: the tag itself on tag pushes, the dispatched branch
       # on manual runs. The packaging recipe (PKGBUILD + service file) comes
