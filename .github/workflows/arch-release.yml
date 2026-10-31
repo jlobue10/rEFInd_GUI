@@ -30,7 +30,7 @@ jobs:
       # installed); makepkg then runs without -s, so a drifting PKGBUILD fails
       # loudly here.
       - name: Install build dependencies
-        run: pacman -Syu --noconfirm git cmake gcc make qt6-base qt6-tools mokutil sbsigntools xterm zenity
+        run: pacman -Syu --noconfirm git cmake gcc make qt6-base qt6-tools curl mokutil sbsigntools unzip xterm zenity
 
       # Default checkout: the tag itself on tag pushes, the dispatched branch
       # on manual runs. The packaging recipe (PKGBUILD + service file) comes
@@ -105,7 +105,7 @@ jobs:
           pacman-key --init
           pacman-key --populate archlinuxarm
           grep -q '^DisableSandbox' /etc/pacman.conf || sed -i '/^\[options\]/a DisableSandbox' /etc/pacman.conf
-          pacman -Syu --noconfirm --disable-sandbox git cmake gcc make qt6-base qt6-tools mokutil sbsigntools xterm zenity
+          pacman -Syu --noconfirm --disable-sandbox git cmake gcc make qt6-base qt6-tools curl mokutil sbsigntools unzip xterm zenity
 
       # Default checkout: the tag itself on tag pushes, the dispatched branch
       # on manual runs. The packaging recipe (PKGBUILD + service file) comes
