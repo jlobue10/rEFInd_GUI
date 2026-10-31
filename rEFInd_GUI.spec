@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.5.6
+Version:        3.5.7
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -79,6 +79,11 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
+* Thu Oct 30 2026 Jon LoBue <jlobue10@gmail.com> [3.5.7-1]
+- Arch Linux boot icons in three sizes: icons/ now ships os_arch.png (128 px),
+  os_arch_256.png and os_arch_512.png, rendered from the Arch Linux crest, so
+  the larger Boot Icon Size choices have native-resolution Arch art instead of
+  upscaling rEFInd's 128 px icon. Same set as Steam, Windows 11 and CachyOS.
 * Thu Oct 30 2026 Jon LoBue <jlobue10@gmail.com> [3.5.6-1]
 - Secure Boot signing on every sbctl-managed distro: the package installs
   CachyOS' sbctl-batch-sign as /etc/rEFInd/sbctl-batch-sign and the rEFInd

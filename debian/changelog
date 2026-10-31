@@ -1,3 +1,13 @@
+refind-gui (3.5.7) unstable; urgency=medium
+
+  * Arch Linux boot icons in three sizes: icons/ now ships os_arch.png
+    (128 px), os_arch_256.png and os_arch_512.png, rendered from the Arch
+    Linux crest, so the larger Boot Icon Size choices have native-resolution
+    Arch art instead of upscaling rEFInd's 128 px icon. Same set as Steam,
+    Windows 11 and CachyOS.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Thu, 30 Oct 2026 18:30:00 -0700
+
 refind-gui (3.5.6) unstable; urgency=medium
 
   * Secure Boot signing on every sbctl-managed distro: the package installs
