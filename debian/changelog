@@ -1,3 +1,25 @@
+refind-gui (3.5.8) unstable; urgency=medium
+
+  * Installers download with curl first and fall back to wget. On distros
+    that ship no wget (Omarchy) install-rEFInd-GUI.sh silently built the
+    package locally with makepkg while reporting "No release package
+    available"; the SourceForge rEFInd installer aborted. Both scripts now
+    check for a downloader and an extractor (unzip, else bsdtar) up front,
+    and curl and unzip are package dependencies.
+  * UEFI drivers keep their release names on the ESP: drivers_aa64 holds
+    UsbXbox360Dxe_aa64.efi and TouchI2cDxe_aa64.efi instead of copies
+    renamed to the x86-64 names, which read as wrong-architecture files.
+    The old copy and its sbctl database entry are removed on upgrade.
+  * sbctl signing runs whenever sbctl reports its keys installed, even with
+    Secure Boot disabled, so the ESP is ready the moment it is switched on.
+    Failures are fatal only while Secure Boot enforces. sbctl-batch-sign
+    skips database entries whose file no longer exists.
+  * The Install rEFInd and randomizer terminal windows use a scalable font
+    at the GUI's own size instead of xterm's bitmap default, which was
+    unreadable on HiDPI displays.
+
+ -- Jon LoBue <jlobue10@gmail.com>  Thu, 30 Oct 2026 21:15:00 -0700
+
 refind-gui (3.5.7) unstable; urgency=medium
 
   * Arch Linux boot icons in three sizes: icons/ now ships os_arch.png

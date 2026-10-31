@@ -4,7 +4,7 @@
 %global debug_package %{nil}
 
 Name:           rEFInd_GUI
-Version:        3.5.7
+Version:        3.5.8
 Release:        1%{?dist}
 Summary:        Small GUI for customizing and installing rEFInd bootloader
 
@@ -14,7 +14,7 @@ Source0:        rEFInd_bg_randomizer.service
 Source1:        rEFInd_theme_randomizer.service
 
 BuildRequires:  cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel zlib-devel
-Requires:       mokutil sbsigntools xterm zenity
+Requires:       curl mokutil sbsigntools unzip xterm zenity
 Provides:       rEFInd_GUI
 Conflicts:      rEFInd_GUI
 
@@ -79,6 +79,19 @@ install -m 644 %{_builddir}/rEFInd_GUI/GUI/UEFI_icon.png %{buildroot}/usr/share/
 /usr/share/pixmaps/rEFInd_GUI.png
 
 %changelog
+* Thu Oct 30 2026 Jon LoBue <jlobue10@gmail.com> [3.5.8-1]
+- Installers download with curl first and fall back to wget; on distros without
+  wget (Omarchy) install-rEFInd-GUI.sh silently built locally with makepkg and
+  the SourceForge installer aborted. Downloader and extractor (unzip, else
+  bsdtar) are checked up front; curl and unzip are package dependencies.
+- UEFI drivers keep their release names on the ESP (UsbXbox360Dxe_aa64.efi,
+  TouchI2cDxe_aa64.efi in drivers_aa64); the renamed copy and its sbctl
+  database entry are removed on upgrade.
+- sbctl signing runs whenever sbctl keys are installed, even with Secure Boot
+  disabled (fatal only while it enforces); sbctl-batch-sign skips database
+  entries whose file is gone.
+- Install rEFInd / randomizer xterm windows use a scalable font at the GUI's
+  size instead of the unreadable bitmap default on HiDPI displays.
 * Thu Oct 30 2026 Jon LoBue <jlobue10@gmail.com> [3.5.7-1]
 - Arch Linux boot icons in three sizes: icons/ now ships os_arch.png (128 px),
   os_arch_256.png and os_arch_512.png, rendered from the Arch Linux crest, so

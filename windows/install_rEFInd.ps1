@@ -364,22 +364,29 @@ try {
     # etc.) usable in the boot menu. The driver auto-creates its own config at
     # \EFI\Xbox360\config.ini on first boot, so only the .efi is needed here.
     # The release ships one build per EFI architecture (UsbXbox360Dxe.efi for
-    # x86-64, UsbXbox360Dxe_aa64.efi for ARM64, driver v1.8.1+); on the ESP
-    # both are installed as UsbXbox360Dxe.efi in that architecture's folder.
+    # x86-64, UsbXbox360Dxe_aa64.efi for ARM64, driver v1.8.1+), installed
+    # under its release name (drivers_aa64\UsbXbox360Dxe_aa64.efi) in that
+    # architecture's folder so the file on the ESP says which build it is.
     # NOTE: temporarily fetched from the jlobue10 fork (adds Legion Go 2 PIDs +
     # Ally lockup fix); revert to SkorionOS once upstream PR #7 is merged/released.
     $driverAsset = if ($EfiArch -eq 'aa64') { 'UsbXbox360Dxe_aa64.efi' } else { 'UsbXbox360Dxe.efi' }
     Write-Step "Downloading $driverAsset controller driver..."
-    $driverDest = Join-Path $dest "drivers_${EfiArch}\UsbXbox360Dxe.efi"
+    $driverDest = Join-Path $dest "drivers_${EfiArch}\$driverAsset"
     $driverUrl = "https://github.com/jlobue10/UsbXbox360Dxe/releases/latest/download/$driverAsset"
     try {
-        $driverDownload = Join-Path $workDir 'UsbXbox360Dxe.efi'
+        $driverDownload = Join-Path $workDir $driverAsset
         Invoke-WebRequest -Uri $driverUrl -OutFile $driverDownload -MaximumRedirection 10
         if (-not (Test-FileSignature $driverDownload ([byte[]]@(0x4D, 0x5A)))) {
             # A truncated or HTML error-page must never replace the live copy.
             throw 'downloaded file is not a PE/EFI binary'
         }
         Publish-FileAtomically $driverDownload $driverDest
+        if ($driverAsset -ne 'UsbXbox360Dxe.efi') {
+            # 3.5.5-3.5.7 installed the ARM64 build under the x86-64 name;
+            # leaving that copy beside the new one would load it twice.
+            Remove-Item -Force -ErrorAction SilentlyContinue `
+                (Join-Path $dest "drivers_${EfiArch}\UsbXbox360Dxe.efi")
+        }
     } catch {
         # Non-fatal, but remember why: the summary must not report plain
         # success when the driver never made it to the ESP (issue #23 -- the
@@ -399,10 +406,10 @@ try {
     if ($IsTouchDevice) {
         $touchAsset = if ($EfiArch -eq 'aa64') { 'TouchI2cDxe_aa64.efi' } else { 'TouchI2cDxe.efi' }
         Write-Step "Downloading $touchAsset touchscreen driver..."
-        $touchDest = Join-Path $dest "drivers_${EfiArch}\TouchI2cDxe.efi"
+        $touchDest = Join-Path $dest "drivers_${EfiArch}\$touchAsset"
         $touchUrl = "https://github.com/jlobue10/TouchI2cDxe/releases/latest/download/$touchAsset"
         try {
-            $touchDownload = Join-Path $workDir 'TouchI2cDxe.efi'
+            $touchDownload = Join-Path $workDir $touchAsset
             Invoke-WebRequest -Uri $touchUrl -OutFile $touchDownload -MaximumRedirection 10
             if (-not (Test-FileSignature $touchDownload ([byte[]]@(0x4D, 0x5A)))) {
                 # A truncated or HTML error-page must never replace the live copy.
@@ -413,6 +420,10 @@ try {
             # two AbsolutePointer producers for the same panel.
             Remove-Item -Force -ErrorAction SilentlyContinue `
                 (Join-Path $dest "drivers_${EfiArch}\AllyTouchI2cDxe.efi")
+            if ($touchAsset -ne 'TouchI2cDxe.efi') {
+                Remove-Item -Force -ErrorAction SilentlyContinue `
+                    (Join-Path $dest "drivers_${EfiArch}\TouchI2cDxe.efi")
+            }
         } catch {
             $touchError = "$($_.Exception.Message)"
             Write-Warning "Failed to download ${touchAsset}; skipping touchscreen driver. $_"
@@ -465,11 +476,11 @@ try {
     foreach ($check in @(
             @{ Name = "rEFInd loader (refind_${EfiArch}.efi)";   Path = (Join-Path $dest "refind_${EfiArch}.efi") },
             @{ Name = 'GUI config (refind.conf)';                Path = $conf },
-            @{ Name = 'Controller driver (UsbXbox360Dxe.efi)';   Path = $driverDest })) {
+            @{ Name = "Controller driver ($driverAsset)";        Path = $driverDest })) {
         $espFiles[$check.Name] = Get-Item -LiteralPath $check.Path -ErrorAction SilentlyContinue
     }
     if ($touchDest) {
-        $espFiles['Touchscreen driver (TouchI2cDxe.efi)'] =
+        $espFiles["Touchscreen driver ($touchAsset)"] =
             Get-Item -LiteralPath $touchDest -ErrorAction SilentlyContinue
     }
 
@@ -596,14 +607,14 @@ if ($espFiles) {
         }
     }
 }
-$driverOnEsp = $espFiles -and $null -ne $espFiles['Controller driver (UsbXbox360Dxe.efi)']
+$driverOnEsp = $espFiles -and $null -ne $espFiles["Controller driver ($driverAsset)"]
 if ($driverError) {
     Write-Host "Controller driver download failed: $driverError" -ForegroundColor Yellow
     if ($driverOnEsp) {
         Write-Host 'A PREVIOUS copy of the driver was kept -- it may be outdated.' -ForegroundColor Yellow
     }
 }
-$touchOnEsp = $espFiles -and $null -ne $espFiles['Touchscreen driver (TouchI2cDxe.efi)']
+$touchOnEsp = $espFiles -and $null -ne $espFiles["Touchscreen driver ($touchAsset)"]
 if ($touchError) {
     Write-Host "Touchscreen driver download failed: $touchError" -ForegroundColor Yellow
     if ($touchOnEsp) {
@@ -630,14 +641,14 @@ if ($installError) {
     Write-Host 'above) -- gamepads may not work, or keep old behavior, in the boot menu.' -ForegroundColor Yellow
     Write-Host 'Fix: re-run Install rEFInd with a working network connection, or download' -ForegroundColor Yellow
     Write-Host "$driverAsset from github.com/jlobue10/UsbXbox360Dxe/releases and" -ForegroundColor Yellow
-    Write-Host "copy it to EFI\refind\drivers_${EfiArch}\UsbXbox360Dxe.efi on the ESP." -ForegroundColor Yellow
+    Write-Host "copy it to EFI\refind\drivers_${EfiArch}\$driverAsset on the ESP." -ForegroundColor Yellow
 } elseif ($touchError -or ($touchDest -and -not $touchOnEsp)) {
     Write-Host 'SUCCESS, with a warning: rEFInd is installed and first in the firmware' -ForegroundColor Yellow
     Write-Host 'boot order, but the touchscreen driver was NOT updated (see above)' -ForegroundColor Yellow
     Write-Host '-- touch may not work in the boot menu. Fix: re-run Install rEFInd with a' -ForegroundColor Yellow
     Write-Host "working network connection, or download $touchAsset from" -ForegroundColor Yellow
     Write-Host 'github.com/jlobue10/TouchI2cDxe/releases and copy it to' -ForegroundColor Yellow
-    Write-Host "EFI\refind\drivers_${EfiArch}\TouchI2cDxe.efi on the ESP." -ForegroundColor Yellow
+    Write-Host "EFI\refind\drivers_${EfiArch}\$touchAsset on the ESP." -ForegroundColor Yellow
 } else {
     Write-Host 'SUCCESS: rEFInd is installed and first in the firmware boot order.' -ForegroundColor Green
     Write-Host '(Windows Boot Manager was left untouched; rEFInd chainloads it.)'

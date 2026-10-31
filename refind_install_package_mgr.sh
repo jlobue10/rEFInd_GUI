@@ -140,8 +140,9 @@
 	# usable in the boot menu. The driver auto-creates its own config at
 	# \EFI\Xbox360\config.ini on first boot, so only the .efi is needed here.
 	# The release ships one build per EFI architecture (UsbXbox360Dxe.efi for
-	# x86-64, UsbXbox360Dxe_aa64.efi for ARM64, driver v1.8.1+); on the ESP
-	# both are installed as UsbXbox360Dxe.efi inside that architecture's
+	# x86-64, UsbXbox360Dxe_aa64.efi for ARM64, driver v1.8.1+), installed
+	# under its release name (drivers_aa64/UsbXbox360Dxe_aa64.efi) inside
+	# that architecture's
 	# drivers folder.
 	# NOTE: temporarily fetched from the jlobue10 fork (adds Legion Go 2 PIDs +
 	# Ally lockup fix); revert to SkorionOS once upstream PR #7 is merged/released.
@@ -162,7 +163,17 @@
 		if { curl -fsSL "$XBOX360_DRV_URL" -o "$XBOX360_DRV_TMP" 2>/dev/null \
 			|| wget -q -O "$XBOX360_DRV_TMP" "$XBOX360_DRV_URL"; } \
 			&& [ -s "$XBOX360_DRV_TMP" ] && [ "$(head -c2 "$XBOX360_DRV_TMP")" = "MZ" ]; then
-			sudo cp -f "$XBOX360_DRV_TMP" "$XBOX360_DRV_DIR/UsbXbox360Dxe.efi"
+			sudo cp -f "$XBOX360_DRV_TMP" "$XBOX360_DRV_DIR/$XBOX360_DRV_ASSET"
+			# 3.5.3-3.5.7 installed the ARM64 build under the x86-64 name;
+			# leaving that copy beside the new one would load it twice.
+			if [ "$XBOX360_DRV_ASSET" != "UsbXbox360Dxe.efi" ]; then
+				sudo rm -f "$XBOX360_DRV_DIR/UsbXbox360Dxe.efi"
+				# ... and its sbctl database entry, or `sbctl verify` keeps
+				# reporting a file that no longer exists.
+				! command -v sbctl >/dev/null 2>&1 \
+					|| sudo sbctl remove-file "$XBOX360_DRV_DIR/UsbXbox360Dxe.efi" >/dev/null 2>&1 || true
+			fi
+			echo "Installed drivers_${EFI_ARCH}/${XBOX360_DRV_ASSET}." >&2
 		else
 			echo "# Warning: failed to download ${XBOX360_DRV_ASSET}; skipping controller driver."
 		fi
@@ -179,7 +190,7 @@
 	# is touch-usable. Only these devices get it. Like the controller driver,
 	# download failure is non-fatal. The release ships one build per EFI
 	# architecture (TouchI2cDxe.efi for x86-64, TouchI2cDxe_aa64.efi for
-	# ARM64); on the ESP both are installed as TouchI2cDxe.efi inside that
+	# ARM64), installed under its release name inside that
 	# architecture's drivers folder.
 	TOUCH_DEVICE=""
 	case "$(cat /sys/class/dmi/id/board_name 2>/dev/null)" in
@@ -207,10 +218,17 @@
 		if { curl -fsSL "$TOUCH_DRV_URL" -o "$TOUCH_DRV_TMP" 2>/dev/null \
 			|| wget -q -O "$TOUCH_DRV_TMP" "$TOUCH_DRV_URL"; } \
 			&& [ -s "$TOUCH_DRV_TMP" ] && [ "$(head -c2 "$TOUCH_DRV_TMP")" = "MZ" ]; then
-			sudo cp -f "$TOUCH_DRV_TMP" "$TOUCH_DRV_DIR/TouchI2cDxe.efi"
+			sudo cp -f "$TOUCH_DRV_TMP" "$TOUCH_DRV_DIR/$TOUCH_DRV_ASSET"
+			echo "Installed drivers_${EFI_ARCH}/${TOUCH_DRV_ASSET}." >&2
 			# TouchI2cDxe supersedes AllyTouchI2cDxe; leaving both would load
-			# two AbsolutePointer producers for the same panel.
+			# two AbsolutePointer producers for the same panel. Same for the
+			# x86-64-named copy 3.5.3-3.5.7 wrote on ARM64.
 			sudo rm -f "$TOUCH_DRV_DIR/AllyTouchI2cDxe.efi"
+			if [ "$TOUCH_DRV_ASSET" != "TouchI2cDxe.efi" ]; then
+				sudo rm -f "$TOUCH_DRV_DIR/TouchI2cDxe.efi"
+				! command -v sbctl >/dev/null 2>&1 \
+					|| sudo sbctl remove-file "$TOUCH_DRV_DIR/TouchI2cDxe.efi" >/dev/null 2>&1 || true
+			fi
 		else
 			echo "# Warning: failed to download ${TOUCH_DRV_ASSET}; skipping touchscreen driver."
 		fi
@@ -221,23 +239,27 @@
 	# Secure Boot enforces. Any distro whose Secure Boot keys are managed by
 	# sbctl gets the CachyOS treatment: CachyOS' own sbctl-batch-sign when it
 	# is on PATH, otherwise the identical copy this package installs
-	# root-owned at /etc/rEFInd/sbctl-batch-sign. Secure Boot enforced by
-	# something else (shim/MOK) is left alone with a warning, as before.
+	# root-owned at /etc/rEFInd/sbctl-batch-sign. sbctl-managed machines are
+	# signed even while Secure Boot is disabled, so the ESP is ready the
+	# moment it is switched on (and `sbctl verify` stays clean); there a
+	# signing failure only warns, since the firmware still boots the unsigned
+	# copy. Secure Boot enforced by something else (shim/MOK) is left alone
+	# with a warning, as before.
 	SB_STATE="$(od -An -tu1 -j4 -N1 \
 		/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null \
 		| tr -d '[:space:]')"
+	SB_SIGNER=""
+	if command -v sbctl-batch-sign >/dev/null 2>&1; then
+		SB_SIGNER="sbctl-batch-sign"
+	elif [ -x /etc/rEFInd/sbctl-batch-sign ]; then
+		SB_SIGNER="/etc/rEFInd/sbctl-batch-sign"
+	fi
+	SBCTL_MANAGED=""
+	if command -v sbctl >/dev/null 2>&1 \
+		&& sudo sbctl status --json 2>/dev/null | grep -qE '"installed":[[:space:]]*true'; then
+		SBCTL_MANAGED=1
+	fi
 	if [ "$SB_STATE" = "1" ]; then
-		SB_SIGNER=""
-		if command -v sbctl-batch-sign >/dev/null 2>&1; then
-			SB_SIGNER="sbctl-batch-sign"
-		elif [ -x /etc/rEFInd/sbctl-batch-sign ]; then
-			SB_SIGNER="/etc/rEFInd/sbctl-batch-sign"
-		fi
-		SBCTL_MANAGED=""
-		if command -v sbctl >/dev/null 2>&1 \
-			&& sudo sbctl status --json 2>/dev/null | grep -qE '"installed":[[:space:]]*true'; then
-			SBCTL_MANAGED=1
-		fi
 		if [ -n "$SBCTL_MANAGED" ] || grep -qE '^ID="?cachyos"?$' /etc/os-release 2>/dev/null; then
 			echo 93
 			echo "# Signing EFI binaries for Secure Boot (sbctl)..."
@@ -247,6 +269,15 @@
 				|| fail_install "$SB_SIGNER failed; Windows was left active."
 		else
 			echo "# Warning: Secure Boot is enabled but sbctl is not managing its keys here; the new rEFInd files were NOT signed."
+		fi
+	elif [ -n "$SBCTL_MANAGED" ]; then
+		if [ -n "$SB_SIGNER" ]; then
+			echo 93
+			echo "# Signing EFI binaries with sbctl (Secure Boot is disabled; ready for when it is enabled)..."
+			sudo "$SB_SIGNER" >&2 \
+				|| echo "# Warning: $SB_SIGNER failed; the new rEFInd files are NOT signed (they still boot while Secure Boot is disabled)."
+		else
+			echo "# Warning: sbctl manages keys here but no sbctl-batch-sign was found; the new rEFInd files were NOT signed."
 		fi
 	fi
 	echo 95

@@ -65,6 +65,34 @@ release_requires_checksum() {
 	[ "$(printf '%s\n%s\n' "$CHECKSUM_REQUIRED_FROM" "$version" | sort -V | head -n 1)" = "$CHECKSUM_REQUIRED_FROM" ]
 }
 
+# fetch_url URL DEST [quiet]: download URL to DEST, curl first, wget as the
+# fallback. The README pipes this script through curl, so curl is the one
+# downloader every user is known to have; wget is not a given -- Omarchy, for
+# one, ships curl and no wget, and a bare `wget` here made every release
+# download "fail" so the installer fell back to a full local makepkg build
+# while reporting "No release package available" for a release that was fine.
+# A failed transfer must not leave a truncated DEST behind: the install globs
+# below would pick it up.
+fetch_url() {
+	if command -v curl >/dev/null 2>&1; then
+		if [ -n "$3" ]; then
+			curl -fsSL -o "$2" "$1" && return 0
+		else
+			curl -fL -o "$2" "$1" && return 0
+		fi
+	elif command -v wget >/dev/null 2>&1; then
+		if [ -n "$3" ]; then
+			wget -q -O "$2" "$1" && return 0
+		else
+			wget -O "$2" "$1" && return 0
+		fi
+	else
+		echo "Error: neither curl nor wget is installed; cannot download $1." >&2
+	fi
+	rm -f "$2"
+	return 1
+}
+
 verify_release_asset() {
 	# One assignment per local: a POSIX shell expands every word before the
 	# builtin runs, so sidecar="${artifact}.sha256" on the same line would
@@ -72,7 +100,7 @@ verify_release_asset() {
 	local url="$1" artifact="$2"
 	local sidecar="${artifact}.sha256"
 	local expected actual
-	if ! wget -q -O "$sidecar" "${url}.sha256"; then
+	if ! fetch_url "${url}.sha256" "$sidecar" quiet; then
 		rm -f "$sidecar"
 		if release_requires_checksum; then
 			echo "Error: release $LATEST_TAG is missing the required checksum for $artifact. Aborting." >&2
@@ -167,15 +195,13 @@ if [ "$FEDORA_BASE" = 0 ] && [ "$BAZZITE" != 0 ]; then
 	cd "$HOME/Downloads" || exit 1
 	rm -f rEFInd_GUI*.rpm
 	RPM_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*\.${PKG_ARCH_RPM}\.rpm" | grep -vE "\.src\.rpm|debuginfo|debugsource" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
-	if [ -n "$RPM_URL" ] && wget "$RPM_URL"; then
-		INSTALL_RPM="$(basename "$RPM_URL")"
+	INSTALL_RPM="$(basename "$RPM_URL")"
+	if [ -n "$RPM_URL" ] && fetch_url "$RPM_URL" "$INSTALL_RPM"; then
 		verify_release_asset "$RPM_URL" "$INSTALL_RPM" || exit 1
 		printf '\nInstalling the prebuilt release rpm.\n\n'
 	else
-		# A download that failed partway leaves a truncated rpm behind, which
-		# the rEFInd_GUI-[0-9]*.rpm install glob below would pick up too.
 		rm -f rEFInd_GUI*.rpm
-		printf '\nNo release rpm available; building locally with rpmbuild.\n\n'
+		printf '\nNo release rpm could be downloaded; building locally with rpmbuild.\n\n'
 		sudo dnf install -y rpm-build cmake gcc-c++ git-core make qt6-qtbase-devel qt6-qttools-devel
 		mkdir -p "$HOME/rpmbuild/SPECS" "$HOME/rpmbuild/SOURCES"
 		cp -f "$CURRENT_WD/rEFInd_GUI.spec" "$HOME/rpmbuild/SPECS"
@@ -212,11 +238,11 @@ if [ "$BAZZITE" = 0 ]; then
 		echo "Error: the latest GitHub release has no .rpm asset. Aborting." >&2
 		exit 1
 	fi
-	if ! wget "$RPM_URL"; then
+	INSTALL_RPM="$(basename "$RPM_URL")"
+	if ! fetch_url "$RPM_URL" "$INSTALL_RPM"; then
 		echo "Error: failed to download $RPM_URL. Aborting." >&2
 		exit 1
 	fi
-	INSTALL_RPM="$(basename "$RPM_URL")"
 	verify_release_asset "$RPM_URL" "$INSTALL_RPM" || exit 1
 	# A previously layered rEFInd_GUI blocks installing the new local rpm
 	if rpm-ostree status | grep -q rEFInd_GUI; then
@@ -245,9 +271,9 @@ if [ "$ARCH_BASE" = 0 ]; then
 		fi
 	done
 	PKG_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*-${PKG_ARCH_PACMAN}\.pkg\.tar\.zst" | grep -v "debug" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
-	if [ -n "$PKG_URL" ] && wget "$PKG_URL"; then
+	INSTALL_PKG="$(basename "$PKG_URL")"
+	if [ -n "$PKG_URL" ] && fetch_url "$PKG_URL" "$INSTALL_PKG"; then
 		printf '\nInstalling the prebuilt release package.\n\n'
-		INSTALL_PKG="$(basename "$PKG_URL")"
 		verify_release_asset "$PKG_URL" "$INSTALL_PKG" || exit 1
 		if ! sudo pacman -U --noconfirm "./$INSTALL_PKG"; then
 			echo "Error: pacman failed to install $INSTALL_PKG. Aborting." >&2
@@ -255,7 +281,7 @@ if [ "$ARCH_BASE" = 0 ]; then
 		fi
 		rm -f "$INSTALL_PKG"
 	else
-		printf '\nNo release package available; building locally with makepkg.\n\n'
+		printf '\nNo release package could be downloaded; building locally with makepkg.\n\n'
 		sudo pacman -S --needed base-devel git cmake qt6-base qt6-tools
 		if ! (cd "$CURRENT_WD" && makepkg -si); then
 			echo "Error: makepkg failed. Aborting." >&2
@@ -273,9 +299,9 @@ if [ "$DEB_BASE" = 0 ]; then
 	cd "$HOME/Downloads" || exit 1
 	rm -f refind-gui*.deb
 	DEB_URL="$(curl -s https://api.github.com/repos/jlobue10/rEFInd_GUI/releases/latest | grep "browser_download_url.*_${PKG_ARCH_DEB}\.deb" | grep -v "dbgsym" | head -n 1 | cut -d : -f 2,3 | tr -d '" ')"
-	if [ -n "$DEB_URL" ] && wget "$DEB_URL"; then
+	INSTALL_DEB="$(basename "$DEB_URL")"
+	if [ -n "$DEB_URL" ] && fetch_url "$DEB_URL" "$INSTALL_DEB"; then
 		printf '\nInstalling the prebuilt release package.\n\n'
-		INSTALL_DEB="$(basename "$DEB_URL")"
 		verify_release_asset "$DEB_URL" "$INSTALL_DEB" || exit 1
 		if ! sudo apt-get install -y "./$INSTALL_DEB"; then
 			echo "Error: apt-get failed to install $INSTALL_DEB. Aborting." >&2
@@ -283,7 +309,7 @@ if [ "$DEB_BASE" = 0 ]; then
 		fi
 		rm -f "$INSTALL_DEB"
 	else
-		printf '\nNo release package available; building locally with dpkg-buildpackage.\n\n'
+		printf '\nNo release package could be downloaded; building locally with dpkg-buildpackage.\n\n'
 		sudo apt-get update
 		sudo apt-get install -y build-essential debhelper cmake qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools
 		if ! (cd "$CURRENT_WD" && dpkg-buildpackage -us -uc -b); then

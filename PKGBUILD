@@ -1,6 +1,6 @@
 # Maintainer: Jonathan LoBue <jlobue10@gmail.com>
 pkgname=rEFInd_GUI
-pkgver=3.5.7
+pkgver=3.5.8
 pkgrel=1
 pkgdesc="Small GUI for customizing and installing rEFInd bootloader"
 arch=('x86_64' 'aarch64')
@@ -8,7 +8,7 @@ url="https://github.com/jlobue10/rEFInd_GUI"
 license=('GPL3')
 # No debug split package; install scripts glob the built package by name
 options=('!debug')
-depends=('mokutil' 'qt6-base' 'sbsigntools' 'xterm' 'zenity' 'zlib')
+depends=('curl' 'mokutil' 'qt6-base' 'sbsigntools' 'unzip' 'xterm' 'zenity' 'zlib')
 makedepends=('cmake' 'gcc' 'qt6-base' 'qt6-tools' 'git')
 source=("rEFInd_bg_randomizer.service"
         "rEFInd_theme_randomizer.service")

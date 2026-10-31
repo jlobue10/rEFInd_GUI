@@ -13,6 +13,8 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QFont>
+#include <QGuiApplication>
 #include <QProcess>
 #include <QProcessEnvironment>
 #include <QSysInfo>
@@ -324,13 +326,35 @@ void prepareDataDir()
 {
 }
 
+// xterm's default is the bitmap "fixed" font: 13 px glyphs that ignore the
+// desktop's Xft.dpi, unreadable on a HiDPI panel (ProArt P16, 3840x2400).
+// Ask for a scalable Xft face at the GUI's own point size instead (11 pt
+// floor); Xft then honours the Xft.dpi the desktop publishes for X clients
+// (KDE and GNOME set it from the display scale), so the terminal text scales
+// like the GUI does -- 27 px on the P16 at Xft.dpi 177. Point size, never a
+// pixel size or an Xft.dpi override: compositors that scale XWayland
+// themselves would double it. The geometry gives the installers' banners and
+// end-of-run summaries room without wrapping.
+static QStringList xtermArgs(const QString &title)
+{
+    qreal pt = QGuiApplication::font().pointSizeF();
+    if (pt < 11)
+        pt = 11;
+    return {QStringLiteral("-fa"), QStringLiteral("Monospace"),
+            QStringLiteral("-fs"), QString::number(qRound(pt)),
+            QStringLiteral("-geometry"), QStringLiteral("110x40"),
+            QStringLiteral("-title"), title,
+            QStringLiteral("-e")};
+}
+
 bool runInstallerScript(const QString &installSource, QString *detail)
 {
     const QString script = dataDir()
         + (installSource == QLatin1String("Sourceforge")
                ? QStringLiteral("/refind_install_Sourceforge.sh")
                : QStringLiteral("/refind_install_package_mgr.sh"));
-    if (!QProcess::startDetached(QStringLiteral("xterm"), {QStringLiteral("-e"), script})) {
+    if (!QProcess::startDetached(QStringLiteral("xterm"),
+                                 xtermArgs(QStringLiteral("rEFInd_GUI: Install rEFInd")) << script)) {
         if (detail)
             *detail = QCoreApplication::translate(
                           "Platform", "xterm could not be started to run %1. Is xterm installed?")
@@ -491,8 +515,8 @@ static bool setRandomizerUnit(const QString &unit, bool enable)
         "sudo systemctl %1 --now %2 && "
         "sudo systemctl status %2; exec bash").arg(action, unit);
     return QProcess::startDetached(QStringLiteral("xterm"),
-                                   {QStringLiteral("-e"), QStringLiteral("bash"),
-                                    QStringLiteral("-c"), command});
+                                   xtermArgs(QStringLiteral("rEFInd_GUI: ") + unit)
+                                       << QStringLiteral("bash") << QStringLiteral("-c") << command);
 }
 
 bool setBackgroundRandomizer(bool enable)

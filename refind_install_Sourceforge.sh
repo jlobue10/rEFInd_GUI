@@ -25,6 +25,44 @@ pause_before_exit() {
 }
 trap pause_before_exit EXIT
 
+# fetch_url URL DEST [quiet]: curl first, wget as the fallback. Not every
+# distro ships wget (Omarchy has curl only), and a bare `wget` turned into a
+# "download failed" abort there. A failed transfer must not leave a truncated
+# DEST behind for the checks below to mistake for a download.
+fetch_url() {
+	if command -v curl >/dev/null 2>&1; then
+		if [ -n "$3" ]; then
+			curl -fsSL -o "$2" "$1" && return 0
+		else
+			curl -fL -o "$2" "$1" && return 0
+		fi
+	elif command -v wget >/dev/null 2>&1; then
+		if [ -n "$3" ]; then
+			wget -q -O "$2" "$1" && return 0
+		else
+			wget -O "$2" "$1" && return 0
+		fi
+	fi
+	rm -f -- "$2"
+	return 1
+}
+
+# Preflight the tools the download and extraction below need, so a missing
+# one is named up front instead of surfacing as a misleading "archive is
+# invalid" error after a successful download (Omarchy ships neither wget nor
+# unzip by default). bsdtar (libarchive, present on every pacman distro)
+# reads zip archives and covers systems without unzip.
+if ! command -v curl >/dev/null 2>&1 && ! command -v wget >/dev/null 2>&1; then
+	fail_install "Neither curl nor wget is installed. Install curl, then run the installer again."
+fi
+if command -v unzip >/dev/null 2>&1; then
+	extract_zip() { unzip -o "$1"; }
+elif command -v bsdtar >/dev/null 2>&1; then
+	extract_zip() { bsdtar -xf "$1"; }
+else
+	fail_install "Neither unzip nor bsdtar is installed. Install unzip, then run the installer again."
+fi
+
 # rEFInd's binaries, driver and tool directories carry an EFI architecture
 # suffix (refind_x64.efi, drivers_aa64, ...). The zip ships all three; pick
 # the running CPU's, as refind-install itself does.
@@ -55,8 +93,8 @@ cd "$DOWNLOAD_DIR" || exit 1
 ZIP_PATH="$DOWNLOAD_DIR/refind-bin-gnuefi-${REFIND_VER}.zip"
 ZIP_STAGE="${ZIP_PATH}.new.$$"
 TEMP_FILES+=("$ZIP_STAGE")
-if ! wget -O "$ZIP_STAGE" \
-	"https://sourceforge.net/projects/refind/files/${REFIND_VER}/refind-bin-gnuefi-${REFIND_VER}.zip"; then
+if ! fetch_url "https://sourceforge.net/projects/refind/files/${REFIND_VER}/refind-bin-gnuefi-${REFIND_VER}.zip" \
+	"$ZIP_STAGE"; then
 	fail_install "The rEFInd archive download failed."
 fi
 # Verify the download against the known-good SHA-256 before publishing/extracting
@@ -73,7 +111,7 @@ fi
 mv -f "$ZIP_STAGE" "$ZIP_PATH" \
 	|| fail_install "The downloaded rEFInd archive could not be published."
 echo "Unzipping rEFInd zip..."
-unzip -o "$ZIP_PATH" \
+extract_zip "$ZIP_PATH" \
 	|| fail_install "The downloaded rEFInd archive is invalid or could not be extracted."
 
 # Resolve the real ESP mountpoint. The ESP may be mounted at /boot/efi,
@@ -120,9 +158,10 @@ sudo cp -f "$REFIND_BIN/refind/refind_${EFI_ARCH}.efi" "$DEST/" \
 # usable in the boot menu. The driver auto-creates its own config at
 # \EFI\Xbox360\config.ini on first boot, so only the .efi is needed here.
 # The release ships one build per EFI architecture (UsbXbox360Dxe.efi for
-# x86-64, UsbXbox360Dxe_aa64.efi for ARM64, driver v1.8.1+); on the ESP both
-# are installed as UsbXbox360Dxe.efi inside that architecture's drivers
-# folder.
+# x86-64, UsbXbox360Dxe_aa64.efi for ARM64, driver v1.8.1+) and each is
+# installed under its release name inside that architecture's drivers folder
+# (drivers_aa64/UsbXbox360Dxe_aa64.efi), so the file on the ESP says which
+# build it is. rEFInd loads every .efi in the folder whatever its name.
 # NOTE: temporarily fetched from the jlobue10 fork (adds Legion Go 2 PIDs +
 # Ally lockup fix); revert to SkorionOS once upstream PR #7 is merged/released.
 XBOX360_DRV_ASSET=""
@@ -138,10 +177,20 @@ if [ -n "$XBOX360_DRV_ASSET" ]; then
 	sudo mkdir -p "$XBOX360_DRV_DIR"
 	# A truncated or HTML error-page download must not reach the ESP:
 	# require a non-empty file with the PE "MZ" signature before copying.
-	if wget -q -O "$DOWNLOAD_DIR/UsbXbox360Dxe.efi" "$XBOX360_DRV_URL" \
-		&& [ -s "$DOWNLOAD_DIR/UsbXbox360Dxe.efi" ] && [ "$(head -c2 "$DOWNLOAD_DIR/UsbXbox360Dxe.efi")" = "MZ" ]; then
-		sudo cp -f "$DOWNLOAD_DIR/UsbXbox360Dxe.efi" "$XBOX360_DRV_DIR/UsbXbox360Dxe.efi"
-		rm -f "$DOWNLOAD_DIR/UsbXbox360Dxe.efi"
+	if fetch_url "$XBOX360_DRV_URL" "$DOWNLOAD_DIR/$XBOX360_DRV_ASSET" quiet \
+		&& [ -s "$DOWNLOAD_DIR/$XBOX360_DRV_ASSET" ] && [ "$(head -c2 "$DOWNLOAD_DIR/$XBOX360_DRV_ASSET")" = "MZ" ]; then
+		sudo cp -f "$DOWNLOAD_DIR/$XBOX360_DRV_ASSET" "$XBOX360_DRV_DIR/$XBOX360_DRV_ASSET"
+		rm -f "$DOWNLOAD_DIR/$XBOX360_DRV_ASSET"
+		# 3.5.3-3.5.7 installed the ARM64 build under the x86-64 name; leaving
+		# that copy beside the new one would load the same driver twice.
+		if [ "$XBOX360_DRV_ASSET" != "UsbXbox360Dxe.efi" ]; then
+			sudo rm -f "$XBOX360_DRV_DIR/UsbXbox360Dxe.efi"
+			# ... and its sbctl database entry, or `sbctl verify` keeps
+			# reporting a file that no longer exists.
+			! command -v sbctl >/dev/null 2>&1 \
+				|| sudo sbctl remove-file "$XBOX360_DRV_DIR/UsbXbox360Dxe.efi" >/dev/null 2>&1 || true
+		fi
+		echo "Installed drivers_${EFI_ARCH}/${XBOX360_DRV_ASSET}."
 	else
 		echo "Warning: failed to download ${XBOX360_DRV_ASSET}; skipping controller driver." >&2
 	fi
@@ -156,8 +205,8 @@ fi
 # produces AbsolutePointer so the rEFInd menu is touch-usable. Only these
 # devices get it. Like the controller driver, download failure is non-fatal.
 # The release ships one build per EFI architecture (TouchI2cDxe.efi for
-# x86-64, TouchI2cDxe_aa64.efi for ARM64); on the ESP both are installed as
-# TouchI2cDxe.efi inside that architecture's drivers folder.
+# x86-64, TouchI2cDxe_aa64.efi for ARM64), installed under its release name
+# inside that architecture's drivers folder (drivers_aa64/TouchI2cDxe_aa64.efi).
 TOUCH_DEVICE=""
 case "$(cat /sys/class/dmi/id/board_name 2>/dev/null)" in
 RC73XA*|RC73YA*|UX8402VV*|H7607BA*) TOUCH_DEVICE=1 ;;
@@ -180,13 +229,20 @@ if [ -n "$TOUCH_DRV_ASSET" ]; then
 	sudo mkdir -p "$TOUCH_DRV_DIR"
 	# A truncated or HTML error-page download must not reach the ESP:
 	# require a non-empty file with the PE "MZ" signature before copying.
-	if wget -q -O "$DOWNLOAD_DIR/TouchI2cDxe.efi" "$TOUCH_DRV_URL" \
-		&& [ -s "$DOWNLOAD_DIR/TouchI2cDxe.efi" ] && [ "$(head -c2 "$DOWNLOAD_DIR/TouchI2cDxe.efi")" = "MZ" ]; then
-		sudo cp -f "$DOWNLOAD_DIR/TouchI2cDxe.efi" "$TOUCH_DRV_DIR/TouchI2cDxe.efi"
-		rm -f "$DOWNLOAD_DIR/TouchI2cDxe.efi"
+	if fetch_url "$TOUCH_DRV_URL" "$DOWNLOAD_DIR/$TOUCH_DRV_ASSET" quiet \
+		&& [ -s "$DOWNLOAD_DIR/$TOUCH_DRV_ASSET" ] && [ "$(head -c2 "$DOWNLOAD_DIR/$TOUCH_DRV_ASSET")" = "MZ" ]; then
+		sudo cp -f "$DOWNLOAD_DIR/$TOUCH_DRV_ASSET" "$TOUCH_DRV_DIR/$TOUCH_DRV_ASSET"
+		rm -f "$DOWNLOAD_DIR/$TOUCH_DRV_ASSET"
+		echo "Installed drivers_${EFI_ARCH}/${TOUCH_DRV_ASSET}."
 		# TouchI2cDxe supersedes AllyTouchI2cDxe; leaving both would load
-		# two AbsolutePointer producers for the same panel.
+		# two AbsolutePointer producers for the same panel. Same for the
+		# x86-64-named copy 3.5.3-3.5.7 wrote on ARM64.
 		sudo rm -f "$TOUCH_DRV_DIR/AllyTouchI2cDxe.efi"
+		if [ "$TOUCH_DRV_ASSET" != "TouchI2cDxe.efi" ]; then
+			sudo rm -f "$TOUCH_DRV_DIR/TouchI2cDxe.efi"
+			! command -v sbctl >/dev/null 2>&1 \
+				|| sudo sbctl remove-file "$TOUCH_DRV_DIR/TouchI2cDxe.efi" >/dev/null 2>&1 || true
+		fi
 	else
 		echo "Warning: failed to download ${TOUCH_DRV_ASSET}; skipping touchscreen driver." >&2
 	fi
@@ -228,23 +284,26 @@ sudo test -s "$DEST/refind_${EFI_ARCH}.efi" && sudo test -s "$DEST/refind.conf" 
 # whose Secure Boot keys are managed by sbctl gets the CachyOS treatment:
 # CachyOS' own sbctl-batch-sign when it is on PATH, otherwise the identical
 # copy this package installs root-owned at /etc/rEFInd/sbctl-batch-sign.
-# Secure Boot enforced by something else (shim/MOK) is left alone with a
-# warning, as before.
+# sbctl-managed machines are signed even while Secure Boot is disabled, so
+# the ESP is ready the moment it is switched on (and `sbctl verify` stays
+# clean); there a signing failure only warns, since the firmware still boots
+# the unsigned copy. Secure Boot enforced by something else (shim/MOK) is
+# left alone with a warning, as before.
 SB_STATE="$(od -An -tu1 -j4 -N1 \
 	/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null \
 	| tr -d '[:space:]')"
+SB_SIGNER=""
+if command -v sbctl-batch-sign >/dev/null 2>&1; then
+	SB_SIGNER="sbctl-batch-sign"
+elif [ -x /etc/rEFInd/sbctl-batch-sign ]; then
+	SB_SIGNER="/etc/rEFInd/sbctl-batch-sign"
+fi
+SBCTL_MANAGED=""
+if command -v sbctl >/dev/null 2>&1 \
+	&& sudo sbctl status --json 2>/dev/null | grep -qE '"installed":[[:space:]]*true'; then
+	SBCTL_MANAGED=1
+fi
 if [ "$SB_STATE" = "1" ]; then
-	SB_SIGNER=""
-	if command -v sbctl-batch-sign >/dev/null 2>&1; then
-		SB_SIGNER="sbctl-batch-sign"
-	elif [ -x /etc/rEFInd/sbctl-batch-sign ]; then
-		SB_SIGNER="/etc/rEFInd/sbctl-batch-sign"
-	fi
-	SBCTL_MANAGED=""
-	if command -v sbctl >/dev/null 2>&1 \
-		&& sudo sbctl status --json 2>/dev/null | grep -qE '"installed":[[:space:]]*true'; then
-		SBCTL_MANAGED=1
-	fi
 	if [ -n "$SBCTL_MANAGED" ] || grep -qE '^ID="?cachyos"?$' /etc/os-release 2>/dev/null; then
 		[ -n "$SB_SIGNER" ] \
 			|| fail_install "Secure Boot is enabled and sbctl manages its keys, but no sbctl-batch-sign was found (not on PATH, not in /etc/rEFInd)."
@@ -253,6 +312,14 @@ if [ "$SB_STATE" = "1" ]; then
 			|| fail_install "$SB_SIGNER failed; Windows was left active."
 	else
 		echo "Warning: Secure Boot is enabled but sbctl is not managing its keys here; the new rEFInd files were NOT signed. Sign them with your own mechanism (shim/MOK or sbctl) before rebooting." >&2
+	fi
+elif [ -n "$SBCTL_MANAGED" ]; then
+	if [ -n "$SB_SIGNER" ]; then
+		echo "Secure Boot is disabled but sbctl manages keys here: signing EFI binaries with $SB_SIGNER so they are ready when it is enabled..."
+		sudo "$SB_SIGNER" \
+			|| echo "Warning: $SB_SIGNER failed; the new rEFInd files are NOT signed (they still boot while Secure Boot is disabled)." >&2
+	else
+		echo "Warning: sbctl manages keys here but no sbctl-batch-sign was found (not on PATH, not in /etc/rEFInd); the new rEFInd files were NOT signed." >&2
 	fi
 fi
 

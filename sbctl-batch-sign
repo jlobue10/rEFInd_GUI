@@ -19,8 +19,9 @@
 #   - skips /boot/grub (GRUB is signed by its own package hooks)
 #   - refuses to run on a Limine install (Limine signs itself)
 # Differences from CachyOS: the ESP path is taken from sbctl's own idea of it
-# (its ESP_PATH env or /boot) instead of hard-coding /boot, and it reports
-# what it did.
+# (its ESP_PATH env or /boot) instead of hard-coding /boot, it skips database
+# entries whose file no longer exists (a stale entry would otherwise abort the
+# whole run under set -e), and it reports what it did.
 set -euo pipefail
 
 if [ -f /boot/limine.conf ]; then
@@ -43,6 +44,7 @@ signed=0
 skipped=0
 while IFS= read -r entry; do
     [ -n "$entry" ] || continue
+    [ -f "$entry" ] || { skipped=$((skipped + 1)); continue; }
     if [[ "$entry" =~ ^.*/EFI/(Microsoft|Windows) || "$entry" == *.mui || "$entry" == *.dll \
         || "$entry" =~ ^/boot/grub ]]; then
         skipped=$((skipped + 1))
@@ -53,4 +55,4 @@ while IFS= read -r entry; do
     signed=$((signed + 1))
 done < <(sbctl verify 2>/dev/null | awk '/✗/ {print $2}')
 
-echo "sbctl-batch-sign: signed $signed file(s), skipped $skipped Microsoft/GRUB file(s)."
+echo "sbctl-batch-sign: signed $signed file(s), skipped $skipped Microsoft/GRUB/missing file(s)."
